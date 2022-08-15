@@ -14,7 +14,7 @@
       <div class="row no-gutters shadow-lg">
         <div class="col-3">
           <div class="card rounded-0">
-            <div class="card-header font-weight-bold text-danger"><span data-feather="phone" class="align-text-bottom"></span> {{ shop.phone }} </div>
+            <div class="card-header font-weight-bold text-dark"><span data-feather="phone" class="align-text-bottom"></span> {{ shop.phone }} </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item p-2"><span data-feather="map-pin" class="align-text-bottom mr-1"></span> <b>Address</b> : {{ shop.address }}</li>
               <li class="list-group-item p-2"><span data-feather="globe" class="align-text-bottom mr-1"></span> <b>Distance</b> : {{ shop.distance_from_cps }}</li>
@@ -27,7 +27,7 @@
             <div class="card-body px-0 pb-0" >
               <h6 class="heading px-2 mb-2">
                 <span data-feather="layers" class="align-text-bottom mr-2"></span>  Product
-                <a data-toggle="modal" href="#Add_Product" class="float-right text-danger"><span data-feather="plus-circle" class="align-text-bottom mr-2"></span> </a>
+                <a data-toggle="modal" href="#Add_Product" class="float-right text-dark"><span data-feather="plus-circle" class="align-text-bottom mr-2"></span> </a>
               </h6>
               <ul class="list-group list-group-flush  overflow-10em-auto custom-scrollbar">
                 <li class="list-group-item" v-for="product in shop.products" :key="product.id">
@@ -39,13 +39,13 @@
         </div>
         <div class="col-lg-6">
           <div class="card h-100 rounded-0 border-0">
-            <div class="card-header bg-transparent font-weight-bold text-danger"> <span data-feather="shopping-bag" class="mr-2"></span> Today's Sales </div>
+            <div class="card-header bg-transparent font-weight-bold text-dark"> <span data-feather="shopping-bag" class="mr-2"></span> Today's Sales </div>
               <div class="card-body custom-scrollbar"  style="max-height: 32.45em;overflow: auto;">
               <!-------- item 1 -------->
               <template v-if="sales.length > 0">
                 <div class="row">
                   <div class="col-6">
-                    <div class="card text-danger mb-4 shadow-lg" v-for="sale  in sales" :key="sale.id">
+                    <div class="card text-dark mb-4 shadow-lg" v-for="sale  in sales" :key="sale.id">
                         <ul class="list-group list-group-flush">
                           <li class="list-group-item font-weight-bold text-center">
                             <img  :src="sale.product.image" class="img-fluid mr-2" width="20"/> <span>{{ sale.product.product_name }}</span>
@@ -67,12 +67,12 @@
         </div>
         <div class="col-lg-3">
           <div class="card h-100 rounded-0">
-            <div class="card-header bg-transparent font-weight-bold text-danger"> <span data-feather="truck" class="mr-2"></span> Current Stock </div>
+            <div class="card-header bg-transparent font-weight-bold text-dark"> <span data-feather="truck" class="mr-2"></span> Current Stock </div>
             <div class="card-body custom-scrollbar p-2"  style="max-height: 32.45em;overflow: auto;">
               <ul class="list-group shadow-lg mb-3" v-for="product in shop.products" :key="product.id">
                 <template v-if="product.stock">
                     <li class="list-group-item font-weight-bold"><img  :src="product.image" class="img-fluid mr-2" width="20"/> {{ product.product_name }}</li>
-                    <li class="list-group-item text-danger font-weight-bold"><span data-feather="truck" class="mr-1"></span> {{ toDecimal(product.association.stock) +' '+ product.weight_unit }} </li>
+                    <li class="list-group-item text-dark font-weight-bold"><span data-feather="truck" class="mr-1"></span> {{ toDecimal(product.association.stock) +' '+ product.weight_unit }} </li>
                 </template>
               </ul>
             </div>
@@ -83,7 +83,7 @@
       <div class="row no-gutters mb-5">
         <div class="col-lg-3">
           <div class="card h-100 rounded-0">
-            <div class="card-header font-weight-bold text-danger d-flex align-items-center p-1">
+            <div class="card-header font-weight-bold text-dark d-flex align-items-center p-1">
               <span data-feather="activity" class="mr-2"></span>  Today's Rate
               <select class="form-control form-control-sm w-50 ml-auto" aria-label="Default select example" data-live-search="false" @change="filterProduct($event.target.value)">
                 <option v-for="product in shop.products" :key="product.id" :value="product.id">{{ product.product_name }}</option>
@@ -93,26 +93,26 @@
               <li class="list-group-item rounded-0 w-auto border-left-0 border-top-0 border-bottom-0 px-1">
                 <h6> Wholesale </h6>
                 <p>
-                  <span class="badge badge-danger font-weight-normal d-block my-1" v-for="range in parseToJSON(productRate.rate.wholesale_rate)" :key="range.id" style="font-size:11px">{{ toDecimal(range.rate) }} <sup>INR </sup> {{ ' : ' + toDecimal(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }} {{ productRate.weight_unit }}</span>
+                  <span class="badge badge-dark font-weight-normal d-block my-1" v-for="range in parseToJSON(productRate.rate.wholesale_rate)" :key="range.id" style="font-size:11px">{{ toDecimal(range.rate) }} <sup>INR </sup> {{ ' : ' + toDecimal(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }} {{ productRate.weight_unit }}</span>
                 </p>
               </li>
               <li class="list-group-item rounded-0 border-right-0 border-top-0 border-bottom-0 px-1">
                 <h6>Retail</h6>
                 <p>
-                  <span class="badge badge-danger font-weight-normal d-block">{{ toDecimal(productRate.rate.retail_rate) }} <sup>INR </sup> {{ productRate.weight_unit }}</span>
+                  <span class="badge badge-dark font-weight-normal d-block">{{ toDecimal(productRate.rate.retail_rate) }} <sup>INR </sup> {{ productRate.weight_unit }}</span>
                 </p>
               </li>
             </ul>
-            <h6 class="text-danger text-center my-4" v-else> Product rate not added yet.</h6>
+            <h6 class="text-dark text-center my-4" v-else> Product rate not added yet.</h6>
           </div>
         </div>
         <div class="col-lg-9">
           <!-- Tab Start -->
           <div class="TabWrapper">
             <ul class="nav nav-tabs  font-weight-bold">
-              <li class="nav-item"> <a id="StkReq" class="nav-link active p-2 text-danger" data-toggle="tab" href="#StockRequest"><span data-feather="truck" class="mr-1"></span>  Stock Request</a> </li>
-              <li class="nav-item"> <a id="SndStk" class="nav-link p-2 text-danger" data-toggle="tab" href="#SendNewStock"><span data-feather="truck" class="mr-1"></span>  Send New Stock</a> </li>
-              <li class="nav-item"> <a id="comStkReq" class="nav-link p-2 text-danger" data-toggle="tab" href="#ComStockRequest"><span data-feather="check-circle" class="mr-1"></span>  Completed Requests</a> </li>
+              <li class="nav-item"> <a id="StkReq" class="nav-link active p-2 text-dark" data-toggle="tab" href="#StockRequest"><span data-feather="truck" class="mr-1"></span>  Stock Request</a> </li>
+              <li class="nav-item"> <a id="SndStk" class="nav-link p-2 text-dark" data-toggle="tab" href="#SendNewStock"><span data-feather="truck" class="mr-1"></span>  Send New Stock</a> </li>
+              <li class="nav-item"> <a id="comStkReq" class="nav-link p-2 text-dark" data-toggle="tab" href="#ComStockRequest"><span data-feather="check-circle" class="mr-1"></span>  Completed Requests</a> </li>
             </ul>
             <div class="tab-content px-1 py-3 custom-scrollbar" style="max-height: 300px; height:300px; overflow-y: auto;">
               <div class="tab-pane active" id="StockRequest">
@@ -135,8 +135,8 @@
                                   </template>
                               </li>
                               <li>
-                                  <button type="button" data-target="#sendStockConfirmRequest" data-toggle="modal" class="btn btn-danger btn-sm small-sm mx-2 py-0" v-if="request.status == 'Processing'" @click="openSendConfirmationModal(request.id)"><span data-feather="check-circle" class="mr-1"></span>  Send</button>
-                                  <button type="button" class="btn btn-danger btn-sm  small-sm mx-2 py-0" data-target="#completeStockRequestConfirmationModal" data-toggle="modal" v-if="request.status == 'Received'"  @click="openSendConfirmationModal(request.id)"><span data-feather="check-circle" class="mr-1"></span>  Completed</button>
+                                  <button type="button" data-target="#sendStockConfirmRequest" data-toggle="modal" class="btn btn-dark btn-sm small-sm mx-2 py-0" v-if="request.status == 'Processing'" @click="openSendConfirmationModal(request.id)"><span data-feather="check-circle" class="mr-1"></span>  Send</button>
+                                  <button type="button" class="btn btn-dark btn-sm  small-sm mx-2 py-0" data-target="#completeStockRequestConfirmationModal" data-toggle="modal" v-if="request.status == 'Received'"  @click="openSendConfirmationModal(request.id)"><span data-feather="check-circle" class="mr-1"></span>  Completed</button>
                               </li>
                           </ul>
                       </div>
@@ -172,7 +172,7 @@
                           </div>
                           <!--  -->
                           <hr v-if="request.status == 'Requested'" />
-                          <button type="submit" class="btn btn-danger btn-sm px-5 mx-2" v-if="request.status == 'Requested'"><span data-feather="check-circle" class="mr-1"></span> Confirm</button>
+                          <button type="submit" class="btn btn-dark btn-sm px-5 mx-2" v-if="request.status == 'Requested'"><span data-feather="check-circle" class="mr-1"></span> Confirm</button>
                         </form>
                       </div>
                     </div>
@@ -220,12 +220,12 @@
               <div id="SendNewStock" class="tab-pane fade" >
                 <form method="POST" @submit.prevent="directStockRequest" class="container-fluid">
                   <label class="mr-5 ml-2 font-weight-bold"> Grand Total Price : {{ toDecimal(calculateTotalPrice) }} <sup>INR </sup></label>
-                  <button class="btn btn-outline-danger btn-sm  px-5" type="submit">Confirm</button>
+                  <button class="btn btn-outline-dark btn-sm  px-5" type="submit">Confirm</button>
                   <hr />
                   <div class="row">
                     <div class="col-4"  v-for="product in shop.products" :key="product.id">
                       <ul class="list-group shadow-lg mb-3" v-if="product.stock">
-                        <li class="list-group-item font-weight-bold text-truncate px-1 text-center"><img  :src="product.image" class="img-fluid mr-2" width="20"/> {{ product.product_name }} <span class="text-danger">({{ toDecimal(product.association.stock) +' '+ product.weight_unit }} )</span></li>
+                        <li class="list-group-item font-weight-bold text-truncate px-1 text-center"><img  :src="product.image" class="img-fluid mr-2" width="20"/> {{ product.product_name }} <span class="text-dark">({{ toDecimal(product.association.stock) +' '+ product.weight_unit }} )</span></li>
                         <li class="list-group-item px-2">
                           <div class="input-group input-group-sm">
                             <input type="text" v-maska="'#*.##'" class="form-control" @input="calculateSupplyRate($event,product.id)" placeholder="Quantity" v-model="form.directStockRequest.products['product-'+product.id]" />
@@ -256,7 +256,7 @@
       <div class="modal" id="sendStockConfirmRequest">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header py-1 border-danger text-danger d-flex align-items-center">
+            <div class="modal-header py-1 border-dark text-dark d-flex align-items-center">
                 <h6 class="mb-0">Confirm and Modify Stock Detail </h6>
                 <button type="button" class="btn btn-link btn-sm" data-dismiss="modal">&times;</button>
             </div>
@@ -291,7 +291,7 @@
                       </template>
                   </tbody>
                 </table>
-                <button type="submit" class="btn btn-danger btn-sm px-5">Send Stock To Shop</button>
+                <button type="submit" class="btn btn-dark btn-sm px-5">Send Stock To Shop</button>
               </form>
             </div>
           </div>
@@ -302,7 +302,7 @@
       <div class="modal" id="completeStockRequestConfirmationModal">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header py-2 border-danger text-danger">
+            <div class="modal-header py-2 border-dark text-dark">
                 <h6 class="" v-if="isNotEmpty(selectedRequest)">Review Stock Detail  <small>Actual Payment : {{ selectedRequest.actual_payment }} <sup>INR</sup></small></h6>
                 <button type="button" class="btn btn-link btn-sm" data-dismiss="modal">&times;</button>
             </div>
@@ -335,7 +335,7 @@
                   <label>Received Amount </label>
                   <input v-model="receiveStockPayment" class="form-control form-control-sm" placeholder="Receive Amount" v-maska="'#*.##'"/>
                 </div>
-                <button @click="completeStockRequest(selectedRequest.id)" class="btn btn-outline-danger btn-sm" style="margin-top: 2em;">Yes , I Reviewed</button>
+                <button @click="completeStockRequest(selectedRequest.id)" class="btn btn-outline-dark btn-sm" style="margin-top: 2em;">Yes , I Reviewed</button>
               </template>
             </div>
           </div>
@@ -347,7 +347,7 @@
       <div class="modal" id="Add_Product">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header border-danger text-danger py-1 align-items-center">
+            <div class="modal-header border-dark text-dark py-1 align-items-center">
                 <h6>Add new product to shop</h6>
                 <button type="button" class="btn btn-link btn-sm" data-dismiss="modal">&times;</button>
             </div>
@@ -359,7 +359,7 @@
                     <v-select label="selectProduct" v-model="form.addProduct.products" multiple :options="products" :get-option-label="(option) => option.product_name" :get-option-key="(option) => option.id"></v-select>
                 </div>
                 <hr />
-                <button class="btn btn-danger btn-sm add-btn" type="submit" >Add Product</button>
+                <button class="btn btn-dark btn-sm add-btn" type="submit" >Add Product</button>
               </form>
             </div>
           </div>

@@ -2,7 +2,8 @@ body {
   font-size: .875rem;
 }
 
-.feather {
+.feather,
+.iconify{
   width: 16px;
   height: 16px;
 }
@@ -39,16 +40,25 @@ body {
 
 .sidebar .nav-link {
   font-weight: 500;
-  color: #333;
+  color: #FFFFFF;
+}
+.sidebar .nav-link:hover  svg {
+  color:#FFFFFF;
 }
 
-.sidebar .nav-link .feather {
+.sidebar .nav-link .feather,
+.sidebar .nav-link .iconify{
+  margin-right: 4px;
+  color: #727272;
+}
+
+.sidebar .nav-link .span {
   margin-right: 4px;
   color: #727272;
 }
 
 .sidebar .nav-link.active {
-  color: #2470dc;
+  color: #FFFFFF;
 }
 
 .sidebar .nav-link:hover .feather,

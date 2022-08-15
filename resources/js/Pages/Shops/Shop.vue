@@ -18,10 +18,10 @@
         </div>
 
         <div class="col-auto text-right d-flex align-items-center">
-            <h6 class="border-danger btn-sm border rounded-lg small font-weight-bold mr-2 m-0 d-inline-block">
-              Stock Request Pending <span class="badge badge-danger">{{ totalStockRequest }}</span>
+            <h6 class="border-dark btn-sm border rounded-lg small font-weight-bold mr-2 m-0 d-inline-block">
+              Stock Request Pending <span class="badge badge-dark">{{ totalStockRequest }}</span>
             </h6>
-            <Link class="btn add-btn btn-danger btn-sm" :href="route('shop.create')" >
+            <Link class="btn add-btn btn-dark btn-sm" :href="route('shop.create')" >
             <span data-feather="database" class="mr-1 align-text-bottom"></span> Add New Shop</Link>
         </div>
       </div>
@@ -33,13 +33,13 @@
           <div class="card shadow-lg mb-3">
             <div class="card-header py-1 px-3 font-weight-bold">
               <span data-feather="file" class="align-text-bottom"></span> {{ shop.shop_name }}
-              <Link :href="route('shop.show',shop.id)" class="btn btn-outline-danger py-0 btn-sm float-right ml-5 px-3" > View <span class="badge badge-danger">{{ shopStockReqeustSize(shop) }}</span></Link>
+              <Link :href="route('shop.show',shop.id)" class="btn btn-outline-dark py-0 btn-sm float-right ml-5 px-3" > View <span class="badge badge-dark">{{ shopStockReqeustSize(shop) }}</span></Link>
             </div>
              <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between align-items-center py-1">Wholesale Rate <span class="badge badge-danger">&#8377; {{ (product.rate == null) ? 0 : (JSON.parse(product.rate.wholesale_rate).length == 0) ? 0 : toDecimal(JSON.parse(product.rate.wholesale_rate)[0].rate) }}</span></li>
-                <li class="list-group-item d-flex justify-content-between align-items-center py-1">Retail Rate <span class="badge badge-danger">&#8377; {{ (product.rate == null) ? 0 : toDecimal(product.rate.retail_rate) }}</span></li>
-                <li class="list-group-item d-flex justify-content-between align-items-center py-1">Sale <span class="badge badge-danger">&#8377; {{ toDecimal(shop.today_sale) }}</span></li>
-                <li class="list-group-item d-flex justify-content-between align-items-center py-1" v-if="product.stock">Stock <span class="badge badge-danger">{{ toDecimal(shop.association.stock) }} <sup>{{ product.weight_unit }}</sup></span></li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-1">Wholesale Rate <span class="badge badge-dark">&#8377; {{ (product.rate == null) ? 0 : (JSON.parse(product.rate.wholesale_rate).length == 0) ? 0 : toDecimal(JSON.parse(product.rate.wholesale_rate)[0].rate) }}</span></li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-1">Retail Rate <span class="badge badge-dark">&#8377; {{ (product.rate == null) ? 0 : toDecimal(product.rate.retail_rate) }}</span></li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-1">Sale <span class="badge badge-dark">&#8377; {{ toDecimal(shop.today_sale) }}</span></li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-1" v-if="product.stock">Stock <span class="badge badge-dark">{{ toDecimal(shop.association.stock) }} <sup>{{ product.weight_unit }}</sup></span></li>
             </ul>
           </div>
         </div>

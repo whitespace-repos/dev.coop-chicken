@@ -249,8 +249,8 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-	background-color: rgb(136, 37, 7);
-	outline: 1px solid rgb(136, 37, 7);
+	background-color: #1e1f21;
+	outline: 1px solid #1e1f21;
 }
 
 .v-toast__item .v-toast__text{ padding:0 20px !important}

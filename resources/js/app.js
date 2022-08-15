@@ -7,6 +7,7 @@ import { InertiaProgress } from '@inertiajs/progress';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import { Dataset, DatasetItem, DatasetInfo, DatasetPager, DatasetSearch, DatasetShow } from 'vue-dataset'
+import { Icon } from '@iconify/vue';
 //
 import VueLoading from 'vue-loading-overlay';
 import Maska from 'maska'
@@ -42,7 +43,7 @@ createInertiaApp({
             })
             .use(VueLoading,{
                 // Pass props by their camelCased names
-                color: '#984346',
+                color: '#bf8a00',
                 loader: 'dots',
                 width: 50,
                 height: 50,
@@ -61,6 +62,7 @@ createInertiaApp({
             .component("v-select", vSelect)
             .component('Calendar', Calendar)
             .component('DatePicker', DatePicker)
+            .component('Icon',Icon)
             .mixin({
                 directives: { maska },
                 props:['auth','isLoading'],

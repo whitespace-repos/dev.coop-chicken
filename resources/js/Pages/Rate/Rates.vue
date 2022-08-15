@@ -5,7 +5,7 @@
       <h6 class="d-flex align-items-center mb-1">
         <span data-feather="calendar" class="align-text-bottom mr-2"></span> Set / Update Today's Rate
       </h6>
-      <small class="text-danger ml-4">Date: <strong>{{ currentDate }}</strong></small>
+      <small class="text-dark ml-4">Date: <strong>{{ currentDate }}</strong></small>
 
       <hr />
 
@@ -32,14 +32,14 @@
         <div class="row">
             <div class="col" v-for="(range , index ) in selectedProduct.weight_ranges" :key="range.id" >
               <div class="form-group" v-if = "range.from != 0 || range.to != 0 " :class="{'has-error':v$.form.rate.range['range-'+range.id].$error}">
-                  <label>Range {{index + 1 }} : <label class="badge badge-danger font-weight-normal"> {{ toDecimal(range.from) + ' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }} {{ selectedProduct.weight_unit }} </label> </label>
+                  <label>Range {{index + 1 }} : <label class="badge badge-dark font-weight-normal"> {{ toDecimal(range.from) + ' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }} {{ selectedProduct.weight_unit }} </label> </label>
                   <input v-maska="'#*.##'" class="form-control" :name="range.id" v-model="v$.form.rate.range['range-'+range.id].$model"/>
                   <small v-if="v$.form.rate.range['range-'+range.id].$error">{{ 'Please Enter a Valid Rate' }} </small>
               </div>
             </div>
           <div class="col-md-12">
             <hr />
-            <button class="btn btn-danger px-5" type="submit" :disabled="v$.form.rate.$invalid"><span data-feather="database" class="mr-2 align-text-bottom"></span> Save Rate</button>
+            <button class="btn btn-dark px-5" type="submit" :disabled="v$.form.rate.$invalid"><span data-feather="database" class="mr-2 align-text-bottom"></span> Save Rate</button>
           </div>
         </div>
       </form>
@@ -70,14 +70,14 @@
                         <td>
                           <template v-if="r.wholesale_rate != null && r.wholesale_rate != '[]'">
                             <template  v-for="(range,index) in parseToJSON(r.wholesale_rate)" :key="range.id">
-                              <span class="badge badge-danger font-weight-normal mr-2" v-if="index==0">
+                              <span class="badge badge-dark font-weight-normal mr-2" v-if="index==0">
                                   {{toDecimal(range.from) +" - "+ toDecimal(range.to) +" "+ r.product.weight_unit }} : {{  toDecimal(range.rate) }} <sup>INR </sup>
                               </span>
                             </template>
                           </template>
                         </td>
-                        <td> <span class="badge badge-danger font-weight-normal "> {{  toDecimal(r.retail_rate) }} <sup>INR </sup> {{ " / "+ r.product.weight_unit }} </span> </td>
-                        <td> <span class="badge badge-danger font-weight-normal ">{{ r.status }} </span> </td>
+                        <td> <span class="badge badge-dark font-weight-normal "> {{  toDecimal(r.retail_rate) }} <sup>INR </sup> {{ " / "+ r.product.weight_unit }} </span> </td>
+                        <td> <span class="badge badge-dark font-weight-normal ">{{ r.status }} </span> </td>
                       </tr>
                     </template>
                     <template v-else>

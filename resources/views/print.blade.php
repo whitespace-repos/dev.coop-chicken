@@ -69,21 +69,21 @@
                                 <td></td>
                                 <td></td>
                                 <td class="text-right"><h4><strong>Total: </strong></h4></td>
-                                <td class="text-center text-danger"><h4><strong>₹{{ $carts->sum('price') + 0 }}</strong></h4></td>
+                                <td class="text-center text-dark"><h4><strong>₹{{ $carts->sum('price') + 0 }}</strong></h4></td>
                             </tr>
 
                             <tr>
                                 <td></td>
                                 <td></td>
                                 <td class="text-right"><h4><strong>Received: </strong></h4></td>
-                                <td class="text-center text-danger"><h4><strong>₹{{ $request->receiveAmount }}</strong></h4></td>
+                                <td class="text-center text-dark"><h4><strong>₹{{ $request->receiveAmount }}</strong></h4></td>
                             </tr>
                         @else
                             <tr>
                                 <td></td>
                                 <td></td>
                                 <td class="text-right"><h4><strong>Total: </strong></h4></td>
-                                <td class="text-center text-danger"><h4><strong>₹{{ $carts->sum('price') + 0 }}</strong></h4></td>
+                                <td class="text-center text-dark"><h4><strong>₹{{ $carts->sum('price') + 0 }}</strong></h4></td>
                             </tr>
                         @endif
                     </tbody>

@@ -1,5 +1,5 @@
 <template>
-    <header class="navbar navbar-dark sticky-top bg-danger flex-md-nowrap p-0 shadow">
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
         <Link :href="route('dashboard')" class="navbar-brand col-auto pl-4 pr-5 py-1" style="width:8.9em">
             <img src="/assets/img/logo-bg.png" alt="logo">
         </Link>
@@ -13,9 +13,9 @@
         </div>
     </header>
     <!-- Page Content -->
-    <div class="container-fluid overflow-92vh-auto">
+    <div class="container-fluid" style="max-height: 91.8vh;overflow: auto;height: 91.8vh;">
         <div class="row">
-            <nav id="sidebarMenu" class="bg-light sidebar collapse show pt-0">
+            <nav id="sidebarMenu" class="bg-dark sidebar collapse show pt-0">
                 <div class="position-sticky pt-3 sidebar-sticky custom-scrollbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -50,14 +50,14 @@
                         </li>
                         <li class="nav-item">
                             <Link class="nav-link" href="/rate">
-                                <span class="align-text-center mr-2 text-muted pl-1">&#8377;</span>
+                                <icon icon="fa6-solid:indian-rupee-sign" />
                                 Rates
                             </Link>
                         </li>
                     </ul>
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
                         <span>Reports</span>
-                        <a class="link-danger" href="#" aria-label="Add a new report">
+                        <a class="link-dark" href="#" aria-label="Add a new report">
                             <span data-feather="plus-circle" class="align-text-bottom"></span>
                         </a>
                     </h6>

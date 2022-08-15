@@ -1,5 +1,5 @@
 <template>
-    <header class="navbar navbar-dark sticky-top bg-danger flex-md-nowrap p-0 shadow">
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
         <Link :href="route('make-sale')" class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 py-1">
             <img src="/assets/img/logo-bg.png" alt="logo">
         </Link>
@@ -7,10 +7,11 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <h5 class="text-white heading mb-0"> {{ 'COOP - ' + $page.props.shop.shop_name }} </h5>
+        <h6 class="text-white heading mb-0" style="line-height: 20px;"> {{ 'COOP - ' + $page.props.shop.shop_name }}  <br /> <small class="d-flex align-items-center justify-content-center font-weight-bold"><span data-feather="truck" class="mr-2"></span>{{ $page.props.shop.supplier.name }} </small></h6>
 
         <div class="navbar-nav">
-            <div class="nav-item text-nowrap">
+            <div class="nav-item text-nowrap d-flex align-items-center">
+                <li class="nav-link border-right pr-3 text-black"><span data-feather="user" class="mr-2"></span>{{ $page.props.auth.user.name }}</li>
                 <Link href="/logout" as="button" method="post" class="nav-link px-3  btn btn-link">Sign out</Link>
             </div>
         </div>
@@ -18,7 +19,7 @@
 
     <!-- Page Content -->
      <!-- Page Content -->
-    <div class="container-fluid overflow-92vh-auto" >
+    <div class="container-fluid" style="max-height: 91.8vh; overflow: auto; height: 93.8vh;" >
         <main class="pt-3 px-3 pb-2">
             <slot />
         </main>

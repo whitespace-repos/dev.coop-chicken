@@ -5,7 +5,7 @@
         <h6 class="mb-0"><span data-feather="edit" class="align-text-bottom"></span> Update User Detail</h6>
         <BreezeValidationErrors class="mb-4 " />
         <!--  -->
-        <hr class="border-danger bg-danger border w-100"/>
+        <hr class="border-dark bg-dark border w-100"/>
         <!--  -->
         <form @submit.prevent="submit">
             <div class="card card-body shadow-lg">
@@ -57,7 +57,7 @@
                     </div>
                     <div class="form-group col-md-12">
                         <hr />
-                        <button class="btn btn-danger add-btn btn-sm" type="submit" :disabled="v$.form.$invalid">Save Changes</button>
+                        <button class="btn btn-dark add-btn btn-sm" type="submit" :disabled="v$.form.$invalid">Save Changes</button>
                     </div>
                 </div>
             </div>

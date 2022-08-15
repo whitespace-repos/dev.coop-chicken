@@ -112,7 +112,7 @@
             <!-- -->
             <div class="col-md-12">
               <div class="form-group py-1">
-                  <button class="btn btn-danger px-5 my-4" type="submit" :disabled="v$.form.shop.$invalid"><span data-feather="database" class="mr-2 align-text-bottom"></span> Save New Shop</button>
+                  <button class="btn btn-dark px-5 my-4" type="submit" :disabled="v$.form.shop.$invalid"><span data-feather="database" class="mr-2 align-text-bottom"></span> Save New Shop</button>
               </div>
             </div>
           </div>

@@ -12,13 +12,13 @@
             <div class="card" v-for="(supplier , indx ) in suppliers" :key="indx">
                 <div class="card-header p-0" :id="'headingOne'+indx">
                     <h2 class="mb-0">
-                        <button class="btn btn-link btn-block text-left" :class="{'collapsed':(indx != 0)}" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseOne'+indx" aria-expanded="true" :aria-controls="'collapseOne'+indx">
+                        <button class="btn btn-link btn-block text-left" :class="{'collapsed':(indx != 0)}" type="button" data-toggle="collapse" :data-target="'#collapseOne'+indx" aria-expanded="true" :aria-controls="'collapseOne'+indx">
                         Supplier  <i> ( {{ supplier.name }} ) </i> Detail
                         </button>
                     </h2>
                 </div>
 
-                <div :id="'collapseOne'+indx" class="collapse" :class="{'show':(indx == 0)}" :aria-labelledby="'headingOne'+indx" data-bs-parent="#accordionExample">
+                <div :id="'collapseOne'+indx" class="collapse" :class="{'show':(indx == 0)}" :aria-labelledby="'headingOne'+indx" data-parent="#accordionExample">
                     <div class="card-body px-0 pt-0">
                         <table class="table table-sm table-striped">
                             <thead>
@@ -40,19 +40,19 @@
                         </table>
                         <div class="px-2">
                             <h6 v-if="supplier.shops.length > 0" class="text-underline my-3" style="text-decoration:underline"> Shop associated with supplier </h6>
-                            <h6 v-else class="text-danger mt-3 mb-0" style="text-decoration:underline"> No shop associated with supplier </h6>
+                            <h6 v-else class="text-dark mt-3 mb-0" style="text-decoration:underline"> No shop associated with supplier </h6>
 
-                            <div class="accordion" id="accordionShops">
+                            <div class="accordion" :id="'accordionShops'+indx">
                                 <div class="card" v-for="(shop,index) in supplier.shops" :key="index">
                                     <div class="card-header p-0" :id="'shop'+index">
                                         <h2 class="mb-0">
-                                            <button class="btn btn-link btn-block text-left collapsed small"  type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseShop'+index" aria-expanded="true" :aria-controls="'collapseShop'+index">
+                                            <button class="btn btn-link btn-block text-left collapsed small"  type="button" data-toggle="collapse" :data-target="'#collapseShop'+shop.id" aria-expanded="true" :aria-controls="'collapseShop'+shop.id">
                                             <kbd>{{ '#' + (index + 1) }} </kbd> {{ shop.shop_name }}
                                             </button>
                                         </h2>
                                     </div>
 
-                                    <div :id="'collapseShop'+index" class="collapse fade" :aria-labelledby="'shop'+index" data-bs-parent="#accordionShops">
+                                    <div :id="'collapseShop'+shop.id" class="collapse fade" :aria-labelledby="'shop'+index" :data-parent="'#accordionShops'+indx">
                                         <div class="card-body p-0">
                                             <table class="table table-sm table-striped small-sm m-0">
                                                 <thead>

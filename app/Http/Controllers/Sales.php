@@ -14,7 +14,7 @@ class Sales extends Controller
 {
     //
     public function make(){
-        $shop = auth()->user()->shop()->with('products.weightRanges','products.rate','purchase_history')->first();
+        $shop = auth()->user()->shop()->with('supplier','products.weightRanges','products.rate','purchase_history')->first();
         if(auth()->user()->shop->today_sales->count() > 0){
             $sales = auth()
                         ->user()

@@ -14,6 +14,12 @@ module.exports = {
         container: {
             center: true,
         },
+        neumorphismColor: {
+            dark: {
+                shadow: '#202123',
+            // ...
+            },
+        },
         extend: {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
@@ -32,5 +38,6 @@ module.exports = {
 
     plugins: [
                 require('@tailwindcss/forms'),
+                require('tailwindcss-neumorphism')
             ],
 };

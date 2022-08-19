@@ -4,8 +4,8 @@
         <section>
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="#" class="Btn mx-2 btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#myModal"> New Stock Request </a>
-                    <Link :href="route('make-sale')" class="heading text-dark">
+                    <a href="#" class="Btn mx-2 btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#myModal"> New Stock Request </a>
+                    <Link :href="route('make-sale')" class="heading text-primary">
                         Return Back
                     </Link>
                 </div>
@@ -30,10 +30,10 @@
                                                 <span data-feather="calendar" class="mr-1"></span> {{ request.date }}
                                             </button>
                                             <!--  -->
-                                            <h6 class="my-2 d-inline-flex small-sm font-weight-bold ml-3 text-dark">Status - {{ request.status }}    <sub> on {{ parseDate(request.updated_at) }} </sub> <small v-if="request.status != 'Requested'" class="ml-4">Actual Payment : {{ toDecimal(request.actual_payment) }} <sup>INR</sup></small> <small v-if="request.status == 'Completed'" class="ml-3"> Receive Payment : {{ toDecimal(request.payment_received) }} <sup>INR</sup> </small></h6>
+                                            <h6 class="my-2 d-inline-flex small-sm font-weight-bold ml-3 text-primary">Status - {{ request.status }}    <sub> on {{ parseDate(request.updated_at) }} </sub> <small v-if="request.status != 'Requested'" class="ml-4">Actual Payment : {{ toDecimal(request.actual_payment) }} <sup>INR</sup></small> <small v-if="request.status == 'Completed'" class="ml-3"> Receive Payment : {{ toDecimal(request.payment_received) }} <sup>INR</sup> </small></h6>
                                         </li>
                                         <li>
-                                            <button class="btn btn-dark btn-sm my-1 py-0" data-toggle="modal" data-target="#receiveStockConfirmModal" @click="openReceiveConfirmationModal(request.id)" v-if="request.status == 'Sent'"><span data-feather="check-circle" class="mr-1"></span>  Receive Stock </button>
+                                            <button class="btn btn-primary btn-sm my-1 py-0" data-toggle="modal" data-target="#receiveStockConfirmModal" @click="openReceiveConfirmationModal(request.id)" v-if="request.status == 'Sent'"><span data-feather="check-circle" class="mr-1"></span>  Receive Stock </button>
                                         </li>
                                     </ul>
                                 </div>
@@ -67,7 +67,7 @@
                                                             </select>
                                                         </div>
                                                         <div class="col-4 mt-auto">
-                                                            <button type="submit" class="btn btn-dark btn-sm px-4">Submit</button>
+                                                            <button type="submit" class="btn btn-primary btn-sm px-4">Submit</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -96,7 +96,7 @@
                                                 <span data-feather="calendar" class="mr-1"></span> {{ request.date }}
                                             </button>
                                             <!--  -->
-                                            <h6 class="my-2 d-inline-flex small-sm font-weight-bold ml-3 text-dark">Status - {{ request.status }}    <sub> on {{ parseDate(request.updated_at) }} </sub> <small v-if="request.status != 'Requested'" class="ml-4">Actual Payment : {{ toDecimal(request.actual_payment) }} <sup>INR</sup></small> <small v-if="request.status == 'Completed'" class="ml-3"> Receive Payment : {{ toDecimal(request.payment_received) }} <sup>INR</sup> </small></h6>
+                                            <h6 class="my-2 d-inline-flex small-sm font-weight-bold ml-3 text-primary">Status - {{ request.status }}    <sub> on {{ parseDate(request.updated_at) }} </sub> <small v-if="request.status != 'Requested'" class="ml-4">Actual Payment : {{ toDecimal(request.actual_payment) }} <sup>INR</sup></small> <small v-if="request.status == 'Completed'" class="ml-3"> Receive Payment : {{ toDecimal(request.payment_received) }} <sup>INR</sup> </small></h6>
                                         </li>
                                     </ul>
                                 </div>
@@ -137,7 +137,7 @@
         <div class="modal CmnModal" id="receiveStockConfirmModal">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header py-3 border-dark text-dark align-items-center">
+                    <div class="modal-header py-3 border-primary text-primary align-items-center">
                         <h6 class="m-0" v-if="isNotEmpty(selectedRequest)">Confirm and Modify Stock Detail <small>Actual Payment : <sub>{{ selectedRequest.actual_payment }} </sub> </small></h6>
                         <a href="javascript:void(0)" class="close py-0" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -175,7 +175,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <button type="submit" class="btn btn-outline-dark btn-sm ml-auto"><span data-feather="check-circle" class="mr-1"></span>  Yes ,I Confirm Receive Stock</button>
+                                <button type="submit" class="btn btn-outline-primary btn-sm ml-auto"><span data-feather="check-circle" class="mr-1"></span>  Yes ,I Confirm Receive Stock</button>
                             </form>
                         </template>
                     </div>
@@ -189,9 +189,9 @@
                 <div class="modal-content">
                     <form method="POST" @submit.prevent="sendStockRequest" class="mb-0">
                         <!-- Modal Header -->
-                        <div class="modal-header py-2 d-flex align-items-center text-dark border-dark">
+                        <div class="modal-header py-2 d-flex align-items-center text-primary border-primary">
                             <h6 class="mb-0"><span data-feather="truck" class="mr-2 "></span> Request Stock</h6>
-                            <button type="button" class="btn btn-sm btn-link text-dark" data-dismiss="modal">&times;</button>
+                            <button type="button" class="btn btn-sm btn-link text-primary" data-dismiss="modal">&times;</button>
                         </div>
 
                         <!-- Modal body -->
@@ -199,7 +199,7 @@
                             <div class="row">
                                 <div class="col-4"  v-for="product in shop.products" :key="product.id">
                                     <ul class="list-group shadow-lg mb-3" v-if="product.stock">
-                                        <li class="list-group-item font-weight-bold small-sm text-truncate px-2"><img  :src="product.image" class="img-fluid mr-2" width="20"/> {{ product.product_name }} <span class="text-dark">({{ toDecimal(product.association.stock) +' '+ product.weight_unit }} )</span></li>
+                                        <li class="list-group-item font-weight-bold small-sm text-truncate px-2"><img  :src="product.image" class="img-fluid mr-2" width="20"/> {{ product.product_name }} <span class="text-primary">({{ toDecimal(product.association.stock) +' '+ product.weight_unit }} )</span></li>
                                         <li class="list-group-item px-2">
                                             <div class="input-group input-group-sm">
                                                 <input min="0" onkeypress="return event.charCode >= 48" class="form-control" placeholder="0" v-model="form.stockRequest.products['product-'+product.id]" v-maska="'#*.##'"/>
@@ -215,7 +215,7 @@
 
                         <!-- Modal footer -->
                         <div class="modal-footer p-0">
-                            <button type="submit" class="btn btn-dark btn-sm px-5">Stock Request</button>
+                            <button type="submit" class="btn btn-primary btn-sm px-5">Stock Request</button>
                         </div>
                     </form>
                 </div>
@@ -311,7 +311,7 @@ export default {
     border-right:none !important;
   }
   .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
-        color: #fff;
-        background-color: #7f3235!important;
+        color: #202123!important;
+        background-color: #ebebeb!important;
     }
 </style>

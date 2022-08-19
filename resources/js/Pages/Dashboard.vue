@@ -40,7 +40,7 @@
                         </table>
                         <div class="px-2">
                             <h6 v-if="supplier.shops.length > 0" class="text-underline my-3" style="text-decoration:underline"> Shop associated with supplier </h6>
-                            <h6 v-else class="text-dark mt-3 mb-0" style="text-decoration:underline"> No shop associated with supplier </h6>
+                            <h6 v-else class="text-primary mt-3 mb-0" style="text-decoration:underline"> No shop associated with supplier </h6>
 
                             <div class="accordion" :id="'accordionShops'+indx">
                                 <div class="card" v-for="(shop,index) in supplier.shops" :key="index">
@@ -68,9 +68,9 @@
                                                 <tbody>
                                                     <tr v-for="product in shop.products" :key="product.id">
                                                         <td>{{ product.product_name }}</td>
-                                                        <td>{{ (product.rate == null) ? toDecimal(0) : toDecimal(product.rate.retail_rate) }} <sup>INR</sup> </td>
-                                                        <td>{{ (product.rate == null) ? toDecimal(0) : (JSON.parse(product.rate.wholesale_rate).length == 0) ? toDecimal(0) : toDecimal(JSON.parse(product.rate.wholesale_rate)[0].rate) }} <sup>INR</sup> </td>
-                                                        <td>{{ toDecimal(product.today_sale) }} <sup>INR</sup> </td>
+                                                        <td v-currency>{{ (product.rate == null) ? toDecimal(0) : toDecimal(product.rate.retail_rate) }}</td>
+                                                        <td v-currency>{{ (product.rate == null) ? toDecimal(0) : (JSON.parse(product.rate.wholesale_rate).length == 0) ? toDecimal(0) : toDecimal(JSON.parse(product.rate.wholesale_rate)[0].rate) }}</td>
+                                                        <td v-currency>{{ toDecimal(product.today_sale) }}</td>
                                                         <td colspan="2">{{ toDecimal(product.association.stock) }} <sup>{{ product.weight_unit }} </sup></td>
                                                     </tr>
                                                 </tbody>

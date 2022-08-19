@@ -4,9 +4,9 @@
     <BreezeAuthenticatedLayout>
       <div class="d-flex justify-content-between align-items-center">
         <h6 class="mb-0"><span data-feather="users" class="align-text-bottom"></span> Users</h6>
-        <inertia-link :href="this.route('user.create')"  class="btn add-btn btn-dark btn-sm" as="button" type="button" ><span data-feather="database" class="mr-2"></span> Add New User</inertia-link>
+        <inertia-link :href="this.route('user.create')"  class="btn add-btn btn-primary btn-sm" as="button" type="button" ><span data-feather="database" class="mr-2"></span> Add New User</inertia-link>
       </div>
-      <hr class="border-dark bg-dark border w-100"/>
+      <hr />
       <!--  -->
       <dataset
           v-slot="{ ds }"
@@ -15,55 +15,58 @@
           :ds-search-in="['name','phone']"
 
         >
-          <div class="row" :data-page-count="ds.dsPagecount">
-            <div class="col-md-6 mb-2 mb-md-0">
-              <dataset-show />
+          <div class="card card-body">
+            <div class="row" :data-page-count="ds.dsPagecount">
+              <div class="col-md-6 mb-2 mb-md-0">
+                <dataset-show />
+              </div>
+              <div class="col-md-6">
+                <dataset-search ds-search-placeholder="Search..." />
+              </div>
             </div>
-            <div class="col-md-6">
-              <dataset-search ds-search-placeholder="Search..." />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-                <div class="table-responsive">
-                  <table class="table table-striped d-md-table table-sm my-4">
-                    <thead>
-                      <tr>
-                        <td scope="col"><kbd>{{ '# ' }}</kbd></td>
-                        <th v-for="(th, index) in cols" :key="th.field" :class="['sort', th.sort]" @click="click($event, index)">
-                          {{ th.name }} <i class="gg-select float-right"></i>
-                        </th>
-                        <th  width="200">Action</th>
-                      </tr>
-                    </thead>
-                    <dataset-item tag="tbody">
-                      <template #default="{ row, rowIndex }">
+            <div class="row">
+              <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-striped d-md-table table-sm my-4">
+                      <thead>
                         <tr>
-                          <th scope="row"><kbd>{{ '#' + (rowIndex + 1) }}</kbd></th>
-                          <td>
-                              {{ row.name }}
-                              <sup v-if="row.roles[0].name == 'Employee'"  class="text-dark font-weight-bold">
-                                ( {{ '#'+row.shop.supplier.id +' - '+ row.shop.supplier.name }} )
-                              </sup>
-                            </td>
-                          <td><span class="badge badge-dark"> {{ (isEmpty(row)) ? '' : row.roles[0].name  }}</span></td>
-                          <td><span class="badge badge-warning" :class="{'px-4':isEmpty(row.shop)}"> {{ isEmpty(row.shop) ? '-' : row.shop.shop_name }}</span></td>
-                          <td><span class="badge badge-secondary font-weight-normal" :class="{'px-4':isEmpty(row.phone)}"> {{ isEmpty(row.phone) ? '-' : row.phone }}</span></td>
-                          <td>
-                            <inertia-link :href="route('user.edit',row.id)" class=""><span data-feather="edit-2" class="mr-2"></span>Edit</inertia-link>
-                            <inertia-link :href="route('user.show',row.id)" class="ml-4"  v-if="row.roles[0].name == 'Supplier' || row.roles[0].name == 'Admin'">View Detail</inertia-link>
-                          </td>
+                          <td scope="col"><kbd>{{ '# ' }}</kbd></td>
+                          <th v-for="(th, index) in cols" :key="th.field" :class="['sort', th.sort]" @click="click($event, index)">
+                            {{ th.name }} <i class="gg-select float-right"></i>
+                          </th>
+                          <th  width="200">Action</th>
                         </tr>
-                      </template>
-                    </dataset-item>
-                  </table>
-                </div>
+                      </thead>
+                      <dataset-item tag="tbody">
+                        <template #default="{ row, rowIndex }">
+                          <tr>
+                            <th scope="row"><kbd>{{ '#' + (rowIndex + 1) }}</kbd></th>
+                            <td>
+                                {{ row.name }}
+                                <sup v-if="row.roles[0].name == 'Employee'"  class="font-weight-bold">
+                                  ( {{ '#'+row.shop.supplier.id +' - '+ row.shop.supplier.name }} )
+                                </sup>
+                              </td>
+                            <td><span class="badge badge-primary"> {{ (isEmpty(row)) ? '' : row.roles[0].name  }}</span></td>
+                            <td><span class="badge badge-warning" :class="{'px-4':isEmpty(row.shop)}"> {{ isEmpty(row.shop) ? '-' : row.shop.shop_name }}</span></td>
+                            <td><span class="badge badge-secondary font-weight-normal" :class="{'px-4':isEmpty(row.phone)}"> {{ isEmpty(row.phone) ? '-' : row.phone }}</span></td>
+                            <td>
+                              <inertia-link :href="route('user.edit',row.id)" class=""><span data-feather="edit-2" class="mr-2"></span>Edit</inertia-link>
+                              <inertia-link :href="route('user.show',row.id)" class="ml-4"  v-if="row.roles[0].name == 'Supplier' || row.roles[0].name == 'Admin'">View Detail</inertia-link>
+                            </td>
+                          </tr>
+                        </template>
+                      </dataset-item>
+                    </table>
+                  </div>
+              </div>
+            </div>
+            <div class="d-flex flex-md-row flex-column justify-content-between align-items-center">
+              <dataset-info class="mb-2 mb-md-0" />
+              <dataset-pager />
             </div>
           </div>
-          <div class="d-flex flex-md-row flex-column justify-content-between align-items-center">
-            <dataset-info class="mb-2 mb-md-0" />
-            <dataset-pager />
-          </div>
+
         </dataset>
       <!--  main-panel-->
     </BreezeAuthenticatedLayout>

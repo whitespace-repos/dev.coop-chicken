@@ -6,13 +6,13 @@
             <div class="card shadow-lg">
                 <div class="card-header px-1 font-weight-bold py-1 d-flex align-items-center ">
                     <span data-feather="truck" class="mr-2"></span> Current Stock
-                    <inertia-link :href="route('stock.view.request')" class="btn btn-outline-dark btn-sm ml-auto">Stock Request</inertia-link>
+                    <inertia-link :href="route('stock.view.request')" class="btn btn-outline-primary btn-sm ml-auto">Stock Request</inertia-link>
                 </div>
-                <div class="card-body p-2">
+                <div class="card-body p-2 px-3">
                     <carousel :settings="settings" >
                         <slide v-for="product in productCurrentStock" :key="product.id" class="px-2 w-25">
                             <template v-if="product.stock">
-                                <div class="card rounded-xl shadow-sm border-dark text-dark w-100">
+                                <div class="card rounded-xl shadow-sm border-primary text-primary w-100">
                                     <div class="card-header font-weight-bold py-2 text-truncate px-1 small">{{ product.product_name }}</div>
                                     <div class="card-body p-2 d-flex flex-row justify-content-around">
                                         <img :src="product.image" alt="..." width="20" />
@@ -23,7 +23,7 @@
                         </slide>
 
                         <template #addons >
-                            <navigation v-if="productCurrentStock.length > 4"/>
+                            <navigation v-if="productCurrentStock.length > 5"/>
                         </template>
                     </carousel>
                 </div>
@@ -34,12 +34,12 @@
                 <div class="card-header p-2 font-weight-bold">
                     <span data-feather="shopping-bag" class="mr-2"></span> Today's Sales
                 </div>
-                <div class="card-body p-2">
+                <div class="card-body p-2 px-3">
                     <template v-if="sales.length > 0">
                         <carousel :settings="settings" >
                             <slide v-for="sale  in sales" :key="sale.id" class="px-2 w-25">
                                 <template v-if="sale.product.stock">
-                                    <div class="card rounded-xl shadow-sm border-dark text-dark w-100">
+                                    <div class="card rounded-xl shadow-sm border-primary text-primary w-100">
                                         <div class="card-header font-weight-bold py-2 text-truncate px-1 small">{{ sale.product.product_name }}</div>
                                         <div class="card-body p-2 d-flex flex-row justify-content-around">
                                             <img :src="sale.product.image" alt="..." width="20" />
@@ -50,7 +50,7 @@
                             </slide>
 
                             <template #addons >
-                                <navigation v-if="sales.length > 4"/>
+                                <navigation v-if="sales.length > 5"/>
                             </template>
                         </carousel>
                     </template>
@@ -62,7 +62,7 @@
         </div>
     </div>
 
-    <div class="row no-gutters mt-3 shadow-lg" style="max-height: 65vh; overflow: auto; height: 64.6vh;">
+    <div class="row no-gutters mt-3 shadow-lg" style="max-height: 61vh; overflow: auto; height: 61vh;">
         <div>
             <div class="card rounded-0 h-100">
                 <div class="card-header"><span data-feather="user" class="mr-2"></span> Customer Info  </div>
@@ -71,19 +71,19 @@
                         <div class="form-group mb-1" :class="{ 'has-error': v$.form.customer.phone.$errors.length }">
                             <input placeholder="Mobile" class="form-control form-control-sm" id="customer" autocomplete="off" v-model="v$.form.customer.phone.$model" :disabled="Object.keys(carts).length > 0" v-maska="'##########'" @maska="loadCustomer">
                             <template v-for="(error, index) of v$.form.customer.phone.$errors" :key="index">
-                                <small class="text-dark">{{ error.$message }}</small>
+                                <small class="text-primary">{{ error.$message }}</small>
                             </template>
                         </div>
                         <div class="input-group input-group-sm" v-if="!existingCustomer">
                             <input type="text" class="form-control" placeholder="Customer Name" aria-label="Customer Name" aria-describedby="button-addon2" v-model="v$.form.customer.name.$model" >
                             <div class="input-group-append">
-                                <button class="btn btn-outline-dark" type="submit" id="button-addon2">Save</button>
+                                <button class="btn btn-outline-primary" type="submit" id="button-addon2">Save</button>
                             </div>
                         </div>
                             <template v-for="(error, index) of v$.form.customer.name.$errors" :key="index">
-                            <small class="text-dark">{{ error.$message }}</small>
+                            <small class="text-primary">{{ error.$message }}</small>
                         </template>
-                        <h6 v-if="existingCustomer" class="text-dark font-weight-bold text-center my-2">{{ form.customer.name }}</h6>
+                        <h6 v-if="existingCustomer" class="text-primary font-weight-bold text-center my-2">{{ form.customer.name }}</h6>
                     </form>
                 </div>
                 <div class="table-responsive" v-if="Object.keys(carts).length > 0">
@@ -106,7 +106,7 @@
                                 <td class="p-0">
                                     <form  method="POST" class="mr-2 small" @submit.prevent="removeCart($event,cart)">
                                         <input type="hidden" :value="cart.id" name='id' />
-                                        <button class="btn text-dark small p-0" type="submit">x</button>
+                                        <button class="btn text-primary small p-0" type="submit">x</button>
                                     </form>
                                 </td>
                             </tr>
@@ -115,7 +115,7 @@
                 </div>
                 <div class="card-footer p-0 mt-auto" :class="{'d-none':!Object.keys(carts).length}">
                     <inertia-link :href="this.route('cart.clear')" @click="clearCart" type="button" as="button" method="POST" class="btn btn-warning py-0 m-1 small btn-sm px-1"> Clear Cart </inertia-link>
-                    <inertia-link :href="this.route('cart.list')"  type="button" class="btn btn-dark py-0 m-1 small btn-sm px-1"> Generate Bill </inertia-link>
+                    <inertia-link :href="this.route('cart.list')"  type="button" class="btn btn-primary py-0 m-1 small btn-sm px-1"> Generate Bill </inertia-link>
                     <strong class="ml-2 small font-weight-bold"><sup>INR</sup> {{ toDecimal(totalAmount) }}</strong>
                 </div>
             </div>
@@ -141,7 +141,7 @@
                                                         <input type="radio"  :class="['tbName' , 'product_' +product.id+ '_retail_radio' ]" :name="'product_'+product.id+'_radio'" value="retail" data-btn="submit1"   id="customRadioInline1" name="customRadioInline" class="form-check-input" />
                                                         <label class="form-check-label" for="exampleRadios1">
                                                             <small>Retial Rate </small> <br />
-                                                            <span class="badge badge-dark mt-1" style="font-size:9px">{{ (product.rate == null ) ? ' - ' : toDecimal(product.rate.retail_rate) }} <sup v-if="product.rate != null">INR </sup>  {{ ' - ' + product.weight_unit  }} </span>
+                                                            <span class="badge badge-primary mt-1" style="font-size:9px">{{ (product.rate == null ) ? ' - ' : toDecimal(product.rate.retail_rate) }} <sup v-if="product.rate != null">INR </sup>  {{ ' - ' + product.weight_unit  }} </span>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -152,7 +152,7 @@
                                                         <label class="form-check-label" for="exampleRadios1">
                                                             <small>Wholesale </small> <br />
                                                             <template v-if="product.rate != null && product.rate != ''">
-                                                                <span class="badge badge-dark mt-1 font-weight-normal" v-for="range in parseToJSON(product.rate.wholesale_rate)" :key="range.id" style="font-size:9px">{{ toDecimal(range.rate) }} <sup>INR </sup> {{ ' : ' + toDecimal(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }}  {{ product.weight_unit }}</span>
+                                                                <span class="badge badge-primary mt-1 font-weight-normal" v-for="range in parseToJSON(product.rate.wholesale_rate)" :key="range.id" style="font-size:9px">{{ toDecimal(range.rate) }} <sup>INR </sup> {{ ' : ' + toDecimal(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }}  {{ product.weight_unit }}</span>
                                                             </template>
                                                         </label>
                                                     </div>
@@ -166,7 +166,7 @@
                                                     <div class="input-group-append" id="button-addon4">
                                                         <span class="input-group-text">{{product.weight_unit}}</span>
                                                         <span class="input-group-text price">0.00 <sup>INR</sup></span>
-                                                        <button class="btn btn-outline-dark" type="submit" :class="{'cursor-not-allowed': (product.rate == null || disableAddToCartButton(product.id))}" :disabled="product.rate == null || disableAddToCartButton(product.id)">ADD</button>
+                                                        <button class="btn btn-outline-primary" type="submit" :class="{'cursor-not-allowed': (product.rate == null || disableAddToCartButton(product.id))}" :disabled="product.rate == null || disableAddToCartButton(product.id)">ADD</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -190,7 +190,7 @@
                 <div class="accordion  overflow-57vh-auto custom-scrollbar" id="accordionExample" >
                     <div class="card" v-for="(data,index) in purchaseHistory" :key="index">
                         <div class="card-header p-0" id="headingOne">
-                            <ul class="d-flex justify-content-around align-items-center font-weight-bold list-unstyled mb-0 small text-dark">
+                            <ul class="d-flex justify-content-around align-items-center font-weight-bold list-unstyled mb-0 small text-primary">
                                 <li>
                                     <button class="btn btn-link btn-block text-left p-1 collapsed border-0 d-flex align-items-center" type="button" data-toggle="collapse" :data-target="'#collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index">
                                         {{ parseDate(index,'YY/MM/D') }}

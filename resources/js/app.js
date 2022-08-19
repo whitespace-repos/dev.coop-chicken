@@ -43,11 +43,11 @@ createInertiaApp({
             })
             .use(VueLoading,{
                 // Pass props by their camelCased names
-                color: '#bf8a00',
+                color: '#BF8A00',
                 loader: 'dots',
                 width: 50,
                 height: 50,
-                backgroundColor: '#f8f9fa',
+                backgroundColor: '#202123',
                 opacity: 0.6,
                 zIndex: 9999,
             })
@@ -64,8 +64,15 @@ createInertiaApp({
             .component('DatePicker', DatePicker)
             .component('Icon',Icon)
             .mixin({
-                directives: { maska },
-                props:['auth','isLoading'],
+                directives: {
+                                maska,
+                                currency: {
+                                    // directive definition
+                                    mounted(el) {
+                                        el.innerHTML = "&#8377; "+ el.innerHTML;
+                                    }
+                                }
+                },
                 methods: {
                             route,
                             toDecimal : str => Number(str).toFixed(2),
@@ -106,6 +113,10 @@ createInertiaApp({
             feather.replace({ 'aria-hidden': 'true' });
             loader.hide();
         });
+
+        // appInstance.directive('currency', {
+        //     /* ... */
+        //   });
 
         return appInstance;
     },

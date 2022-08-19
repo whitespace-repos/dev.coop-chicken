@@ -23,7 +23,7 @@
                           </template>
                       </div>
                     </div>
-                    <button type="submit" class="btn btn-dark py-0 btn-xs mt-2 w-25 ml-auto float-right"  :disabled="v$.form.weightUnit.$invalid">Add</button>
+                    <button type="submit" class="btn btn-primary py-0 btn-xs mt-2 w-25 ml-auto float-right"  :disabled="v$.form.weightUnit.$invalid">Add</button>
                   </div>
                   <!--  -->
                   <table class="table table-striped table-hover table-sm small-sm">
@@ -38,14 +38,14 @@
                       <tr v-for="unit in weightUnits" :key="unit.id">
                         <td>Weight Unit</td>
                         <td>{{ unit.value +'( '+unit.key + ' )' }}</td>
-                        <td><inertia-link :href="this.route('settings.destroy',unit.id)" method="POST" as="button" :data="{_method:'DELETE'}" class="text-dark"> <span data-feather="trash-2" class="align-text-bottom"></span></inertia-link></td>
+                        <td><inertia-link :href="this.route('settings.destroy',unit.id)" method="POST" as="button" :data="{_method:'DELETE'}" class="text-primary"> <span data-feather="trash-2" class="align-text-bottom"></span></inertia-link></td>
                       </tr>
                     </tbody>
                   </table>
                 </form>
             </div>
             <div class="col-lg-8" :class="{'mx-auto':auth.isSupplier}">
-              <form action="" class="shadow-lg card card-body" method="POST" @submit.prevent="saveProduct">
+              <form action="" class="shadow-lg card card-body text-primary" method="POST" @submit.prevent="saveProduct">
                 <div class="row">
                   <div class="col">
                     <div class="form-group" :class="{ 'has-error': v$.form.product.product_name.$errors.length }">
@@ -151,14 +151,14 @@
 
                   <div class="col-12 text-right">
                       <hr />
-                      <button class="btn btn-dark add-btn btn-sm  " type="submit"><span data-feather="database" class="align-text-bottom mr-1"></span> Add Product</button>
+                      <button class="btn btn-primary add-btn btn-sm  " type="submit"><span data-feather="database" class="align-text-bottom mr-1"></span> Add Product</button>
                   </div>
                 </div>
               </form>
             </div>
             <div class="col-12">
               <div class="card">
-                <div class="card-header border-0 bg-dark text-white"><span data-feather="layers" class="align-text-bottom mr-2"></span> List of Products</div>
+                <div class="card-header border-0 text-primary"><span data-feather="layers" class="align-text-bottom mr-2"></span> List of Products</div>
                 <div class="card-body p-0">
                   <table class="table table-striped table-hover table-sm">
                     <thead>
@@ -174,24 +174,24 @@
                       <tr v-for="product in products" :key="product.id">
                         <td>{{ product.product_name }}</td>
                         <td>
-                            <span class="badge badge-dark font-weight-normal px-3" v-if="product.shops.length == 0">0</span>
-                            <span class="badge badge-dark font-weight-normal mr-1" v-for="shop in product.shops" :key="shop.id">{{ shop.shop_name }}</span>
+                            <span class="badge badge-primary font-weight-normal px-3" v-if="product.shops.length == 0">0</span>
+                            <span class="badge badge-primary font-weight-normal mr-1" v-for="shop in product.shops" :key="shop.id">{{ shop.shop_name }}</span>
                         </td>
                         <td>
-                              <span class="badge badge-dark font-weight-normal" v-if="product.wholesale_weight_range == 0">
+                              <span class="badge badge-primary font-weight-normal" v-if="product.wholesale_weight_range == 0">
                                 {{ "-" }}
                               </span>
-                              <span class="badge badge-dark font-weight-normal ml-1" v-for="range in product.weight_ranges" :key="range.id">{{ toDecimal(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }} {{ product.weight_unit }}</span>
+                              <span class="badge badge-primary font-weight-normal ml-1" v-for="range in product.weight_ranges" :key="range.id">{{ toDecimal(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }} {{ product.weight_unit }}</span>
                         </td>
                         <td>{{ product.weight_unit }}</td>
                         <td>
-                            <a href="javascript:void(0)" class="mr-2" @click="openEditModal(product.id)"><span data-feather="edit-2" class="align-text-bottom text-dark"></span> Edit</a>
+                            <a href="javascript:void(0)" class="mr-2" @click="openEditModal(product.id)"><span data-feather="edit-2" class="align-text-bottom text-primary"></span> Edit</a>
                             <inertia-link :href="this.route('product.destroy',product.id)" as="button" type="button"  method="POST" :data="{_method:'DELETE',status:(product.status == 'Active')?'Inactive':'Active'}" class="ml-2">
                               <span v-if="product.status == 'Active'">
-                                <span data-feather="toggle-left" class="align-text-bottom text-dark"></span>  Make Inactive
+                                <span data-feather="toggle-left" class="align-text-bottom text-primary"></span>  Make Inactive
                               </span>
                               <span v-else>
-                                 <span data-feather="toggle-right" class="align-text-bottom text-dark"></span> Make Active
+                                 <span data-feather="toggle-right" class="align-text-bottom text-primary"></span> Make Active
                               </span>
                             </inertia-link>
                         </td>
@@ -209,7 +209,7 @@
       <div class="modal fade modal-right" id="editModal">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header py-2 text-dark border-dark">
+            <div class="modal-header py-2 text-primary border-primary">
               <h5 class="modal-title d-flex align-items-center" id="staticBackdropLabel"><span data-feather="edit" class="mr-2"></span>Edit Product Detail</h5>
               <a href="javascript:void(0)" @click.prevent="hideModal('editModal')" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -313,7 +313,7 @@
               </div>
               <div class="col-md-12 text-right">
                 <hr />
-                <button class="btn btn-dark px-4 py-1" type="submit"><span data-feather="database" class="align-text-bottom mr-2"></span> Update Product</button>
+                <button class="btn btn-primary px-4 py-1" type="submit"><span data-feather="database" class="align-text-bottom mr-2"></span> Update Product</button>
               </div>
             </div>
           </form>

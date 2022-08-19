@@ -6,7 +6,7 @@
           <h6><span data-feather="users" class="mr-2"></span> Supplier Detail </h6>
         </div>
 
-        <hr class="w-100 border-dark bg-dark "/>
+        <hr class="w-100 border-primary bg-primary "/>
 
 
         <div class="accordion" id="accordionExample">

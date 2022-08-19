@@ -5,7 +5,7 @@
         <h6 class="mb-0"><span data-feather="user" class="align-text-bottom"></span> Add New User</h6>
         <BreezeValidationErrors class="mb-4 " />
         <!--  -->
-        <hr class="border-dark bg-dark border w-100"/>
+        <hr class="border-primary bg-primary border w-100"/>
 
         <form @submit.prevent="submit">
             <div class="card shadow-lg card-body">
@@ -67,7 +67,7 @@
 
                     <div class="form-group col-md-12">
                         <hr />
-                        <button class="btn btn-dark px-3 add-btn btn-sm" type="submit" :disabled="v$.form.$invalid">Add {{form.role}}</button>
+                        <button class="btn btn-primary px-3 add-btn btn-sm" type="submit" :disabled="v$.form.$invalid">Add {{form.role}}</button>
                     </div>
                 </div>
             </div>

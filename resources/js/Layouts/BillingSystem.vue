@@ -7,7 +7,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <h6 class="text-white heading mb-0" style="line-height: 20px;"> {{ 'COOP - ' + $page.props.shop.shop_name }}  <br /> <small class="d-flex align-items-center justify-content-center font-weight-bold"><span data-feather="truck" class="mr-2"></span>{{ $page.props.shop.supplier.name }} </small></h6>
+        <h6 class="text-white heading mb-0" style="line-height: 20px;"> {{ 'COOP - ' + $page.props.shop.shop_name }}  <br /> <small class="d-flex align-items-center justify-content-center font-weight-bold"><span data-feather="truck" class="mr-2"></span>{{ $page.props.auth.user.shop.supplier.name }} </small></h6>
 
         <div class="navbar-nav">
             <div class="nav-item text-nowrap d-flex align-items-center">

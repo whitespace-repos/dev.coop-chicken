@@ -1,3 +1,23 @@
+svg{
+   display: inline-flex;
+   margin: unset;
+ }
+
+ hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid #FFFFFF;
+  background: #FFFFFF;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color:#FFFFFF;
+}
+
 .has-error .form-control[data-validation-icon=false], .has-success .form-control[data-validation-icon=false] {
 	background: none !important;
   }
@@ -218,7 +238,7 @@
 }
 
 .overflow-57vh-auto{
-  height: 57vh;
+  height: 52.8vh;
   overflow: auto;
 }
 

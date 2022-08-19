@@ -37,11 +37,13 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
+                'shop' => (empty($request->user()->shop)) ? [] : $request->user()->shop->supplier,
                 "isSuperAdmin" => (empty($request->user())) ? false : $request->user()->hasRole('Super Admin'),
                 "isAdmin" => (empty($request->user())) ? false : $request->user()->hasRole('Admin'),
                 "isSupplier" => (empty($request->user())) ? false : $request->user()->hasRole('Supplier'),
                 "isEmployee" => (empty($request->user())) ? false : $request->user()->hasRole('Employee'),
             ],
+            'currency' => 'fa6-solid:indian-rupee-sign',
             'isLoading'=>false,
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [

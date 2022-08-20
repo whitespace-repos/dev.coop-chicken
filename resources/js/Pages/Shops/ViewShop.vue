@@ -65,7 +65,7 @@
             </div>
           </div>
         </div>
-        <div class="col-2">
+        <div class="col-auto">
           <div class="card h-100 rounded-0">
             <div class="card-header bg-transparent font-weight-bold text-primary"> <span data-feather="truck" class="mr-2"></span> Current Stock </div>
             <div class="card-body custom-scrollbar p-2"  style="max-height: 32.45em;overflow: auto;">
@@ -108,7 +108,7 @@
         </div>
         <div class="col">
           <!-- Tab Start -->
-          <div class="TabWrapper bg-white">
+          <div class="TabWrapper bg-white border-right border-bottom">
             <ul class="nav nav-tabs  font-weight-bold">
               <li class="nav-item"> <a id="StkReq" class="nav-link active p-2" data-toggle="tab" href="#StockRequest"><span data-feather="truck" class="mr-1"></span>  Stock Request</a> </li>
               <li class="nav-item"> <a id="SndStk" class="nav-link p-2 " data-toggle="tab" href="#SendNewStock"><span data-feather="truck" class="mr-1"></span>  Send New Stock</a> </li>

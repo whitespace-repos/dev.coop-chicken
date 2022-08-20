@@ -1,8 +1,6 @@
 body {
   font-size: .875rem;
   overflow: hidden;
-  color:#202123!important;
-  background:#202123!important;
 }
 
 .feather,
@@ -15,18 +13,6 @@ body {
  * Sidebar
  */
 
-.sidebar {
-  position: fixed;
-  top: 0;
-  /* rtl:raw:
-  right: 0;
-  */
-  bottom: 0;
-  /* rtl:remove */
-  left: 0;
-  z-index: 100; /* Behind the navbar */
-  padding: 48px 0 0; /* Height of navbar */
-}
 
 @media (max-width: 767.98px) {
   .sidebar {
@@ -41,27 +27,8 @@ body {
 }
 
 .sidebar .nav-link {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  height: 4.17em;
-  margin-right: 1.67em;
-  margin-bottom: 2em;
-  margin-left: 1.67em;
-  padding: 0 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 0.83em;
-  background-color: transparent;
-  box-shadow: -4px -4px 10px 0 rgb(19 20 21 / 20%), -4px -4px 8px 0 rgb(19 20 21 / 20%), -4px -4px 8px 0 rgb(45 46 49 / 90%), 4px -4px 8px 0 rgb(19 20 21 / 90%);
-  color: #FFFFFF;
+   color: #FFFFFF;
+   margin-bottom: 0.5em;
 }
 
 .org-shadow{
@@ -90,9 +57,6 @@ body {
 
 .sidebar .nav-link.active {
   color: #FFFFFF;
-  border-left: 0.05em solid #bf8a00;
-  background-color: transparent;
-  box-shadow: inset -1px -1px 2px 0 rgb(13 13 14 / 20%), inset -1px -1px 2px 0 rgb(13 13 14 / 20%), inset -1px -1px 2px 0 rgb(51 53 56 / 90%), inset 1px -1px 3px 1px rgb(13 13 14 / 90%);
 }
 
 .sidebar .nav-link:hover .feather,

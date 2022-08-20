@@ -42,7 +42,7 @@
                     <div class="form-group col-md-4">
                         <label> Role </label>
                         <!-- array of strings or numbers -->
-                        <v-select :options="['Employee', 'Supplier']" :clearable="false" v-model="form.role"  :disabled="!auth.isAdmin" :noDrop="!auth.isAdmin"></v-select>
+                        <v-select :options="['Employee', 'Supplier']" :clearable="false" v-model="form.role"  :disabled="!$page.props.auth.isAdmin" :noDrop="!$page.props.auth.isAdmin"></v-select>
                     </div>
 
 

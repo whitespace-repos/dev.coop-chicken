@@ -9,7 +9,7 @@
         <div class="card card-body shadow-lg">
           <div class="row">
             <div class="form-group col-md-4" >
-              <template v-if="auth.isAdmin">
+              <template v-if="$page.props.auth.isAdmin">
                 <label>Choose Supplier</label>
                 <select v-model="form.shop.supplier_id" class="form-control" @change="loadSupplierProducts">
                   <option :value="supplier.id" v-for="supplier in suppliers" :key="supplier.id">{{ supplier.name }}</option>

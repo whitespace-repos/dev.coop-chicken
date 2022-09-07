@@ -44,6 +44,10 @@
           </div>
         </div>
       </div>
+<!--
+      <input v-model="textCurrency" />
+
+      <span v-currency="textCurrency"></span> -->
     </BreezeAuthenticatedLayout>
 </template>
 
@@ -61,6 +65,7 @@ export default {
     props:['prop_products', 'prop_shops', 'prop_product', 'prop_filterProduct', 'prop_filterDate'],
     data () {
               return {
+                        textCurrency:0,
                         products:this.prop_products,
                         shops:this.prop_shops,
                         product:this.prop_product,

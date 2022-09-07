@@ -23,7 +23,6 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import ToastPlugin from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
-
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 createInertiaApp({
@@ -66,16 +65,26 @@ createInertiaApp({
             .mixin({
                 directives: {
                                 maska,
-                                currency: {
-                                    // directive definition
-                                    mounted(el) {
-                                        el.innerHTML = "&#8377; "+ el.innerHTML;
+                                currency:{
+                                    mounted(el){
+                                        el.innerHTML = "&#8377; "+ Number(el.innerHTML).toFixed(2);
                                     }
                                 }
                 },
                 methods: {
                             route,
                             toDecimal : str => Number(str).toFixed(2),
+                            beep() {
+                                this.playSound("../sound/beep-29.mp3");
+                            },
+                            clearSound() {
+                                this.playSound("../sound/button-21.mp3");
+                            },
+                            playSound(src) {
+                                const sound = new Audio(src);
+                                sound.src = src;
+                                sound.play();
+                            },
                             preserveUrl: url => {
                                                     return  {
                                                                 preserveState: true,

@@ -17,10 +17,14 @@ class PurchaseHistory extends Model
                                 'sold_by',
                                 'shop_id',
                                 'cart',
+                                'customer_id',
+                                'payment_type',
+                                'rest_amount',
+                                'past_due_amount'
     ];
 
 
-    // 
+    //
     public function soldBy(){
         return $this->belongsTo(User::class,'sold_by');
     }
@@ -28,5 +32,9 @@ class PurchaseHistory extends Model
     //
     public function shop(){
         return $this->belongsTo(Shop::class);
+    }
+
+    public function sales(){
+        return $this->hasMany(Sale::class);
     }
 }

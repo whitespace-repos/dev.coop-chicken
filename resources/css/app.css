@@ -259,6 +259,21 @@ svg{
   height: 72vh;
 }
 
+
+@media screen and ( min-height: 700px ) {
+  .billing-screen{
+    height: 80%;
+  }
+}
+@media screen and ( max-height: 699px ) {
+  .billing-screen{
+    height: 68%;
+  }
+}
+.custom-scrollbar{
+  overflow: auto;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
 	width: 3px;
 }

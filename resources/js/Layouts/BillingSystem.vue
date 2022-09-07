@@ -1,5 +1,5 @@
 <template>
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <header class="navbar navbar-dark sticky-top bg-primary flex-md-nowrap p-0 shadow" id="navbar">
         <Link :href="route('make-sale')" class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 py-1">
             <img src="/assets/img/logo-bg.png" alt="logo">
         </Link>
@@ -19,11 +19,13 @@
 
     <!-- Page Content -->
      <!-- Page Content -->
-    <div class="container-fluid" style="max-height: 91.8vh; overflow: auto; height: 93.8vh;" >
-        <main class="pt-3 px-3 pb-2">
+
+    <main class="pt-3 px-3 pb-2" style="height:94vh;overflow:auto">
+        <div class="container-fluid">
             <slot />
-        </main>
-    </div>
+        </div>
+    </main>
+
 </template>
 
 <script>

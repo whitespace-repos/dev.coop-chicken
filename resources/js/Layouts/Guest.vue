@@ -8,7 +8,7 @@ import { Link } from '@inertiajs/inertia-vue3';
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 " v-show="elementVisible">
         <div>
             <Link href="/">
-                <img src="/assets/img/guest-logo.png" alt="logo">
+                <img src="/assets/img/guest-logo.png" alt="logo" />
             </Link>
         </div>
 

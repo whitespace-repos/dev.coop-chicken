@@ -12,9 +12,9 @@
       <form method="POST"  @submit.prevent="addRate" class="font-weight-bold shadow-lg p-3 rounded-lg org-shadow bg-white">
         <div class="row">
           <div class="col-md-8">
-            <div class="form-group">
+            <div class="form-group" :class="{'has-error':v$.form.rate.product_id.$error}">
                 <label> Select Product </label>
-                <select class="form-control" name="product_id" v-model="form.rate.product_id" @change="this.$inertia.get('/rate/'+$event.target.value)">
+                <select class="form-control" name="product_id" v-model="v$.form.rate.product_id.$model" @change="this.$inertia.get('/rate/'+$event.target.value)">
                   <option v-for="product in products" :key="product.id" :value="product.id">{{ product.product_name }}</option>
                 </select>
             </div>
@@ -196,8 +196,9 @@ export default {
                                     rateValidation:helpers.withMessage('Please Enter a Valid Rate',rateValidation),
                                     required
                                 },
-                                range:this.weightRangeValidation
-                      }
+                                range:this.weightRangeValidation,
+                                product_id:{required}
+                      },
                 }
       }
     },

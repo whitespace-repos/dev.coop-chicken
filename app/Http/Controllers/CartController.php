@@ -25,7 +25,6 @@ class CartController extends Controller
     //
     public function cartList()
     {
-
         $cartItems = Cart::getContent();
 
         //
@@ -48,7 +47,8 @@ class CartController extends Controller
         return Inertia::render('Sale/Cart', [
                                                 "carts" => Cart::getContent(),
                                                 "items" => $cartItems->pluck('items'),
-                                                "shop" => $shop
+                                                "shop" => $shop,
+                                                "customer" => empty($cartItems) ? null : collect($cartItems)->first()->attributes->customer
                                         ]);
     }
 
@@ -132,8 +132,32 @@ class CartController extends Controller
 
     public function checkout(Request $request){
         $this->cartItems = Cart::getContent();
+        $customer = Customer::find($request->customer_id);
         $cartItems = Cart::getContent();
         $products = auth()->user()->shop->products;
+        $history = PurchaseHistory::create([
+                    "date" => Carbon::today(),
+                    "total" => $request->total,
+                    "receive" =>$request->receive,
+                    "quantity" => Cart::getContent()->count(),
+                    "sold_by" => auth()->id(),
+                    "customer_id" => $request->customer_id,
+                    "shop_id" => auth()->user()->shop->id,
+                    "cart" => Cart::getContent()->toJson(),
+                    "payment_type" => $request->payment_type,
+                    "past_due_amount" => $customer->due_amount,
+                    "rest_amount" => ($request->payment_type == 'Pending') ? (($customer->due_amount + Cart::getTotal()) - $request->receive) : 0
+        ]);
+
+        if($request->payment_type == 'Pending'){
+            $customer->due_amount = (($customer->due_amount + Cart::getTotal()) - $request->receive);
+            $customer->save();
+        }else{
+            $customer->due_amount = 0;
+            $customer->save();
+        }
+
+
         foreach ($cartItems as $key => $cart) {
             //
             $product = $products->find($cart->attributes->product->id);
@@ -168,21 +192,13 @@ class CartController extends Controller
                         "sold_by" => auth()->id(),
                         "product_id" => $product->id,
                         "customer_id" => $customer->id,
+                        "purchase_history_id" => $history->id,
                         "shop_id" => auth()->user()->shop->id,
                         "cart" => Cart::getContent()->toJson(),
             ]);
 
             //
         }
-        // $history = PurchaseHistory::create([
-        //             "date" => Carbon::today(),
-        //             "total" => $request->total,
-        //             "receive" =>$request->receive,
-        //             "quantity" => Cart::getContent()->count(),
-        //             "sold_by" => auth()->id(),
-        //             "shop_id" => auth()->user()->shop->id,
-        //             "cart" => Cart::getContent()->toJson(),
-        // ]);
         //
         Cart::clear();
         return redirect()->route('make-sale');
@@ -190,7 +206,7 @@ class CartController extends Controller
 
     public function printReceipt(Request $request){
         return view('print')->with([
-                                        "carts" => collect(json_decode($request->carts)),
+                                        "carts" => Cart::getContent()->toJson(),
                                         "request" => $request
                                     ]);
     }

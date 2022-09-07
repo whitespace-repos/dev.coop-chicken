@@ -45,7 +45,7 @@
                 </form>
             </div>
             <div class="col-lg-8" :class="{'mx-auto':auth.isSupplier}">
-              <form action="" class="shadow-lg card card-body text-primary" method="POST" @submit.prevent="saveProduct">
+              <form action="" class="shadow-lg card card-body text-primary font-weight-bold" method="POST" @submit.prevent="saveProduct">
                 <div class="row">
                   <div class="col">
                     <div class="form-group" :class="{ 'has-error': v$.form.product.product_name.$errors.length }">
@@ -124,6 +124,12 @@
                       <label class="form-check checkbox d-flex">
                         <input type="checkbox" v-model="form.product.stock" class="float-left mr-2"/> <span v-if="form.product.stock"> Yes </span><span v-else>No</span>
                       </label>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label>Input Mask</label>
+                      <input v-model="form.product.mask" class="form-control"/>
                     </div>
                   </div>
                 </div>
@@ -216,7 +222,7 @@
               </a>
             </div>
             <div class="modal-body">
-              <form action="" class="small" method="POST" @submit.prevent="updateProduct" enctype="multipart/form-data">
+              <form action="" class="font-weight-bold small" method="POST" @submit.prevent="updateProduct" enctype="multipart/form-data">
                 <div class="row">
                   <div class="col">
                     <div class="form-group" :class="{ 'has-error': v$.form.editProduct.product_name.$errors.length }">
@@ -288,6 +294,13 @@
                   <label class="form-check checkbox">
                     <input type="checkbox" v-model="form.editProduct.stock" style="zoom:2" class="float-left mr-2"/> <span v-if="form.editProduct.stock"> Yes </span><span v-else>No</span>
                   </label>
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="form-group">
+                  <label>Input Mask</label>
+                   <input v-model="form.editProduct.mask" class="form-control"/>
                 </div>
               </div>
             </div>
@@ -367,6 +380,7 @@ export default {
                                             parent_product_id:'',
                                             conversion_rate:0,
                                             default_wholesale_weight:0,
+                                            mask:'#*.##'
                 }),
                 editProduct:this
                                   .$inertia
@@ -388,6 +402,7 @@ export default {
                                                     {from:0,to:0},{from:0,to:0},{from:0,to:50000},
                                           ],
                                           default_wholesale_weight:0,
+                                          mask:'#*.##'
               }),
           },
           selectedProduct:{}

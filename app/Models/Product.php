@@ -22,7 +22,8 @@ class Product extends Model
                             'parent_product_id',
                             'wholesale_weight_range',
                             'default_wholesale_weight',
-                            'supplier_id'
+                            'supplier_id',
+                            'mask'
                         ];
 
      /**

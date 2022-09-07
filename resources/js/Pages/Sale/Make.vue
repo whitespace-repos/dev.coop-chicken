@@ -14,9 +14,9 @@
                             <template v-if="product.stock">
                                 <div class="card rounded-xl shadow-sm border-primary text-primary w-100">
                                     <div class="card-header font-weight-bold py-2 text-truncate px-1 small">{{ product.product_name }}</div>
-                                    <div class="card-body p-2 d-flex flex-row justify-content-around">
-                                        <img :src="product.image" alt="..." width="20" />
-                                        <b>{{ toDecimal(product.association.stock) +' ' + product.weight_unit }}</b>
+                                    <div class="card-body p-2 d-flex flex-row justify-content-center">
+                                        <img :src="product.image" alt="..." width="20" class="mr-2"/>
+                                        <b class="text-truncate">{{ toDecimal(product.association.stock) +' ' + product.weight_unit }}</b>
                                     </div>
                                 </div>
                             </template>
@@ -62,11 +62,11 @@
         </div>
     </div>
 
-    <div class="row no-gutters mt-3 shadow-lg" style="max-height: 61vh; overflow: auto; height: 61vh;">
+    <div class="row no-gutters mt-3 shadow-lg billing-screen">
         <div>
             <div class="card rounded-0 h-100">
-                <div class="card-header"><span data-feather="user" class="mr-2"></span> Customer Info  </div>
-                <div class="p-2 overflow-57vh-auto custom-scrollbar">
+                <div class="card-header"><span data-feather="user" class="mr-2"></span> Customer Info </div>
+                <div class="p-2 overflow-hiddenss33q">
                     <form action="#" method="POST" @submit.prevent="saveCustomerForm">
                         <div class="form-group mb-1" :class="{ 'has-error': v$.form.customer.phone.$errors.length }">
                             <input placeholder="Mobile" class="form-control form-control-sm" id="customer" autocomplete="off" v-model="v$.form.customer.phone.$model" :disabled="Object.keys(carts).length > 0" v-maska="'##########'" @maska="loadCustomer">
@@ -86,7 +86,7 @@
                         <h6 v-if="existingCustomer" class="text-primary font-weight-bold text-center my-2">{{ form.customer.name }}</h6>
                     </form>
                 </div>
-                <div class="table-responsive" v-if="Object.keys(carts).length > 0">
+                <div class="table-responsive custom-scrollbar" v-if="Object.keys(carts).length > 0">
                     <table class="table table-sm table-striped small table-hover">
                         <thead>
                             <tr class="font-weight-bold">
@@ -120,10 +120,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-6">
-                <div class="card rounded-0 border-left-0 border-right-0" v-if="existingCustomer">
+        <div class="col">
+                <div class="card rounded-0 border-left-0 border-right-0 h-100" v-if="existingCustomer">
                     <div class="card-header"> Billing System </div>
-                    <div class="card-body overflow-57vh-auto custom-scrollbar">
+                    <div class="card-body  custom-scrollbar">
                         <div class="row">
                             <div class="col-6" v-for="product in shop.products" :key="product.product_name">
                                 <div class="card shadow mb-3">
@@ -162,7 +162,7 @@
                                             <small class="d-block fs-10 ml-4" v-if="!product.stock">CR : {{ toDecimal(product.conversion_rate) }} <sup> INR </sup></small>
                                             <form action="#" method="POST" class="font-weight-bold mb-0" @submit.prevent="addToCart">
                                                 <div class="input-group input-group-sm">
-                                                    <input  class="form-control" style="width:80px" placeholder="0"  name="weight" v-model="billingWeightInput['product-'+product.id]" @input="calateprice($event,product.wholesale_weight_range)" :data-wholesale-range="(product.rate != null && product.rate != '') ? product.rate.wholesale_rate : []"  :data-retail-rate="(product.rate == null ) ? 0 : product.rate.retail_rate" :data-product="product.product_name" :data-product-id="product.id" :data-wholesale-weight="product.wholesale_weight" autocomplete="off" data-amount="0" data-rate="0" aria-describedby="button-addon4" v-maska="'#*.##'"/>
+                                                    <input  class="form-control" style="width:80px" placeholder="0"  name="weight" v-model="billingWeightInput['product-'+product.id]" @input="calateprice($event,product.wholesale_weight_range)" :data-wholesale-range="(product.rate != null && product.rate != '') ? product.rate.wholesale_rate : []"  :data-retail-rate="(product.rate == null ) ? 0 : product.rate.retail_rate" :data-product="product.product_name" :data-product-id="product.id" :data-wholesale-weight="product.wholesale_weight" autocomplete="off" data-amount="0" data-rate="0" aria-describedby="button-addon4" v-maska="product.mask"/>
                                                     <div class="input-group-append" id="button-addon4">
                                                         <span class="input-group-text">{{product.weight_unit}}</span>
                                                         <span class="input-group-text price">0.00 <sup>INR</sup></span>
@@ -184,49 +184,65 @@
                 </div>
                 <!--  -->
         </div>
-        <div class="col">
-            <div class="card h-100 rounded-0" v-if="Object.keys(purchaseHistory).length > 0 && existingCustomer == true">
-                <h6 class="card-header" style="padding-bottom: 13.2px;"> Purchase History </h6>
-                <div class="accordion  overflow-57vh-auto custom-scrollbar" id="accordionExample" >
-                    <div class="card" v-for="(data,index) in purchaseHistory" :key="index">
-                        <div class="card-header p-0" id="headingOne">
-                            <ul class="d-flex justify-content-around align-items-center font-weight-bold list-unstyled mb-0 small text-primary">
-                                <li>
-                                    <button class="btn btn-link btn-block text-left p-1 collapsed border-0 d-flex align-items-center" type="button" data-toggle="collapse" :data-target="'#collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index">
-                                        {{ parseDate(index,'YY/MM/D') }}
-                                    </button>
-                                </li>
-                                <li> Total : &#8377; {{ toDecimal(sumBy(data, 'total')) }} </li>
-                                <li> Received  : &#8377; {{ toDecimal(sumBy(data, 'receive')) }} </li>
-                            </ul>
+        <div class="col-auto">
+            <template v-if="customer != null">
+                <div class="card h-100 rounded-0" v-if="customer.purchased_history.length > 0 && existingCustomer == true">
+                    <h6 class="card-header" style="padding-bottom: 13.2px;">
+                        <div class="d-flex justify-content-between">
+                            <strong>Purchase History </strong>
+                            <span class="text-danger"><b>Due Amount</b> : &#8377; {{ customer.due_amount }} </span>
                         </div>
+                    </h6>
+                    <div class="accordion   custom-scrollbar" id="accordionExample" >
+                        <div class="card" v-for="(history,index) in customer.purchased_history" :key="index">
+                            <div class="card-header p-0" id="headingOne">
+                                <ul class="d-flex justify-content-around align-items-center font-weight-bold list-unstyled mb-0 small text-primary">
+                                    <li>
+                                        <button class="btn btn-link btn-block text-left p-1 collapsed border-0 d-flex align-items-center" type="button" data-toggle="collapse" :data-target="'#collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index">
+                                            {{ parseDate(history.created_at,'DD-MMM, YY hh:mmA') }}
+                                        </button>
+                                    </li>
+                                    <li style="line-height: 1.2;"  class="mx-3">
+                                        <small class="font-weight-bold">Total &nbsp; &nbsp; &nbsp; : &nbsp;  &#8377; {{ toDecimal(history.total) }} </small> <br />
+                                        <small class="font-weight-bold" v-if="history.past_due_amount > 0">Past Due  :&nbsp;   &#8377; {{ toDecimal(history.past_due_amount) }} </small>
+                                    </li>
 
-                        <div :id="'collapse'+index" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                            <div class="card-body py-1 px-2" style="overflow-y: auto; max-height:8em;">
-                                <table class="table table-striped table-sm table-hover small-sm">
-                                    <thead>
-                                        <tr>
-                                            <th class="border-0 p-0">Product</th>
-                                            <th class="border-0 p-0">quantity</th>
-                                            <th class="border-0 p-0">total</th>
-                                            <th class="border-0 p-0">Receive</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="history in data" :key="history.id" >
-                                            <td class="border-0 p-0">{{ "-" }}</td>
-                                            <td class="border-0 p-0">{{ history.quantity }}</td>
-                                            <td class="border-0 p-0">&#8377; {{ toDecimal(history.total) }} <sup> </sup></td>
-                                            <td class="border-0 p-0">&#8377; {{ toDecimal(history.receive) }} <sup> </sup></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                    <li style="line-height: 1.2;" class="mx-3">
+                                        <small class="font-weight-bold">Grand &nbsp; &nbsp; :&nbsp;   &#8377; {{ toDecimal(history.total + history.past_due_amount) }} </small> <br />
+                                        <small class="font-weight-bold">Received  :&nbsp;   &#8377; {{ toDecimal(history.receive) }} </small>
+                                    </li>
+                                    <li>
+                                        <span class="badge badge-primary mr-2" style="font-size: 12px;" v-if="history.payment_type == 'Pending'">P</span>
+                                        <span class="badge badge-primary mr-2"  style="font-size: 12px;" v-else-if="history.payment_type == 'Discount'">D</span>
+                                        <span class="badge badge-primary mr-2"  style="font-size: 12px;" v-else="history.payment_type == 'Round Off'">R</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div :id="'collapse'+index" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                <div class="card-body p-2" style="overflow-y: auto; max-height:8em;">
+                                    <table class="table table-striped table-sm table-hover small-sm mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="border-0 p-0">Product</th>
+                                                <th class="border-0 p-0">Quantity</th>
+                                                <th class="border-0 p-0">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="sale in history.sales" :key="sale.id" >
+                                                <td class="border-0 p-0">{{ sale.product.product_name }}</td>
+                                                <td class="border-0 p-0">{{ sale.quantity +' '+ sale.product.weight_unit }}</td>
+                                                <td class="border-0 p-0">&#8377; {{ toDecimal(sale.total) }} <sup> </sup></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
+            </template>
             <div class="card h-100 text-center card-body rounded-0" v-else>
                 <img src="/assets/img/blank_img2.png" alt="icon" class=" w-50 m-auto">
                 <h6>No History Available</h6>
@@ -273,7 +289,7 @@ export default {
                   formUrl:"{{ route('customer.store') }}",
                   rate:0,
                   purchaseHistory:[],
-                  customer:'',
+                  customer:null,
                   cartFlag:false,
                   paymentMethod:'EMI',
                   currentStock:[],
@@ -360,9 +376,9 @@ export default {
                             this.existingCustomer = response.data.existingCustomer;
                             if(this.existingCustomer)  {
                                 assignIn(this.form.customer,response.data.customer);
-                                this.purchaseHistory = response.data.purchase_history;
                                 this.$toast.success("Customer Detail Loaded !")
                                 feather.replace({ 'aria-hidden': 'true' });
+                                this.customer = response.data.customer;
                             }else{
                                 this.$toast.warning("Customer not found !")
                             }
@@ -420,9 +436,7 @@ export default {
 
             //
             if(InsufficientStock){
-                $.jGrowl("Insufficient Stock ! Please request for stock", {
-                    theme: 'jGrowl-bg text-white'
-                });
+                this.$toast.warning("Insufficient Stock ! Please request for stock !")
                 return false;
             }
             //
@@ -435,7 +449,8 @@ export default {
                     only: ["carts"],
                     onSuccess: (response) => {
                                     window.history.pushState('data', 'Add to Cart', '/make-sale');
-
+                                    //
+                                    this.beep();
                                     if(prod.stock){
                                         prod.association.stock = prod.association.stock - _this.form.cart.weight;
                                     }else{
@@ -446,6 +461,7 @@ export default {
                                     this.billingWeightInput["product-"+this.form.cart.product] = 0;
                                     $el.closest('form').find(".price").html(parseFloat(0));
                                     $(".product_"+_this.form.cart.product+"_retail_radio").prop("checked",true);
+                                    this.$toast.success("Product added to cart successfully !")
                     },
                 })
           },
@@ -458,6 +474,7 @@ export default {
                     onSuccess: (response) => {
                                     window.history.pushState('data', 'Remove from Cart', '/make-sale');
                                     //
+                                    this.clearSound();
                                     let _this = this;
                                     //
                                     let prod = this.currentStock.find(function(p){ return p.id == item.attributes.product.id; });
@@ -520,6 +537,8 @@ export default {
           },
           clearCart(){
                 let _this = this;
+                this.clearSound();
+                //
                 forIn(this.carts, function(o, k) {
                     _this.currentStock.filter(function(s){
                         if(o.attributes.product.id == s.id){

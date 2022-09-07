@@ -8,6 +8,7 @@ use StockRequest;
 use Shop;
 use App\Models\StockRequestedProduct;
 use Inertia;
+use \Carbon\Carbon;
 
 class Stocks extends Controller
 {

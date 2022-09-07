@@ -31,6 +31,7 @@
         "vue-axios": "^3.4.1",
         "vue-dataset": "^3.4.5",
         "vue-final-modal": "^3.4.4",
+        "vue-html-to-paper": "^1.4.4",
         "vue-loading-overlay": "5.0",
         "vue-select": "^4.0.0-beta.3",
         "vue-toast-notification": "3.0",

@@ -1,5 +1,5 @@
 <template>
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <header class="navbar navbar-dark sticky-top bg-primary  flex-md-nowrap p-0 shadow">
         <Link :href="route('dashboard')" class="navbar-brand col-auto pl-4 pr-5 py-1" style="width:8.9em">
             <img src="/assets/img/logo-bg.png" alt="logo">
         </Link>
@@ -13,9 +13,9 @@
         </div>
     </header>
     <!-- Page Content -->
-    <div class="container-fluid" style="max-height: 91.8vh;overflow: auto;height: 91.8vh;">
+    <div class="container-fluid" style="max-height: 93.8vh;overflow: auto;height: 93.8vh;">
         <div class="row">
-            <nav id="sidebarMenu" class="bg-dark sidebar collapse show px-0 col-auto position-fixed">
+            <nav id="sidebarMenu" class="bg-primary sidebar collapse show px-0 col-auto position-fixed">
                 <div class="pt-3 sidebar-sticky custom-scrollbar font-weight-bold">
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -90,7 +90,7 @@
                 </div>
             </nav>
 
-            <main class="col-auto py-4 ml-auto" style="flex: 0 0 87.33333%;max-width: 87.33333%;">
+            <main class="col-auto py-4 ml-auto" style="flex: 0 0 86.33333%;max-width: 86.33333%;">
                 <slot />
             </main>
         </div>

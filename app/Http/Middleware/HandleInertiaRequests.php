@@ -43,6 +43,7 @@ class HandleInertiaRequests extends Middleware
                 "isSupplier" => (empty($request->user())) ? false : $request->user()->hasRole('Supplier'),
                 "isEmployee" => (empty($request->user())) ? false : $request->user()->hasRole('Employee'),
             ],
+            'currencySymbol' => '&#8377; ',
             'currency' => 'fa6-solid:indian-rupee-sign',
             'isLoading'=>false,
             'ziggy' => function () use ($request) {

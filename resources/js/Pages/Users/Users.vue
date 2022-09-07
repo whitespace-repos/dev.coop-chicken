@@ -15,7 +15,7 @@
           :ds-search-in="['name','phone']"
 
         >
-          <div class="card card-body">
+          <div class="card card-body shadow-lg">
             <div class="row" :data-page-count="ds.dsPagecount">
               <div class="col-md-6 mb-2 mb-md-0">
                 <dataset-show />

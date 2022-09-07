@@ -9,7 +9,7 @@ class Sale extends Model
 {
     use HasFactory;
 
-    
+
     protected $fillable = [
             'date',
             'total',
@@ -18,6 +18,7 @@ class Sale extends Model
             'sold_by',
             'product_id',
             'customer_id',
+            'purchase_history_id',
             'shop_id',
             'cart',
     ];

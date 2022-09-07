@@ -1,9 +1,9 @@
 <template>
     <Head title="Dashboard" />
     <BreezeAuthenticatedLayout>
-        <div class="card">
+        <div class="card" id="summary">
             <div class="row">
-                <div class="col-md-8 cart">
+                <div class="col-7 cart">
                     <div class="title">
                         <div class="row">
                             <div class="col">
@@ -13,45 +13,148 @@
                         </div>
                     </div>
                     <div class="row border-top border-bottom" v-for="cart in carts" :key="cart.id">
-                        <div class="row main align-items-center">
-                            <div class="col-2"><img class="img-fluid" :src="cart.attributes.product.image"></div>
+                        <div class="row main align-items-center py-2">
+                            <div class="col-auto"><img class="img-fluid w-50" :src="cart.attributes.product.image"></div>
                             <div class="col">
                                 <div class="row text-muted">{{ cart.attributes.product.product_name }}</div>
                                 <div class="row">{{ cart.attributes.weight +' '+ cart.attributes.product.weight_unit }}</div>
                             </div>
-                            <div class="col">{{ cart.price }}<sup>INR</sup></div>
+                            <div class="col" v-currency>{{ cart.price }}</div>
                         </div>
                     </div>
 
                     <div class="back-to-shop"><inertia-link :href="route('make-sale')" class="Btn">&leftarrow; Back to shop</inertia-link></div>
                 </div>
-                <div class="col-md-4 summary">
-                    <div>
-                        <h5><b>Summary</b></h5>
+                <div class="col-5 summary">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="m-0"><b>Summary</b></h5>
+                        <span><b>{{ payment_type }} Amount</b> : <span>&#8377;  {{ toDecimal((totalAmount + customer.due_amount ) - receiveAmount) }}</span></span>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col" style="padding-left:0;">ITEMS {{ Object.keys(carts).length }}</div>
-                        <div class="col text-right">{{ totalAmount }} <sup>INR</sup></div>
+                        <div class="col text-right" v-currency>{{ totalAmount }}</div>
                     </div>
-                    <form>
-                        <div class="form-group">
-                            <label class="control-label">Receive Amount </label>
-                            <input type="number" class="form-control" v-model="receiveAmount" placeholder="0"/>
+
+                    <div class="form-group my-4" :class="{'has-error':v$.receiveAmount.$errors.length }">
+                        <label class="control-label">Receive Amount </label>
+                        <input v-maska="'#*.##'" class="form-control m-0" v-model="v$.receiveAmount.$model" placeholder="0"/>
+                        <small v-for="error of v$.receiveAmount.$errors" :key="error.$uid" v-html="error.$message"></small>
+                    </div>
+                    <div class="form-group text-center font-weight-bold">
+                        <div class="custom-control custom-radio custom-control-inline ">
+                            <input type="radio" id="round_off" name="payment_type" v-model="payment_type" class="custom-control-input" value="Round Off">
+                            <label class="custom-control-label cursor-pointer" for="round_off" style="cursor:pointer;">Round Off</label>
                         </div>
-                    </form>
-                    <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
-                        <div class="col">Total Price</div>
-                        <div class="col text-right" :class="{'text-line-through':receiveAmount }">{{ totalAmount }} <sup>INR</sup></div>
+                        <div class="custom-control custom-radio custom-control-inline cursor-pointer">
+                            <input type="radio" id="discount" name="payment_type" v-model="payment_type" class="custom-control-input"  value="Discount">
+                            <label class="custom-control-label cursor-pointer" for="discount" style="cursor:pointer;">Discount</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline cursor-pointer">
+                            <input type="radio" id="pending" name="payment_type" v-model="payment_type" class="custom-control-input"  value="Pending">
+                            <label class="custom-control-label cursor-pointer" for="pending" style="cursor:pointer;">Pending</label>
+                        </div>
                     </div>
-                    <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
-                        <div class="col">Receive Price</div>
-                        <div class="col text-right">{{ receiveAmount }} <sup>INR</sup></div>
-                    </div><inertia-link :href="route('cart.checkout')"  class="btn  btn-primary rounded p-2" method="post" as="button" type="button" :data="{'receive':receiveAmount,'total':totalAmount}" @click="print">Pay</inertia-link>
+
+                    <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 1vh 0;">
+                        <div class="col font-weight-bold">Total Price</div>
+                        <div class="col text-right"  v-currency>{{ totalAmount }}</div>
+                    </div>
+
+                    <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 1vh 0;">
+                        <div class="col font-weight-bold">Past Due Amount</div>
+                        <div class="col text-right" v-currency>{{ customer.due_amount }}</div>
+                    </div>
+
+                    <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 1vh 0;">
+                        <div class="col font-weight-bold">Grand Total</div>
+                        <div class="col text-right"  v-currency>{{toDecimal(totalAmount + customer.due_amount) }}</div>
+                    </div>
+
+                    <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 1vh 0;">
+                        <div class="col font-weight-bold">Receive Price</div>
+                        <div class="col text-right">
+                            &#8377;  {{ toDecimal(receiveAmount) }}
+                        </div>
+                    </div>
+                    <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 1vh 0;" v-if="(payment_type == 'Discount' || payment_type == 'Pending')  && v$.receiveAmount.$invalid == false">
+                        <div class="col font-weight-bold">{{ payment_type }} Amount</div>
+                        <div class="col text-right">
+                            &#8377;  {{ toDecimal((totalAmount + customer.due_amount ) - receiveAmount) }}
+                        </div>
+                    </div>
+
+                    <button class="btn  btn-primary rounded p-2" @click="printAndProceed" :disabled="v$.receiveAmount.$invalid">Pay</button>
                 </div>
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-8  mx-auto">
+                <div class="card my-5" id="receipt-content" style="display:none">
+                    <div class="card-body">
+                        <div class="brand-logo text-center mb-4">
+                            <img src="/assets/img/guest-logo.png" alt="logo" class="mx-auto" width="80"/>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <span>No: {{ `coop-cps-${Math.round(new Date().getTime() / 1000)}` }}</span>
+                            <span class="mr-3">04/09/22 10:00 AM</span>
+                        </div>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Item</th>
+                                    <th>Qty</th>
+                                    <th width="100" class="text-right">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(cart , index) in carts" :key="index">
+                                    <td><kbd style="padding: 0.02rem 0.3rem;">#{{index}}</kbd></td>
+                                    <td>{{ cart.attributes.product.product_name }}</td>
+                                    <td>{{ cart.attributes.weight +' '+ cart.attributes.product.weight_unit }}</td>
+                                    <td v-currency class="text-right">{{ cart.price }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <hr  class="mt-5"/>
+
+                        <div class="ml-2 mr-1 mb-5">
+
+                            <div class="row" style="padding: .4vh 0;">
+                                <div class="col font-weight-bold">Total</div>
+                                <div class="col text-right">&#8377; {{ totalAmount }}</div>
+                            </div>
+
+                            <div class="row" style="padding: .4vh 0;">
+                                <div class="col font-weight-bold">PAY AMOUNT</div>
+                                <div class="col text-right">&#8377; {{ toDecimal(receiveAmount) }}</div>
+                            </div>
+
+                            <div class="row" style="padding: .4vh 0;">
+                                <div class="col font-weight-bold">Past Due Amount</div>
+                                <div class="col text-right">&#8377; {{ customer.due_amount }}</div>
+                            </div>
+
+                            <div class="row" style="padding: .4vh 0;">
+                                <div class="col font-weight-bold">Grand Total</div>
+                                <div class="col text-right">&#8377; {{toDecimal(totalAmount + customer.due_amount) }}</div>
+                            </div>
+
+                            <div class="row" style="padding: .4vh 0;" v-if="payment_type=='Pending' && v$.receiveAmount.$invalid">
+                                <div class="col font-weight-bold">{{ payment_type }} Amount</div>
+                                <div class="col text-right">&#8377; {{ toDecimal(totalAmount-receiveAmount) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="print-area"></div>
     </BreezeAuthenticatedLayout>
 </template>
 
@@ -60,7 +163,8 @@
 import BreezeAuthenticatedLayout from '@/Layouts/BillingSystem.vue'
 import { Head } from '@inertiajs/inertia-vue3'
 import _ from 'lodash'
-
+import useVuelidate from '@vuelidate/core'
+import { required , maxValue, minValue} from '@vuelidate/validators'
 
 
 export default {
@@ -68,14 +172,17 @@ export default {
         BreezeAuthenticatedLayout,
         Head
     },
-    props:['carts','items'],
+    props:['carts','items','customer'],
     data () {
       return {
                 receiveAmount:0,
+                payment_type:"Round Off",
+                customerId:this.customer.id
             }
       },
     mounted(){
       var _this = this;
+      this.receiveAmount = this.totalAmount + this.customer.due_amount;
     },
 
     computed:{
@@ -88,19 +195,37 @@ export default {
             return total;
         }
     },
+    validations() {
+        return {
+                    receiveAmount : {
+                                        maxValue:maxValue(this.totalAmount + this.customer.due_amount),
+                                        minValue:minValue(1) ,
+                                        required
+                                }
+        }
+    },
+    setup () {
+        return { v$: useVuelidate() }
+    },
+
+
     methods: {
         parseToJSON(data){
             return JSON.parse(data);
         },
-        print(){
-            let carts = JSON.stringify(this.carts);
-            let url = this.route('print-receipt')+"?carts="+carts+"&receiveAmount="+this.receiveAmount;
-
-            let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=0,height=0,left=-1000,top=-1000`;
-            var w = window.open(url, 'test', params);
-            w.window.print();
-            w.document.close();
-            return false;
+        printAndProceed() {
+            if(this.v$.receiveAmount.$invalid){
+                this.v$.receiveAmount.$touch();
+                return
+            }
+            //
+            document.getElementById("navbar").style.display="none";
+            document.getElementById("summary").style.display="none";
+            document.getElementById('receipt-content').style.display="block";
+            window.document.title = "COOP Payment Receipt";
+            window.print();
+            //
+            this.$inertia.form({'receive': this.receiveAmount,'total':this.totalAmount,'customer_id':this.customerId,'payment_type':this.payment_type}).post(this.route('cart.checkout'));
         }
     },
 }

@@ -258,7 +258,9 @@
           <div class="modal-content">
             <div class="modal-header py-1 border-primary text-primary d-flex align-items-center">
                 <h6 class="mb-0">Confirm and Modify Stock Detail </h6>
-                <button type="button" class="btn btn-link btn-sm" data-dismiss="modal">&times;</button>
+                <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
             </div>
             <!-- Modal body -->
             <div class="modal-body">
@@ -304,7 +306,9 @@
           <div class="modal-content">
             <div class="modal-header py-2 border-primary text-primary">
                 <h6 class="" v-if="isNotEmpty(selectedRequest)">Review Stock Detail  <small>Actual Payment : {{ selectedRequest.actual_payment }} <sup>INR</sup></small></h6>
-                <button type="button" class="btn btn-link btn-sm" data-dismiss="modal">&times;</button>
+                <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
             </div>
             <!-- Modal body -->
             <div class="modal-body">
@@ -347,9 +351,11 @@
       <div class="modal" id="Add_Product">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header border-primary text-primary py-1 align-items-center">
-                <h6>Add new product to shop</h6>
-                <button type="button" class="btn btn-link btn-sm" data-dismiss="modal">&times;</button>
+            <div class="modal-header border-primary text-primary py-2 align-items-center">
+                <h6 class="mb-0">Add new product to shop</h6>
+                <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
             </div>
             <!-- Modal body -->
             <div class="modal-body">

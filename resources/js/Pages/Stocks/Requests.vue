@@ -139,7 +139,7 @@
                 <div class="modal-content">
                     <div class="modal-header py-3 border-primary text-primary align-items-center">
                         <h6 class="m-0" v-if="isNotEmpty(selectedRequest)">Confirm and Modify Stock Detail <small>Actual Payment : <sub>{{ selectedRequest.actual_payment }} </sub> </small></h6>
-                        <a href="javascript:void(0)" class="close py-0" data-dismiss="modal" aria-label="Close">
+                        <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </a>
                     </div>
@@ -191,7 +191,9 @@
                         <!-- Modal Header -->
                         <div class="modal-header py-2 d-flex align-items-center text-primary border-primary">
                             <h6 class="mb-0"><span data-feather="truck" class="mr-2 "></span> Request Stock</h6>
-                            <button type="button" class="btn btn-sm btn-link text-primary" data-dismiss="modal">&times;</button>
+                            <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </a>
                         </div>
 
                         <!-- Modal body -->
@@ -202,7 +204,7 @@
                                         <li class="list-group-item font-weight-bold small-sm text-truncate px-2"><img  :src="product.image" class="img-fluid mr-2" width="20"/> {{ product.product_name }} <span class="text-primary">({{ toDecimal(product.association.stock) +' '+ product.weight_unit }} )</span></li>
                                         <li class="list-group-item px-2">
                                             <div class="input-group input-group-sm">
-                                                <input min="0" onkeypress="return event.charCode >= 48" class="form-control" placeholder="0" v-model="form.stockRequest.products['product-'+product.id]" v-maska="'#*.##'"/>
+                                                <input min="0" onkeypress="return event.charCode >= 48" class="form-control" placeholder="0" v-model="form.stockRequest.products['product-'+product.id]" v-maska="product.mask"/>
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text" id="inputGroup-sizing-sm">{{ product.weight_unit }}</span>
                                                 </div>

@@ -12,6 +12,8 @@ use Carbon;
 use Sale;
 use Twilio\Rest\Client;
 use Redirect;
+use Illuminate\Support\Facades\Http;
+use Razorpay\Api\Api;
 
 class CartController extends Controller
 {
@@ -214,5 +216,23 @@ class CartController extends Controller
     public function cartTest(){
         $shop = auth()->user()->shop;
         return Inertia::render('Sale/Test',["shop" => $shop ]);
+    }
+
+
+    public function makeOrder(Request $request){
+        //
+        $response = Http::withBasicAuth(env('RAZOR_KEY'), env('RAZOR_SECRET'))
+            ->withHeaders([
+                            'Content-Type' => 'application/json',
+                        ])
+            ->post('https://api.razorpay.com/v1/orders',$request->orderDetail)
+            ->json();
+        //
+        return response()->json($response);
+    }
+
+
+    public function paymentStore(Request $request){
+        dd($request);
     }
 }

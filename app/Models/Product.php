@@ -41,7 +41,11 @@ class Product extends Model
      *
      */
     public function rate(){
-        return $this->hasOne(Rate::class)->where('date', Carbon::today())->where('status','Active');
+        return $this->hasOne(Rate::class)->where('date', Carbon::today())->where('status','Active')->where('type','Regular');
+    }
+
+    public function exceptional_rate(){
+        return $this->hasOne(Rate::class)->where('type',"Exceptional")->where('date', Carbon::today())->where('status','Active');
     }
 
     public function filterRate(){

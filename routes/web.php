@@ -86,7 +86,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('cart/remove', [CartController::class, 'removeCart'])->name('cart.remove');
     Route::post('cart/clear', [CartController::class, 'clearAllCart'])->name('cart.clear');
     Route::post('cart/checkout',[CartController::class,'checkout'])->name('cart.checkout');
-
+    Route::post('exceptional/rate',[Rates::class,'exceptionalRate'])->name('exceptional.rate');
+    Route::post('razorpay/order',[CartController::class,'makeOrder'])->name('razorpay.make.order');
+    Route::post('payment/store',[CartController::class,'paymentStore'])->name('payment.store');
 
 });
 

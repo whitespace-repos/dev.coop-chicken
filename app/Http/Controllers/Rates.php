@@ -152,4 +152,29 @@ class Rates extends Controller
         //
     }
 
+    public function exceptionalRate(Request $request){
+        $product = Product::find($request->product_id);
+        //
+        $productTodayRate = Rate::where( 'date', Carbon::today())
+            ->where('status','Active')
+            ->where('product_id',$product->id)
+            ->where('type','Exceptional')
+            ->first();
+
+        if(!empty($productTodayRate)){
+            $productTodayRate->status = 'Inactive';
+            $productTodayRate->save();
+        }
+        //
+        $rate = new Rate();
+        $rate->date = Carbon::today();
+        $rate->product_id = $request->product_id;
+        $rate->retail_rate = $request->retail_rate;
+        $rate->type = "Exceptional";
+        $rate->wholesale_rate =  collect($request->weightRanges)->toJson();
+        $rate->save();
+        //
+        return redirect()->route('shop.show',$request->shop_id);
+    }
+
 }

@@ -149,7 +149,7 @@ class Products extends Controller
 
 
     public function filterProduct($id){
-        $product = Product::with('rate')->find($id);
+        $product = Product::with('rate','exceptional_rate')->find($id);
         return response()->json(['productRate' => $product]);
     }
 }

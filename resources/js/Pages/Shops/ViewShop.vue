@@ -44,13 +44,13 @@
               <!-------- item 1 -------->
               <template v-if="sales.length > 0">
                 <div class="row">
-                  <div class="col-6">
-                    <div class="card text-primary mb-4 shadow-lg" v-for="sale  in sales" :key="sale.id">
+                  <div class="col-6" v-for="sale  in sales" :key="sale.id">
+                    <div class="card text-primary mb-4 shadow-lg">
                         <ul class="list-group list-group-flush">
                           <li class="list-group-item font-weight-bold text-center">
                             <img  :src="sale.product.image" class="img-fluid mr-2" width="20"/> <span>{{ sale.product.product_name }}</span>
                           </li>
-                          <li class="list-group-item px-1 text-center">
+                          <li class="list-group-item px-1 text-center font-weight-bold">
                                 <span data-feather="shopping-bag" class="mr-1"></span> {{ toDecimal(sale.total_quantity) }} <sup>{{ sale.product.weight_unit }}</sup>
                                 <span data-feather="at-sign" class="mr-1  ml-3"></span> <span v-currency>{{ toDecimal(sale.total_sales) }}</span>
                           </li>
@@ -89,21 +89,81 @@
                 <option v-for="product in shop.products" :key="product.id" :value="product.id">{{ product.product_name }}</option>
               </select>
             </div>
-            <ul class="list-group list-group-horizontal rounded-0" v-if="productRate.rate != null && productRate.rate != ''">
-              <li class="list-group-item rounded-0 w-auto border-left-0 border-top-0 border-bottom-0 px-1">
-                <h6> Wholesale </h6>
-                <p>
-                  <span class="badge badge-primary font-weight-normal d-block my-1" v-for="range in parseToJSON(productRate.rate.wholesale_rate)" :key="range.id" style="font-size:11px" v-currency>{{ toDecimal(range.rate) }} {{ ' : ' + toDecimal(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }} {{ productRate.weight_unit }}</span>
-                </p>
-              </li>
-              <li class="list-group-item rounded-0 border-right-0 border-top-0 border-bottom-0 px-1">
-                <h6>Retail</h6>
-                <p>
-                  <span class="badge badge-primary font-weight-normal d-block" v-currency>{{ toDecimal(productRate.rate.retail_rate) +' '+ productRate.weight_unit }}</span>
-                </p>
-              </li>
-            </ul>
-            <h6 class="text-primary text-center my-4" v-else> Product rate not added yet.</h6>
+            <template v-if="!exceptionalRateFlag">
+              <ul class="list-group list-group-horizontal rounded-0 border-0" v-if="productRate.rate != null && productRate.rate != ''">
+                <li class="list-group-item rounded-0 border-left-0 border-top-0 border-bottom-0 w-100">
+                  <h6> Wholesale </h6>
+                  <p>
+                    <span class="badge badge-primary font-weight-normal d-block my-1" v-for="range in parseToJSON(productRate.rate.wholesale_rate)" :key="range.id" style="font-size:11px">&#8377;  {{ toDecimal(range.rate) }} {{ ' : ' + toDecimal(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }} {{ productRate.weight_unit }}</span>
+                  </p>
+                </li>
+                <li class="list-group-item rounded-0 border-right-0 border-top-0 border-bottom-0 w-auto">
+                  <h6>Retail</h6>
+                  <p>
+                    <span class="badge badge-primary font-weight-normal d-block">&#8377;  {{ toDecimal(productRate.rate.retail_rate) +' '+ productRate.weight_unit }}</span>
+                  </p>
+                </li>
+              </ul>
+
+              <small class="pt-3 px-3 font-weight-bold" v-if="productRate.exceptional_rate != null && productRate.exceptional_rate != ''">Exceptinal Rate</small>
+              <ul class="list-group list-group-horizontal rounded-0 border-bottom-0 border-top" v-if="productRate.exceptional_rate != null && productRate.exceptional_rate != ''">
+                <li class="list-group-item rounded-0 border-left-0 border-top-0 border-bottom-0 w-100">
+                  <h6> Wholesale </h6>
+                  <p>
+                    <span class="badge badge-primary font-weight-normal d-block my-1" v-for="range in parseToJSON(productRate.exceptional_rate.wholesale_rate)" :key="range.id" style="font-size:11px">&#8377;   {{ toDecimal(range.rate) }} {{ ' : ' + toDecimal(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }} {{ productRate.weight_unit }}</span>
+                  </p>
+                </li>
+                <li class="list-group-item rounded-0 border-right-0 border-top-0 border-bottom-0 w-auto">
+                  <h6>Retail</h6>
+                  <p>
+                    <span class="badge badge-primary font-weight-normal d-block">&#8377;  {{ toDecimal(productRate.exceptional_rate.retail_rate) +' '+ productRate.weight_unit }}</span>
+                  </p>
+                </li>
+              </ul>
+              <h6 class="text-primary text-center my-4" v-if="productRate.exceptional_rate == null && productRate.rate == null"> Product rate not added yet.</h6>
+
+              <a href="#" class="btn btn-primary py-0 mx-4 mt-auto mb-4 small btn-sm" @click="exceptionalRateFlag = true">Exceptional Rate</a>
+            </template>
+            <template v-else>
+              <form class="py-2 px-1 h-100" @submit.prevent="saveExceptionalRate">
+                  <div class="form-group mb-4">
+                    <label for="font-weight-bold">Retail Rate</label>
+                    <input v-maska="'#*.##'" class="form-control form-control-sm" placeholder="0.00" v-model="form.exceptionalRate.retail_rate"/>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="font-wegiht-bold">Add Weight Ranges</label>
+                    <div class="d-flex mb-2">
+                      <div>
+                        <div class="form-group mb-0" v-for="(r,i) in form.exceptionalRate.weightRanges" :key="i">
+                            <input class="border-gray border rounded border-bottom-0" v-model="form.exceptionalRate.weightRanges[i].from" v-maska="'#*'" style="width:40px"/>
+                            -
+                            <template v-if="i == form.exceptionalRate.weightRanges.length - 1">
+                              <input type="hidden" class="border-gray border rounded border-bottom-0 mr-1 ml-1" v-model="form.exceptionalRate.weightRanges[i].to" v-maska="'#*'"  style="width:40px"/>
+                              <input class="border-gray border rounded border-bottom-0 mr-1 ml-1" value="MAX" disabled  style="width:40px"/>
+                            </template>
+                            <template v-else>
+                              <input class="border-gray border rounded border-bottom-0  mr-1 ml-1" v-model="form.exceptionalRate.weightRanges[i].to" v-maska="'#*'"  style="width:40px"/>
+                            </template>
+                            :
+
+                            <input class="border-gray border rounded border-bottom-0 mx-2" v-model="form.exceptionalRate.weightRanges[i].rate" v-maska="'#*.##'" placeholder="0.00"  style="width:60px"/>
+                        </div>
+                      </div>
+                      <div>
+                        <a href="javascript:void(0)" class="btn btn-link btn-sm small ml-2 pt-0 align-self-start" @click="addRange(form.exceptionalRate.weightRanges)" v-if="(form.exceptionalRate.weightRanges.length < 3)"> Add </a> <br />
+                        <a href="javascript:void(0)" class="btn btn-link btn-sm small ml-2 pt-0 align-self-start" @click="form.exceptionalRate.weightRanges = []" v-if="(form.exceptionalRate.weightRanges.length > 0)"> Reset</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex justify-content-center mt-5">
+                    <button class="btn btn-sm btn-primary py-0 mr-2" type="submit">Save Rate</button>
+                    <button  class="btn btn-sm btn-outline-secondary py-0" @click="exceptionalRateFlag = false">Cancel</button>
+                  </div>
+              </form>
+            </template>
+
           </div>
         </div>
         <div class="col">
@@ -393,6 +453,7 @@ export default {
     props:['products','shop','users','due_amount','sales'],
     data () {
         return {
+                  exceptionalRateFlag:false,
                   // lodash instance for templates
                   isNil,
                   //
@@ -410,6 +471,10 @@ export default {
                                   products:{},
                                   actual_payment:0,
                                   shop_id:'',
+                        }),
+                        exceptionalRate:this.$inertia.form({
+                            retail_rate:0,
+                            weightRanges:[]
                         })
                   },
                   selectedRequest:null,
@@ -507,6 +572,44 @@ export default {
             this.productRate = response.data.productRate;
             this.$toast.info("Today's Rate loaded")
           })
+        },
+        saveExceptionalRate(){
+          this.form.exceptionalRate
+            .transform((data) => ({
+                ...data,
+                shop_id:this.shop.id,
+                product_id: this.productRate.id,
+              })).post(this.route('exceptional.rate'),{
+                onSuccess:() => {
+                  this.exceptionalRateFlag = false;
+                  this.$toast.success("Exceptional Rate is set for this shop.")
+                },
+            })
+        },
+        addRange(range){
+            let countRange = range.length;
+            switch(countRange) {
+              case 0:
+              // code block
+              range.push({from:10,to:50000,product_id:this.productRate.id});
+              break;
+            case 1:
+              // code block
+              var from = parseInt(range[0].from);
+              var to = range[0].to = from + 100;
+              //
+              range.push({from:(to + 1),to:50000,product_id:this.productRate.id});
+              break;
+            case 2:
+              // code block
+              var from = parseInt(range[1].from);
+              var to = range[1].to = from + 100;
+              //
+              range.push({from:(to + 1),to:50000,product_id:this.productRate.id});
+              break;
+            default:
+              // code block
+          }
         }
     }
 }

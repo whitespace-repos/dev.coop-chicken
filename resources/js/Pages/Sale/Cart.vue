@@ -84,7 +84,9 @@
                         </div>
                     </div>
 
-                    <button class="btn  btn-primary rounded p-2" @click="printAndProceed" :disabled="v$.receiveAmount.$invalid">Pay</button>
+                    <button class="btn  btn-primary rounded p-2 font-weight-bold" @click="printAndProceed" :disabled="v$.receiveAmount.$invalid">Pay Offline</button>
+                    <hr />
+                    <button class="btn  btn-primary rounded p-2 font-weight-bold" @click="payOnline" :disabled="v$.receiveAmount.$invalid">Pay Online</button>
                 </div>
             </div>
         </div>
@@ -162,7 +164,7 @@
 
 import BreezeAuthenticatedLayout from '@/Layouts/BillingSystem.vue'
 import { Head } from '@inertiajs/inertia-vue3'
-import _ from 'lodash'
+import {forEach , _ , assignIn } from 'lodash'
 import useVuelidate from '@vuelidate/core'
 import { required , maxValue, minValue} from '@vuelidate/validators'
 
@@ -175,9 +177,11 @@ export default {
     props:['carts','items','customer'],
     data () {
       return {
+                receiptNo : `coop-cps-${Math.round(new Date().getTime() / 1000)}`,
                 receiveAmount:0,
                 payment_type:"Round Off",
-                customerId:this.customer.id
+                customerId:this.customer.id,
+                orderId:null
             }
       },
     mounted(){
@@ -226,6 +230,74 @@ export default {
             window.print();
             //
             this.$inertia.form({'receive': this.receiveAmount,'total':this.totalAmount,'customer_id':this.customerId,'payment_type':this.payment_type}).post(this.route('cart.checkout'));
+        },
+        payOnline(){
+            let notes = {};
+            forEach(this.carts, function(item) {
+                let value = item.attributes.product.product_name + ' => ₹ ' + item.price +' - '+ item.quantity +' '+ item.attributes.product.weight_unit;
+                let obj = { 'Item' : value };
+                assignIn(notes,obj);
+            });
+            //
+            let order = {
+                receipt:this.receiptNo,
+                amount:this.receiveAmount * 100,
+                currency:'INR',
+                notes : notes
+            };
+            //
+            if(this.orderId != null){
+                var rzp1 = new Razorpay({
+                        "key": "rzp_test_RHigXN4roHTXEx",
+                        "amount": this.receiveAmount,
+                        "currency": "INR",
+                        "name": this.customer.name,
+                        "description": "Items",
+                        "image": "https://dev.coop-chicken.in/assets/img/guest-logo.png",
+                        "order_id": this.orderId,
+                        "callback_url": "http://localhost:8000/payment/store",
+                        redirect: true,
+                        "prefill": {
+                            "name": this.customer.name,
+                            "email": this.customer.phone+'@coop-chicken.in',
+                            "contact": this.customer.phone
+                        },
+                        "notes": {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    });
+                rzp1.open();
+                //
+            }else{
+                this.axios.post(this.route('razorpay.make.order'),{orderDetail : order }).then(response => {
+                    var rzp1 = new Razorpay({
+                        "key": "rzp_test_RHigXN4roHTXEx",
+                        "amount": this.receiveAmount,
+                        "currency": "INR",
+                        "name": this.customer.name,
+                        "description": "Items",
+                        "image": "https://dev.coop-chicken.in/assets/img/guest-logo.png",
+                        "order_id": response.data.id,
+                        "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+                        "prefill": {
+                            "name": this.customer.name,
+                            "email": this.customer.phone+'@coop-chicken.in',
+                            "contact": this.customer.phone
+                        },
+                        "notes": {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    });
+                    rzp1.open();
+                    preventDefault();
+                });
+            }
         }
     },
 }

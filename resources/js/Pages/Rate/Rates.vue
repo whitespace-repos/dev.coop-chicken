@@ -60,6 +60,7 @@
                       <th>Wholesale Rate</th>
                       <th>Retail Rate</th>
                       <th>Status</th>
+                      <th>Type</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -78,11 +79,12 @@
                         </td>
                         <td> <span class="badge badge-primary font-weight-normal "><icon :icon="$page.props.currency" />  {{  toDecimal(r.retail_rate) }} {{ " / "+ r.product.weight_unit }} </span> </td>
                         <td> <span class="badge badge-primary font-weight-normal ">{{ r.status }} </span> </td>
+                        <td> <span class="badge badge-primary font-weight-normal ">{{ r.type }} </span> </td>
                       </tr>
                     </template>
                     <template v-else>
                       <tr>
-                        <td colspan="5" class="p-3 text-center"> No Record Found.</td>
+                        <td colspan="6" class="p-3 text-center"> No Record Found.</td>
                       </tr>
                     </template>
                   </tbody>

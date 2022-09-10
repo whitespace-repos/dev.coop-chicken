@@ -22,7 +22,7 @@
                             <div class="col" v-currency>{{ cart.price }}</div>
                         </div>
                     </div>
-
+                    {{ orderId }}
                     <div class="back-to-shop"><inertia-link :href="route('make-sale')" class="Btn">&leftarrow; Back to shop</inertia-link></div>
                 </div>
                 <div class="col-5 summary">
@@ -181,7 +181,8 @@ export default {
                 receiveAmount:0,
                 payment_type:"Round Off",
                 customerId:this.customer.id,
-                orderId:null
+                orderId:null,
+                paymentId:null,
             }
       },
     mounted(){
@@ -229,9 +230,9 @@ export default {
             window.document.title = "COOP Payment Receipt";
             window.print();
             //
-            this.$inertia.form({'receive': this.receiveAmount,'total':this.totalAmount,'customer_id':this.customerId,'payment_type':this.payment_type}).post(this.route('cart.checkout'));
+            this.$inertia.form({"payment_id":this.paymentId,'receive': this.receiveAmount,'total':this.totalAmount,'customer_id':this.customerId,'payment_type':this.payment_type}).post(this.route('cart.checkout'));
         },
-        payOnline(){
+        payOnline(e){
             let notes = {};
             forEach(this.carts, function(item) {
                 let value = item.attributes.product.product_name + ' => ₹ ' + item.price +' - '+ item.quantity +' '+ item.attributes.product.weight_unit;
@@ -239,65 +240,33 @@ export default {
                 assignIn(notes,obj);
             });
             //
-            let order = {
-                receipt:this.receiptNo,
-                amount:this.receiveAmount * 100,
-                currency:'INR',
-                notes : notes
+            var _this = this;
+            var options = {
+                "receipt":this.receiptNo,
+                "key": "rzp_test_RHigXN4roHTXEx",
+                "amount": this.receiveAmount * 100,
+                "name": this.customer.name,
+                "description": "A Wild Sheep Chase is the third novel by Japanese author Haruki Murakami",
+                "image": "https://dev.coop-chicken.in/assets/img/guest-logo.png",
+                "prefill": {
+                    "name": this.customer.name,
+                    "email": this.customer.phone+'@coop-chicken.in',
+                    "contact": this.customer.phone
+                },
+                "notes": notes,
+                "handler": function (response){
+                    _this.paymentId = response.razorpay_payment_id;
+                    _this.$toast.success("Payment done successfully.");
+                    _this.printAndProceed();
+                },
+                "modal": {
+                    "ondismiss": function(){
+                        _this.$toast.success("Payment not done please try again or pay offline.");
+                    }
+                }
             };
-            //
-            if(this.orderId != null){
-                var rzp1 = new Razorpay({
-                        "key": "rzp_test_RHigXN4roHTXEx",
-                        "amount": this.receiveAmount,
-                        "currency": "INR",
-                        "name": this.customer.name,
-                        "description": "Items",
-                        "image": "https://dev.coop-chicken.in/assets/img/guest-logo.png",
-                        "order_id": this.orderId,
-                        "callback_url": "http://localhost:8000/payment/store",
-                        redirect: true,
-                        "prefill": {
-                            "name": this.customer.name,
-                            "email": this.customer.phone+'@coop-chicken.in',
-                            "contact": this.customer.phone
-                        },
-                        "notes": {
-                            "address": "Razorpay Corporate Office"
-                        },
-                        "theme": {
-                            "color": "#3399cc"
-                        }
-                    });
-                rzp1.open();
-                //
-            }else{
-                this.axios.post(this.route('razorpay.make.order'),{orderDetail : order }).then(response => {
-                    var rzp1 = new Razorpay({
-                        "key": "rzp_test_RHigXN4roHTXEx",
-                        "amount": this.receiveAmount,
-                        "currency": "INR",
-                        "name": this.customer.name,
-                        "description": "Items",
-                        "image": "https://dev.coop-chicken.in/assets/img/guest-logo.png",
-                        "order_id": response.data.id,
-                        "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
-                        "prefill": {
-                            "name": this.customer.name,
-                            "email": this.customer.phone+'@coop-chicken.in',
-                            "contact": this.customer.phone
-                        },
-                        "notes": {
-                            "address": "Razorpay Corporate Office"
-                        },
-                        "theme": {
-                            "color": "#3399cc"
-                        }
-                    });
-                    rzp1.open();
-                    preventDefault();
-                });
-            }
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
         }
     },
 }

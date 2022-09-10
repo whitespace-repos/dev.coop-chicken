@@ -148,6 +148,8 @@ class CartController extends Controller
                     "cart" => Cart::getContent()->toJson(),
                     "payment_type" => $request->payment_type,
                     "past_due_amount" => $customer->due_amount,
+                    "payment_id" => $request->payment_id,
+                    "payment_method" => ($request->payment_id != null) ? 'Online' : 'Offline',
                     "rest_amount" => ($request->payment_type == 'Pending') ? (($customer->due_amount + Cart::getTotal()) - $request->receive) : 0
         ]);
 

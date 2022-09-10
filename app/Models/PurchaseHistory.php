@@ -20,7 +20,9 @@ class PurchaseHistory extends Model
                                 'customer_id',
                                 'payment_type',
                                 'rest_amount',
-                                'past_due_amount'
+                                'past_due_amount',
+                                'payment_id',
+                                'payment_method'
     ];
 
 

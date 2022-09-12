@@ -156,6 +156,7 @@
         </div>
 
         <div id="print-area"></div>
+        <button class="btn btn-primary btn-sm" @click="confirmation">COnfirm</button>
     </BreezeAuthenticatedLayout>
 </template>
 
@@ -214,6 +215,10 @@ export default {
 
 
     methods: {
+        async confirmation(){
+            await this.$confirm({ title: "Are you sure?", description: "This action is irreversible."})
+	        .then(() => this.destroy());
+        },
         parseToJSON(data){
             return JSON.parse(data);
         },
@@ -245,8 +250,7 @@ export default {
                 "key": "rzp_test_RHigXN4roHTXEx",
                 "amount": this.receiveAmount * 100,
                 "name": this.customer.name,
-                "description": "A Wild Sheep Chase is the third novel by Japanese author Haruki Murakami",
-                "image": "https://dev.coop-chicken.in/assets/img/guest-logo.png",
+                "description": "Checkout",
                 "prefill": {
                     "name": this.customer.name,
                     "email": this.customer.phone+'@coop-chicken.in',

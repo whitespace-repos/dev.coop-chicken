@@ -107,7 +107,6 @@ class Stocks extends Controller
             foreach ($shop->products as $key => $product) {
                 if(!empty($request->products['product-'.$product->id])){
                     StockRequestedProduct::create([
-                        "date" => Carbon::now(),
                         "stock_request_id" => $stockRequest->id,
                         "product_id" => $product->id,
                         "stock_request" => $request->products['product-'.$product->id],
@@ -181,6 +180,7 @@ class Stocks extends Controller
             $shop = auth()->user()->shop;
             $stockRequest = StockRequest::find($id);
             $stockRequest->status = 'Received';
+            $stockRequest->payment_id = $request->payment_id;
             $stockRequest->save();
             //
             foreach($stockRequest->requested_products as $product){

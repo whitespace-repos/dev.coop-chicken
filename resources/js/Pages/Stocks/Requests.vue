@@ -138,7 +138,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header py-3 border-primary text-primary align-items-center">
-                        <h6 class="m-0" v-if="isNotEmpty(selectedRequest)">Confirm and Modify Stock Detail <small>Actual Payment : <sub>{{ selectedRequest.actual_payment }} </sub> </small></h6>
+                        <h6 class="m-0" v-if="isNotEmpty(selectedRequest)">Confirm and Modify Stock Detail <small>Actual Payment : <sub  v-currency>{{ selectedRequest.actual_payment }} </sub> </small></h6>
                         <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </a>
@@ -229,7 +229,7 @@
 <script>
 import BreezeAuthenticatedLayout from '@/Layouts/BillingSystem.vue'
 import { Head } from '@inertiajs/inertia-vue3'
-import _ from 'lodash';
+import {_,assignIn,forEach} from 'lodash';
 import moment from 'moment'
 import { Link } from '@inertiajs/inertia-vue3';
 
@@ -243,12 +243,17 @@ export default {
     props:['products','shop','carts'],
     data () {
       return {
+                receiptNo : `coop-cps-${Math.round(new Date().getTime() / 1000)}`,
+                shopName:this.$page.props.shop.shop_name,
+                contact:this.$page.props.shop.phone,
+                email:this.$page.props.shop.phone+'@coop-chicken.in',
                 form:{
                     paymentOptions:this.$inertia.form({
                                                 payment_method:'Pay When Stock Received'
                     }),
                     receiveStock:this.$inertia.form({
-                                receive_stocks:{}
+                                receive_stocks:{},
+                                payment_id:null
                     }),
                     stockRequest : this
                                 .$inertia
@@ -281,12 +286,47 @@ export default {
                 })
         },
         ReceiveStockOnShop(id){
-            this.form.receiveStock.post(this.route('received.stock',id), {
-                onSuccess: (response) => {
-                                    this.form.receiveStock.reset();
-                                    $("#receiveStockConfirmModal").modal("hide");
+            let notes = { "Stock ID" : this.selectedRequest.id };
+            //
+            var _this = this;
+            let shopName = this.shopName;
+            let email = this.email;
+            let contact = this.contact;
+            //
+            var options = {
+                "receipt":this.receiptNo,
+                "key": "rzp_test_RHigXN4roHTXEx",
+                "amount": this.selectedRequest.actual_payment * 100,
+                "name": shopName,
+                "description": "Recieve Stock",
+                "prefill": {
+                    "name": shopName,
+                    "email": email,
+                    "contact": contact
                 },
-            })
+                "notes": notes,
+                "handler": function (response){
+                    _this.payment_id = response.razorpay_payment_id;
+                    _this.$toast.success("Payment done successfully.");
+                    //
+                    _this.form.receiveStock.payment_id = response.razorpay_payment_id;
+                    console.log(_this.form.receiveStock);
+                    _this.form.receiveStock.post(_this.route('received.stock',id), {
+                        onSuccess: () => {
+                                _this.form.receiveStock.reset();
+                        },
+                    })
+
+                },
+                "modal": {
+                    "ondismiss": function(){
+                        _this.$toast.warning("Payment not done please try again.");
+                    }
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+            $("#receiveStockConfirmModal").modal("hide");
         },
         isEmpty:function(o){
           return _.isNil(o);

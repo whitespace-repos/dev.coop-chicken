@@ -22,7 +22,8 @@ class StockRequest extends Model
                             'total_stock_wastage',
                             'actual_payment',
                             'payment_received',
-                            'date'
+                            'date',
+                            'payment_id'
     ];
 
 

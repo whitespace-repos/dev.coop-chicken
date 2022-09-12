@@ -16,8 +16,7 @@ return new class extends Migration
         Schema::table('purchase_histories', function (Blueprint $table) {
             //
             $table->enum("payment_type",['Discount','Round Off','Pending'])->default('Round Off');
-            $table->bigInteger('customer_id')->unsigned();
-            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
+            $table->foreignId('customer_id')->nullable()->constrained('customers');
         });
     }
 

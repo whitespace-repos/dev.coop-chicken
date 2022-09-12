@@ -20,7 +20,7 @@ class Rates extends Controller
     {
         //
         $rates = Rate::where( 'date', ($request->has('date')) ? $request->date : Carbon::today())
-                        ->with('product.weightRanges')
+                        ->with('product.weightRanges','shop')
                         ->whereRelation('product','supplier_id',auth()->id())
                         ->where(function ($query) use($request) {
                             ($request->has("date")) ?
@@ -172,6 +172,7 @@ class Rates extends Controller
         $rate->retail_rate = $request->retail_rate;
         $rate->type = "Exceptional";
         $rate->wholesale_rate =  collect($request->weightRanges)->toJson();
+        $rate->shop_id = $request->shop_id;
         $rate->save();
         //
         return redirect()->route('shop.show',$request->shop_id);

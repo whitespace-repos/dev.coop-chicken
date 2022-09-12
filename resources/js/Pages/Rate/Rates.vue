@@ -60,13 +60,12 @@
                       <th>Wholesale Rate</th>
                       <th>Retail Rate</th>
                       <th>Status</th>
-                      <th>Type</th>
                     </tr>
                   </thead>
                   <tbody>
                     <template v-if="rates.length > 0">
                       <tr v-for="r in rates" :key="r.id">
-                        <td>{{ r.product.product_name }}</td>
+                        <td>{{ r.product.product_name }} <sup v-if="r.shop" class="font-weight-bold text-secondary">( {{ r.shop.shop_name }} )</sup></td>
                         <td>{{ r.date }}</td>
                         <td>
                           <template v-if="r.wholesale_rate != null && r.wholesale_rate != '[]'">
@@ -78,8 +77,7 @@
                           </template>
                         </td>
                         <td> <span class="badge badge-primary font-weight-normal "><icon :icon="$page.props.currency" />  {{  toDecimal(r.retail_rate) }} {{ " / "+ r.product.weight_unit }} </span> </td>
-                        <td> <span class="badge badge-primary font-weight-normal ">{{ r.status }} </span> </td>
-                        <td> <span class="badge badge-primary font-weight-normal ">{{ r.type }} </span> </td>
+                        <td> <span class="badge badge-primary font-weight-normal ">{{ r.status }} - {{ r.type }} </span> </td>
                       </tr>
                     </template>
                     <template v-else>
@@ -161,7 +159,7 @@ export default {
 
 
     },
-    props:['products','selectedProduct','rates'],
+    props:['products','selectedProduct','rates','shop_id'],
 
     data(){
         return {
@@ -173,7 +171,8 @@ export default {
                                             range:{},
                                             retail_rate:0,
                                             wholesale_rate:0,
-                                            default_wholesale_weight:0
+                                            default_wholesale_weight:0,
+                                            shop_id:this.shop_id
                           }),
                         selectedRate:this
                                   .$inertia
@@ -183,7 +182,8 @@ export default {
                                             product:{product_name:''},
                                             range:{},
                                             retail_rate:0,
-                                            wholesale_rate:0
+                                            wholesale_rate:0,
+                                            shop_id:this.shop_id
                           }),
                 },
                 _token:'',

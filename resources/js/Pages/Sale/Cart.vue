@@ -1,7 +1,7 @@
 <template>
     <Head title="Dashboard" />
     <BreezeAuthenticatedLayout>
-        <div class="card" id="summary">
+        <div class="card mb-4" id="summary">
             <div class="row">
                 <div class="col-7 cart">
                     <div class="title">
@@ -22,10 +22,9 @@
                             <div class="col" v-currency>{{ cart.price }}</div>
                         </div>
                     </div>
-                    {{ orderId }}
                     <div class="back-to-shop"><inertia-link :href="route('make-sale')" class="Btn">&leftarrow; Back to shop</inertia-link></div>
                 </div>
-                <div class="col-5 summary">
+                <div class="col-5 summary bg-secondary text-white">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="m-0"><b>Summary</b></h5>
                         <span><b>{{ payment_type }} Amount</b> : <span>&#8377;  {{ toDecimal((totalAmount + customer.due_amount ) - receiveAmount) }}</span></span>
@@ -261,7 +260,7 @@ export default {
                 },
                 "modal": {
                     "ondismiss": function(){
-                        _this.$toast.success("Payment not done please try again or pay offline.");
+                        _this.$toast.warning("Payment not done please try again or pay offline.");
                     }
                 }
             };

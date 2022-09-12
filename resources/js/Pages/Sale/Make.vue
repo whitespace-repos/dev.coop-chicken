@@ -211,10 +211,14 @@
                                         <small class="font-weight-bold">Grand &nbsp; &nbsp; :&nbsp;   &#8377; {{ toDecimal(history.total + history.past_due_amount) }} </small> <br />
                                         <small class="font-weight-bold">Received  :&nbsp;   &#8377; {{ toDecimal(history.receive) }} </small>
                                     </li>
-                                    <li>
-                                        <span class="badge badge-primary mr-2" style="font-size: 12px;" v-if="history.payment_type == 'Pending'">P</span>
-                                        <span class="badge badge-primary mr-2"  style="font-size: 12px;" v-else-if="history.payment_type == 'Discount'">D</span>
-                                        <span class="badge badge-primary mr-2"  style="font-size: 12px;" v-else="history.payment_type == 'Round Off'">R</span>
+                                    <li style="line-height: 1.2;">
+                                        <div class="d-flex flex-column text-center">
+                                            <small class="font-weight-bold" v-if="isNil(history.payment_id)">Offline</small>
+                                            <small class="font-weight-bold text-secondary" v-else>Online</small>
+                                            <span class="badge badge-primary mx-auto" style="font-size: 8px;margin-top: 2px;" v-if="history.payment_type == 'Pending'">P</span>
+                                            <span class="badge badge-primary mx-auto"  style="font-size: 8px;margin-top: 2px;" v-else-if="history.payment_type == 'Discount'">D</span>
+                                            <span class="badge badge-primary mx-auto"  style="font-size: 8px;margin-top: 2px;" v-else="history.payment_type == 'Round Off'">R</span>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -275,6 +279,7 @@ export default {
     props:['products','shop','carts','sales'],
     data () {
       return {
+                isNil,
                 sumBy,
                 phoneMaskComplete:false,
                 showModal: false,
@@ -493,8 +498,8 @@ export default {
                 product = $el.data('product'),
                 productId = $el.data('productId'),
                 prod = this.shop.products.find(function(p){ return p.id == productId; }),
-                orignalWeight = parseInt($el.val()),
-                weight = (prod.stock) ? parseInt($el.val()) : ( parseInt($el.val()) / prod.conversion_rate ),
+                orignalWeight = parseFloat($el.val()),
+                weight = (prod.stock) ? parseFloat($el.val()) : ( parseFloat($el.val()) / prod.conversion_rate ),
                 wholesale = (wholesale_weight_range) ? find($el.data('wholesaleRange'), function(r) { return  (r.from <= weight && weight <= r.to) ; }) : null,
                 retail = $el.data('retailRate'),
                 rate = (isNaN(wholesale) || isNil(wholesale)) ? parseFloat(retail) : parseFloat(wholesale.rate),

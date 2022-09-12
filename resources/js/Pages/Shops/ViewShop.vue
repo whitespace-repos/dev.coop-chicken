@@ -85,7 +85,7 @@
           <div class="card h-100 rounded-0">
             <div class="card-header font-weight-bold text-primary d-flex align-items-center p-1">
               <span data-feather="activity" class="mr-2"></span>  Today's Rate
-              <select class="form-control form-control-sm w-50 ml-auto" aria-label="Default select example" data-live-search="false" @change="filterProduct($event.target.value)">
+              <select class="form-control form-control-sm w-50 ml-auto" aria-label="Default select example" data-live-search="false" @change="filterProduct($event.target.value)" ref="filterProductForTodayRate">
                 <option v-for="product in shop.products" :key="product.id" :value="product.id">{{ product.product_name }}</option>
               </select>
             </div>
@@ -474,6 +474,7 @@ export default {
                         }),
                         exceptionalRate:this.$inertia.form({
                             retail_rate:0,
+                            shop_id:this.shop.id,
                             weightRanges:[]
                         })
                   },
@@ -571,6 +572,7 @@ export default {
           this.axios.get(this.route('filter.product',id)).then(response => {
             this.productRate = response.data.productRate;
             this.$toast.info("Today's Rate loaded")
+            this.exceptionalRateFlag = false;
           })
         },
         saveExceptionalRate(){
@@ -585,6 +587,11 @@ export default {
                   this.$toast.success("Exceptional Rate is set for this shop.")
                 },
             })
+            //
+            setTimeout(() => {
+                this.filterProduct(this.productRate.id);
+            }, 2000);
+
         },
         addRange(range){
             let countRange = range.length;

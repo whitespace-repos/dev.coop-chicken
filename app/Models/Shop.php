@@ -73,4 +73,8 @@ class Shop extends Model
     public function supplier(){
         return $this->belongsTo(User::class,'supplier_id');
     }
+
+    public function exceptionalRate(){
+        return $this->hasMany(Rate::class)->where('type',"Exceptional")->where('date', Carbon::today())->where('status','Active');
+    }
 }

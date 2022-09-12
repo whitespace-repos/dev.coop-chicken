@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
+        Schema::table('rates', function (Blueprint $table) {
             //
-            $table->foreignId('purchase_history_id')->constrained('purchase_histories');
+            $table->foreignId('shop_id')->nullable()->constrained('shops');
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
+        Schema::table('rates', function (Blueprint $table) {
             //
         });
     }

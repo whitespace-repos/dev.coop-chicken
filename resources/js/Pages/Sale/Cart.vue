@@ -156,7 +156,6 @@
         </div>
 
         <div id="print-area"></div>
-        <button class="btn btn-primary btn-sm" @click="confirmation">COnfirm</button>
     </BreezeAuthenticatedLayout>
 </template>
 
@@ -168,11 +167,10 @@ import {forEach , _ , assignIn } from 'lodash'
 import useVuelidate from '@vuelidate/core'
 import { required , maxValue, minValue} from '@vuelidate/validators'
 
-
 export default {
     components: {
         BreezeAuthenticatedLayout,
-        Head
+        Head,
     },
     props:['carts','items','customer'],
     data () {
@@ -215,10 +213,6 @@ export default {
 
 
     methods: {
-        async confirmation(){
-            await this.$confirm({ title: "Are you sure?", description: "This action is irreversible."})
-	        .then(() => this.destroy());
-        },
         parseToJSON(data){
             return JSON.parse(data);
         },
@@ -227,14 +221,34 @@ export default {
                 this.v$.receiveAmount.$touch();
                 return
             }
+            let _this = this;
+            let confirm = $.confirm({
+                title: 'Confirm!',
+                theme: 'supervan',
+                content: 'You are recieving ( &#8377; '+_this.receiveAmount+' ) amount. Please confirm before proceed .',
+                buttons: {
+                    confirm:{
+                                text: 'Yes , I Confirmed',
+                                btnClass: 'btn-dark',
+                                action:  function () {
+                                                        //
+                                                        confirm.close();
+                                                        setTimeout(function () {
+                                                            //
+                                                            document.getElementById("navbar").style.display="none";
+                                                            document.getElementById("summary").style.display="none";
+                                                            document.getElementById('receipt-content').style.display="block";
+                                                            window.document.title = "COOP Payment Receipt";
+                                                            window.print();
+                                                            //
+                                                            _this.$inertia.form({"payment_id":_this.paymentId,'receive': _this.receiveAmount,'total':_this.totalAmount,'customer_id':_this.customerId,'payment_type':_this.payment_type}).post(_this.route('cart.checkout'));
+                                                        } , 1000)
+                                }
+                    },
+                    cancel: function () {}
+                }
+            });
             //
-            document.getElementById("navbar").style.display="none";
-            document.getElementById("summary").style.display="none";
-            document.getElementById('receipt-content').style.display="block";
-            window.document.title = "COOP Payment Receipt";
-            window.print();
-            //
-            this.$inertia.form({"payment_id":this.paymentId,'receive': this.receiveAmount,'total':this.totalAmount,'customer_id':this.customerId,'payment_type':this.payment_type}).post(this.route('cart.checkout'));
         },
         payOnline(e){
             let notes = {};

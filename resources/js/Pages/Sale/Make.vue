@@ -123,6 +123,7 @@
         <div class="col">
                 <div class="card rounded-0 border-left-0 border-right-0 h-100" v-if="existingCustomer">
                     <div class="card-header"> Billing System </div>
+                    <button @click="test">Test</button>
                     <div class="card-body  custom-scrollbar">
                         <div class="row">
                             <div class="col-6" v-for="product in shop.products" :key="product.product_name">
@@ -184,7 +185,7 @@
                 </div>
                 <!--  -->
         </div>
-        <div class="col-auto">
+        <div class="col-auto w-30">
             <template v-if="customer != null">
                 <div class="card h-100 rounded-0" v-if="customer.purchased_history.length > 0 && existingCustomer == true">
                     <h6 class="card-header" style="padding-bottom: 13.2px;">
@@ -194,53 +195,71 @@
                         </div>
                     </h6>
                     <div class="accordion   custom-scrollbar" id="accordionExample" >
-                        <div class="card" v-for="(history,index) in customer.purchased_history" :key="index">
+                        <div class="card  border-0 rounded-0" v-for="(historyArr,key) in groupBy(customer.purchased_history,'date')" :key="key">
                             <div class="card-header p-0" id="headingOne">
                                 <ul class="d-flex justify-content-around align-items-center font-weight-bold list-unstyled mb-0 small text-primary">
                                     <li>
-                                        <button class="btn btn-link btn-block text-left p-1 collapsed border-0 d-flex align-items-center" type="button" data-toggle="collapse" :data-target="'#collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index">
-                                            {{ parseDate(history.created_at,'DD-MMM, YY hh:mmA') }}
+                                        <button class="btn btn-link btn-block text-left p-1 collapsed border-0 d-flex align-items-center" type="button" data-toggle="collapse" :data-target="'#collapse'+key" aria-expanded="true" :aria-controls="'collapse'+key">
+                                            &#10153;  {{ parseDate(key,'DD-MMM , YY') }}
                                         </button>
-                                    </li>
-                                    <li style="line-height: 1.2;"  class="mx-3">
-                                        <small class="font-weight-bold">Total &nbsp; &nbsp; &nbsp; : &nbsp;  &#8377; {{ toDecimal(history.total) }} </small> <br />
-                                        <small class="font-weight-bold" v-if="history.past_due_amount > 0">Past Due  :&nbsp;   &#8377; {{ toDecimal(history.past_due_amount) }} </small>
-                                    </li>
-
-                                    <li style="line-height: 1.2;" class="mx-3">
-                                        <small class="font-weight-bold">Grand &nbsp; &nbsp; :&nbsp;   &#8377; {{ toDecimal(history.total + history.past_due_amount) }} </small> <br />
-                                        <small class="font-weight-bold">Received  :&nbsp;   &#8377; {{ toDecimal(history.receive) }} </small>
-                                    </li>
-                                    <li style="line-height: 1.2;">
-                                        <div class="d-flex flex-column text-center">
-                                            <small class="font-weight-bold" v-if="isNil(history.payment_id)">Offline</small>
-                                            <small class="font-weight-bold text-secondary" v-else>Online</small>
-                                            <span class="badge badge-primary mx-auto" style="font-size: 8px;margin-top: 2px;" v-if="history.payment_type == 'Pending'">P</span>
-                                            <span class="badge badge-primary mx-auto"  style="font-size: 8px;margin-top: 2px;" v-else-if="history.payment_type == 'Discount'">D</span>
-                                            <span class="badge badge-primary mx-auto"  style="font-size: 8px;margin-top: 2px;" v-else="history.payment_type == 'Round Off'">R</span>
-                                        </div>
                                     </li>
                                 </ul>
                             </div>
 
-                            <div :id="'collapse'+index" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                <div class="card-body p-2" style="overflow-y: auto; max-height:8em;">
-                                    <table class="table table-striped table-sm table-hover small-sm mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th class="border-0 p-0">Product</th>
-                                                <th class="border-0 p-0">Quantity</th>
-                                                <th class="border-0 p-0">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="sale in history.sales" :key="sale.id" >
-                                                <td class="border-0 p-0">{{ sale.product.product_name }}</td>
-                                                <td class="border-0 p-0">{{ sale.quantity +' '+ sale.product.weight_unit }}</td>
-                                                <td class="border-0 p-0">&#8377; {{ toDecimal(sale.total) }} <sup> </sup></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            <div :id="'collapse'+key" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                <div class="card-body p-0 custom-scrollbar" style="overflow-y: auto; max-height:12em;">
+                                    <div class="accordion   custom-scrollbar" id="accordionExample2" >
+                                        <div class="card border-0  rounded-0" v-for="(history,index) in historyArr" :key="index">
+                                            <div class="card-header p-0" id="heading">
+                                                <ul class="d-flex justify-content-around align-items-center font-weight-bold list-unstyled mb-0 small text-primary">
+                                                    <li>
+                                                        <button class="btn btn-link btn-block text-left p-1 collapsed border-0 d-flex align-items-center" type="button" data-toggle="collapse" :data-target="'#collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index" style="font-size:12px">
+                                                            {{ parseDate(history.created_at,'DD-MMM, YY hh:mmA') }}
+                                                        </button>
+                                                    </li>
+                                                    <li style="line-height: 1.2;"  class="mx-3">
+                                                        <small class="font-weight-bold">Total &nbsp; &nbsp; &nbsp; : &nbsp;  &#8377; {{ toDecimal(history.total) }} </small> <br />
+                                                        <small class="font-weight-bold" v-if="history.past_due_amount > 0">Past Due  :&nbsp;   &#8377; {{ toDecimal(history.past_due_amount) }} </small>
+                                                    </li>
+
+                                                    <li style="line-height: 1.2;" class="mx-3">
+                                                        <small class="font-weight-bold">Grand &nbsp; &nbsp; :&nbsp;   &#8377; {{ toDecimal(history.total + history.past_due_amount) }} </small> <br />
+                                                        <small class="font-weight-bold">Received  :&nbsp;   &#8377; {{ toDecimal(history.receive) }} </small>
+                                                    </li>
+                                                    <li style="line-height: 1.2;">
+                                                        <div class="d-flex flex-column text-center">
+                                                            <small class="font-weight-bold" v-if="isNil(history.payment_id)">Offline</small>
+                                                            <small class="font-weight-bold text-secondary" v-else>Online</small>
+                                                            <span class="badge badge-primary mx-auto" style="font-size: 8px;margin-top: 2px;" v-if="history.payment_type == 'Pending'">P</span>
+                                                            <span class="badge badge-primary mx-auto"  style="font-size: 8px;margin-top: 2px;" v-else-if="history.payment_type == 'Discount'">D</span>
+                                                            <span class="badge badge-primary mx-auto"  style="font-size: 8px;margin-top: 2px;" v-else="history.payment_type == 'Round Off'">R</span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div :id="'collapse'+index" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample2">
+                                                <div class="card-body p-2" style="overflow-y: auto; max-height:8em;">
+                                                    <table class="table table-striped table-sm table-hover small-sm mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="border-0 p-0">Product</th>
+                                                                <th class="border-0 p-0">Quantity</th>
+                                                                <th class="border-0 p-0">Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr v-for="sale in history.sales" :key="sale.id" >
+                                                                <td class="border-0 p-0">{{ sale.product.product_name }}</td>
+                                                                <td class="border-0 p-0">{{ sale.quantity +' '+ sale.product.weight_unit }}</td>
+                                                                <td class="border-0 p-0">&#8377; {{ toDecimal(sale.total) }} <sup> </sup></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -259,7 +278,7 @@
 <script>
 import BreezeAuthenticatedLayout from '@/Layouts/BillingSystem.vue'
 import { Head } from '@inertiajs/inertia-vue3'
-import { assignIn ,get , values , forIn , merge , isNaN , isNil , find , sumBy } from 'lodash'
+import { assignIn ,get , values , forIn , merge , isNaN , isNil , find , sumBy , groupBy} from 'lodash'
 import moment from 'moment'
 import useVuelidate from '@vuelidate/core'
 import { required} from '@vuelidate/validators'
@@ -279,6 +298,7 @@ export default {
     props:['products','shop','carts','sales'],
     data () {
       return {
+                groupBy,
                 isNil,
                 sumBy,
                 phoneMaskComplete:false,
@@ -333,6 +353,8 @@ export default {
             }
       },
     mounted(){
+        //
+
       //
       feather.replace({ 'aria-hidden': 'true' });
       var _this = this;

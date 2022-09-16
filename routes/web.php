@@ -89,7 +89,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('exceptional/rate',[Rates::class,'exceptionalRate'])->name('exceptional.rate');
     Route::post('razorpay/order',[CartController::class,'makeOrder'])->name('razorpay.make.order');
     Route::post('payment/store',[CartController::class,'paymentStore'])->name('payment.store');
-
+    Route::post('update/purchase/history',[Sales::class,'updatePurchaseHistory'])->name('update.purchase.history');
 });
 
 // Route::get("clear-cache",function(){

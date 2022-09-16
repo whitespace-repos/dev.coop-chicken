@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('purchase_histories', function (Blueprint $table) {
+        Schema::table('sales', function (Blueprint $table) {
             //
-            $table->enum("payment_type",['Discount','Round Off','Pending'])->nullable();
-            $table->foreignId('customer_id')->nullable()->constrained('customers');
+            $table->double('rate', 8, 2)->default(0)->after('quantity');
         });
     }
 
@@ -27,7 +26,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('purchase_histories', function (Blueprint $table) {
+        Schema::table('sales', function (Blueprint $table) {
             //
         });
     }

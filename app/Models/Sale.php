@@ -21,6 +21,7 @@ class Sale extends Model
             'purchase_history_id',
             'shop_id',
             'cart',
+            'rate'
     ];
 
     public function product(){

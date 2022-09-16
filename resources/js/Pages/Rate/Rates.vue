@@ -106,7 +106,7 @@
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head } from '@inertiajs/inertia-vue3';
 import useVuelidate from '@vuelidate/core'
-import { required, helpers , requiredIf} from '@vuelidate/validators'
+import { required, helpers , requiredIf, minValue} from '@vuelidate/validators'
 const rateValidation = helpers.regex(/^\d+(?:\.\d{1,2})?$/);
 import { set , assign , slice, assignIn} from 'lodash'
 
@@ -148,7 +148,8 @@ export default {
                   //
                   set(Objest, key,{
                     rateValidation:helpers.withMessage('Please Enter a Valid Rate',rateValidation),
-                    required
+                    required,
+                    minValue:minValue(1)
                   });
                   //
                   assign(validation, Objest);
@@ -196,7 +197,8 @@ export default {
                         rate:{
                                 retail_rate:{
                                     rateValidation:helpers.withMessage('Please Enter a Valid Rate',rateValidation),
-                                    required
+                                    required,
+                                    minValue:minValue(1)
                                 },
                                 range:this.weightRangeValidation,
                                 product_id:{required}

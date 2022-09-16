@@ -193,6 +193,7 @@ class CartController extends Controller
                         "total" => $price,
                         "receive" => $price,
                         "quantity" => $this->weight,
+                        "rate" => $rate,
                         "sold_by" => auth()->id(),
                         "product_id" => $product->id,
                         "customer_id" => $customer->id,

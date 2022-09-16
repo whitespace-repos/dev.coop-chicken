@@ -59,4 +59,29 @@ class Sales extends Controller
                                     "carts" => Cart::getContent()
                           ]);
     }
+
+
+    public function updatePurchaseHistory(Request $request){
+        $history = PurchaseHistory::with('sales')->find($request->id);
+        $history->total = $request->total;
+        $history->receive = $request->receive;
+        $history->save();
+
+        foreach ($request->history as $key =>  $data) {
+            $data = (Object) $data;
+            $sale = $history->sales->find($data->sale_id);
+            //
+            $shop = Shop::with('products')->find($sale->shop_id);
+            $affiliation = $shop->products->find($sale->product_id);
+            $affiliation->association->stock  +=  $sale->quantity - $data->quantity;
+            $affiliation->association->save();
+            //
+            $sale->total = $data->total;
+            $sale->receive = $data->total;
+            $sale->quantity = $data->quantity;
+            $sale->save();
+        }
+        //
+        return back();
+    }
 }

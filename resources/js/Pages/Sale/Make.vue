@@ -200,16 +200,16 @@
                                 <ul class="d-flex justify-content-around align-items-center font-weight-bold list-unstyled mb-0 small text-primary">
                                     <li>
                                         <button class="btn btn-link btn-block text-left p-1 collapsed border-0 d-flex align-items-center" type="button" data-toggle="collapse" :data-target="'#collapse'+key" aria-expanded="true" :aria-controls="'collapse'+key">
-                                            &#10153;  {{ parseDate(key,'DD-MMM , YY') }}
+                                            <Icon icon="radix-icons:calendar" />  {{ parseDate(key,'DD-MMM , YY') }}
                                         </button>
                                     </li>
                                 </ul>
                             </div>
 
                             <div :id="'collapse'+key" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                <div class="card-body p-0 custom-scrollbar" style="overflow-y: auto; max-height:12em;">
+                                <div class="card-body  py-1 px-0  custom-scrollbar" style="overflow-y: auto; max-height:12em;">
                                     <div class="accordion   custom-scrollbar" id="accordionExample2" >
-                                        <div class="card border-0  rounded-0" v-for="(history,index) in historyArr" :key="index">
+                                        <div class="card border-top-0 border-left-0 border-right-0 rounded-0 border-bottom" v-for="(history,index) in historyArr" :key="index">
                                             <div class="card-header p-0" id="heading">
                                                 <ul class="d-flex justify-content-around align-items-center font-weight-bold list-unstyled mb-0 small text-primary">
                                                     <li>
@@ -217,12 +217,12 @@
                                                             {{ parseDate(history.created_at,'DD-MMM, YY hh:mmA') }}
                                                         </button>
                                                     </li>
-                                                    <li style="line-height: 1.2;"  class="mx-3">
+                                                    <li style="line-height: 1.2;"  class="mx-1">
                                                         <small class="font-weight-bold">Total &nbsp; &nbsp; &nbsp; : &nbsp;  &#8377; {{ toDecimal(history.total) }} </small> <br />
                                                         <small class="font-weight-bold" v-if="history.past_due_amount > 0">Past Due  :&nbsp;   &#8377; {{ toDecimal(history.past_due_amount) }} </small>
                                                     </li>
 
-                                                    <li style="line-height: 1.2;" class="mx-3">
+                                                    <li style="line-height: 1.2;" class="mx-1">
                                                         <small class="font-weight-bold">Grand &nbsp; &nbsp; :&nbsp;   &#8377; {{ toDecimal(history.total + history.past_due_amount) }} </small> <br />
                                                         <small class="font-weight-bold">Received  :&nbsp;   &#8377; {{ toDecimal(history.receive) }} </small>
                                                     </li>
@@ -235,11 +235,12 @@
                                                             <span class="badge badge-primary mx-auto"  style="font-size: 8px;margin-top: 2px;" v-else="history.payment_type == 'Round Off'">R</span>
                                                         </div>
                                                     </li>
+                                                    <li v-if="moment(moment().format('Y-MM-DD')).isSame(parseDate(key,'Y-MM-DD'))"><a href="javascript:void(0)" class="mx-1" @click="editHistoryModal(history)"><Icon icon="mdi:database-edit" /></a></li>
                                                 </ul>
                                             </div>
 
                                             <div :id="'collapse'+index" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample2">
-                                                <div class="card-body p-2" style="overflow-y: auto; max-height:8em;">
+                                                <div class="card-body p-2">
                                                     <table class="table table-striped table-sm table-hover small-sm mb-0">
                                                         <thead>
                                                             <tr>
@@ -272,16 +273,91 @@
             </div>
         </div>
     </div>
+
+        <!-- The Modal -->
+        <div class="modal" id="editHistoryModal" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <form method="POST" @submit.prevent="updateHistory" class="mb-0">
+                        <!-- Modal Header -->
+                        <div class="modal-header py-2 d-flex align-items-center text-primary border-primary">
+                            <h6 class="mb-0"><Icon icon="radix-icons:calendar" /> Purchase History Detail</h6>
+                            <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </a>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <p v-if="v$.form.historyObj.$invalid" class="text-danger">Invalid Data please check before proceed .</p>
+
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="w-20">Date</th>
+                                        <th>Item</th>
+                                        <th>Rate</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-light">
+                                    <template v-if="!isNil(form.historyObj.history)">
+                                        <tr v-for="(item,index) in form.historyObj.history" :key="index" >
+                                            <td>{{ item.date }}</td>
+                                            <td>{{ item.item }}</td>
+                                            <td>&#8377; {{ item.rate }}</td>
+                                            <td class="border-0 p-0" width="100">
+                                                <div class="input-group input-group-sm px-2">
+                                                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" v-model="v$.form.historyObj.history[index].quantity.$model" @input="form.historyObj.history[index].total = form.historyObj.history[index].quantity * item.rate" v-maska="item.maska">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1">{{ item.weight_unit }}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="border-0 p-0" width="100">
+                                                <div class="input-group input-group-sm px-2">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1">&#8377;</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" disabled readonly v-model="form.historyObj.history[index].total">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="4"  class="text-right">Total</th>
+                                            <td class="border-0 p-0" width="100">
+                                                <div class="input-group input-group-sm px-2">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1">&#8377;</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" v-model="v$.form.historyObj.total.$model">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer p-0">
+                            <button type="submit" class="btn btn-primary btn-sm px-5" :disabled="v$.form.historyObj.$invalid">Update History</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script>
 import BreezeAuthenticatedLayout from '@/Layouts/BillingSystem.vue'
 import { Head } from '@inertiajs/inertia-vue3'
-import { assignIn ,get , values , forIn , merge , isNaN , isNil , find , sumBy , groupBy} from 'lodash'
+import { assignIn ,get , values , forIn , merge , isNaN , isNil , find , sumBy , groupBy, forEach , set , assign, sum } from 'lodash'
 import moment from 'moment'
 import useVuelidate from '@vuelidate/core'
-import { required} from '@vuelidate/validators'
+import { required , helpers , maxValue, between, minValue} from '@vuelidate/validators'
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 
@@ -301,6 +377,7 @@ export default {
                 groupBy,
                 isNil,
                 sumBy,
+                moment,
                 phoneMaskComplete:false,
                 showModal: false,
                 // carousel settings
@@ -309,51 +386,64 @@ export default {
                     snapAlign: 'center',
                 },
 
-                  existingCustomer:false,
-                  token:$("[name='csrf-token']").attr("content"),
-                  formUrl:"{{ route('customer.store') }}",
-                  rate:0,
-                  purchaseHistory:[],
-                  customer:null,
-                  cartFlag:false,
-                  paymentMethod:'EMI',
-                  currentStock:[],
-                  billingWeightInput:{},
-                  form:{
-                      customer :this
-                                  .$inertia
-                                  .form({
+                existingCustomer:false,
+                token:$("[name='csrf-token']").attr("content"),
+                formUrl:"{{ route('customer.store') }}",
+                rate:0,
+                purchaseHistory:[],
+                customer:null,
+                cartFlag:false,
+                paymentMethod:'EMI',
+                currentStock:[],
+                billingWeightInput:{},
+                form:{
+                        customer :this
+                                    .$inertia
+                                    .form({
                                             name:null,
                                             email:null,
                                             location:null,
                                             phone:null,
-                      }),
-                      cart :this
-                                  .$inertia
-                                  .form({
+                        }),
+                        cart :this
+                                    .$inertia
+                                    .form({
                                             product:"",
                                             customer:"",
                                             weight:0,
                                             amount:0,
                                             rate:0,
                                             type:''
-                      }),
-                      removeCart : this
+                        }),
+                        removeCart : this
                                         .$inertia
                                         .form({
                                             id : ""
-                      }),
-                      stockRequest : this
+                        }),
+                        stockRequest : this
                                         .$inertia
                                         .form({
                                             products : {},
 
-                      })
-                  }
+                        }),
+                        historyObj : this
+                                        .$inertia
+                                        .form({
+                                           history : [],
+                                           total:0,
+                                           receive:0,
+                                           id:null
+
+                        }),
+                        selectedHistory:null
+
+                },
             }
       },
     mounted(){
         //
+
+
 
       //
       feather.replace({ 'aria-hidden': 'true' });
@@ -376,20 +466,29 @@ export default {
           });
       }
     },
-      computed:{
-              // Make a request for a user with a given ID
-              // get only
-              totalAmount: function () {
-                  //
-                  let total = 0;
-                   forIn(this.carts, function(o, k) {
-                       total += o.price;
-                   });
-                  return total;
-              },
-              productCurrentStock(){
+    computed:{
+            // Make a request for a user with a given ID
+            // get only
+            totalAmount: function () {
+                //
+                let total = 0;
+                forIn(this.carts, function(o, k) {
+                    total += o.price;
+                });
+                return total;
+            },
+            productCurrentStock(){
                 return this.currentStock;
-              }
+            },
+            historyValidation(){
+                let validation= [];
+                this.form.historyObj.history.filter(function(obj){
+                    let ob = {quantity : { between:between(1,obj.max) , required }};
+                    //
+                    validation.push(ob);
+                });
+                return validation;
+            }
       },
       methods: {
         loadCustomer(event){
@@ -573,6 +672,26 @@ export default {
                         }
                     })
                 });
+        },
+        editHistoryModal(history){
+            this.form.historyObj.history = [];
+            this.form.selectedHistory = null;
+            //
+            this.form.selectedHistory = history;
+            forEach(history.sales, sale => {
+                this.form.historyObj.history.push({sale_id: sale.id,date:history.date, item : sale.product.product_name  , rate : sale.rate , quantity : sale.quantity , total : sale.total , weight_unit : sale.product.weight_unit , maska:sale.product.mask , max:sale.quantity})
+            })
+
+            this.form.historyObj.total = sumBy(history.sales,'total');
+            this.form.historyObj.receive = sumBy(history.receive,'receive');
+            this.form.historyObj.id = history.id;
+            //
+            console.log(this.form.historyObj.history);
+            $("#editHistoryModal").modal("show");
+        },
+        updateHistory(){
+            this.form.historyObj.post(this.route('update.purchase.history'),{preserveState: false });
+            $("#editHistoryModal").modal("hide");
         }
     },
     validations() {
@@ -581,7 +700,13 @@ export default {
                       customer :{
                                             name:{required},
                                             phone:{required}
+                      },
+                      historyObj:{
+                            history:this.historyValidation,
+                            total:{required,between:between(1,(this.form.selectedHistory != null ) ? this.form.selectedHistory.total : 1 )},
+                            receive:{}
                       }
+
                 }
         }
     },

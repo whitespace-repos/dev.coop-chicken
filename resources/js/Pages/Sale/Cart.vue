@@ -35,10 +35,10 @@
                         <div class="col text-right" v-currency>{{ totalAmount }}</div>
                     </div>
 
-                    <div class="form-group my-4" :class="{'has-error':v$.receiveAmount.$errors.length }">
+                    <div class="form-group my-4" :class="{'has-error':v$.recAmount.$errors.length }">
                         <label class="control-label">Receive Amount </label>
-                        <input v-maska="'#*.##'" class="form-control m-0" v-model="v$.receiveAmount.$model" placeholder="0"/>
-                        <small v-for="error of v$.receiveAmount.$errors" :key="error.$uid" v-html="error.$message"></small>
+                        <input v-maska="'#*.##'" class="form-control m-0" v-model="v$.recAmount.$model" @input="receiveAmount = recAmount" placeholder="0"/>
+                        <small v-for="error of v$.recAmount.$errors" :key="error.$uid" v-html="error.$message" class="text-white"></small>
                     </div>
                     <div class="form-group text-center font-weight-bold">
                         <div class="custom-control custom-radio custom-control-inline ">
@@ -83,9 +83,9 @@
                         </div>
                     </div>
 
-                    <button class="btn  btn-primary rounded p-2 font-weight-bold" @click="printAndProceed" :disabled="v$.receiveAmount.$invalid">Pay Offline</button>
+                    <button class="btn  btn-primary rounded p-2 font-weight-bold" @click="printAndProceed" :disabled="v$.recAmount.$invalid">Pay Offline</button>
                     <hr />
-                    <button class="btn  btn-primary rounded p-2 font-weight-bold" @click="payOnline" :disabled="v$.receiveAmount.$invalid">Pay Online</button>
+                    <button class="btn  btn-primary rounded p-2 font-weight-bold" @click="payOnline" :disabled="v$.recAmount.$invalid">Pay Online</button>
                 </div>
             </div>
         </div>
@@ -177,7 +177,8 @@ export default {
       return {
                 receiptNo : `coop-cps-${Math.round(new Date().getTime() / 1000)}`,
                 receiveAmount:0,
-                payment_type:"Round Off",
+                recAmount:null,
+                payment_type:"",
                 customerId:this.customer.id,
                 orderId:null,
                 paymentId:null,
@@ -204,6 +205,11 @@ export default {
                                         maxValue:maxValue(this.totalAmount + this.customer.due_amount),
                                         minValue:minValue(1) ,
                                         required
+                                },
+                    recAmount : {
+                                        maxValue:maxValue(this.totalAmount + this.customer.due_amount),
+                                        minValue:minValue(1) ,
+                                        required
                                 }
         }
     },
@@ -217,8 +223,8 @@ export default {
             return JSON.parse(data);
         },
         printAndProceed() {
-            if(this.v$.receiveAmount.$invalid){
-                this.v$.receiveAmount.$touch();
+            if(this.v$.recAmount.$invalid){
+                this.v$.recAmount.$touch();
                 return
             }
             let _this = this;
@@ -440,7 +446,6 @@ export default {
         box-shadow: none;
         color: white;
         -webkit-box-shadow: none;
-        -webkit-user-select: none;
         transition: none
     }
 

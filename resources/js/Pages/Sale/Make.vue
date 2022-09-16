@@ -123,7 +123,6 @@
         <div class="col">
                 <div class="card rounded-0 border-left-0 border-right-0 h-100" v-if="existingCustomer">
                     <div class="card-header"> Billing System </div>
-                    <button @click="test">Test</button>
                     <div class="card-body  custom-scrollbar">
                         <div class="row">
                             <div class="col-6" v-for="product in shop.products" :key="product.product_name">

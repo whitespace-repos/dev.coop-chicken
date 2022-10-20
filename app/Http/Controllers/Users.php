@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules;
 use Twilio\Rest\Client;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 use Shop;
 use Inertia;
@@ -98,6 +99,7 @@ class Users extends Controller
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
             'shop_id' => ($request->role == 'Employee') ? $request->shop_id['id'] : null,
+            'api_token' => Str::random(60),
         ]);
 
         event(new Registered($user));
@@ -234,4 +236,7 @@ class Users extends Controller
         return response()->json([ "products" => $products ]);
         //return Inertia::render('Shops/NewShop', [ "products" => $products ]);
     }
+
+
+
 }

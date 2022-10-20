@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Stocks;
 use App\Http\Controllers\Dashboard;
-
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     /* --- Resource Route --- */
     Route::resource('product',Products::class);
     Route::resource('shop',Shops::class);
-    Route::resource('user',Users::class);
+    Route::resource('users',Users::class);
     Route::resource('settings',Settings::class);
     Route::resource('rate',Rates::class);
     Route::resource('stocks',Stocks::class);
@@ -90,8 +90,21 @@ Route::middleware(['auth'])->group(function () {
     Route::post('razorpay/order',[CartController::class,'makeOrder'])->name('razorpay.make.order');
     Route::post('payment/store',[CartController::class,'paymentStore'])->name('payment.store');
     Route::post('update/purchase/history',[Sales::class,'updatePurchaseHistory'])->name('update.purchase.history');
+    //Route::get('users/authenticate',[AuthenticatedSessionController::class, 'authenticate']);
 });
 
+Route::post('/tokens/create', function (Request $request) {
+    $token = $request->user()->createToken($request->token_name);
+
+    return ['token' => $token->plainTextToken];
+});
+
+
+
+Route::get('users/authenticate',[AuthenticatedSessionController::class, 'authenticate']);
+
+
+Route::get('ws',[Dashboard::class,'ws']);
 // Route::get("clear-cache",function(){
 //     Artisan::call('cache:clear');
 //     Artisan::call('config:cache');

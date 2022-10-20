@@ -13,6 +13,9 @@ use App\Imports\ProductRequestProductImport;
 use App\Imports\RatesImport;
 use App\Imports\SalesImport;
 
+use lepiaf\SerialPort\SerialPort;
+use lepiaf\SerialPort\Parser\SeparatorParser;
+use lepiaf\SerialPort\Configure\TTYConfigure;
 
 class Dashboard extends Controller
 {
@@ -53,7 +56,22 @@ class Dashboard extends Controller
 
 
     public function import(){
-        return view('import');
+            $serialPort = new SerialPort(new SeparatorParser(), new TTYConfigure());
+            $serialPort->open("/dev/ttyACM0");
+            while ($data = $serialPort->read()) {
+                echo $data."\n";
+
+                if ($data === "OK") {
+                    $serialPort->write("1\n");
+                    $serialPort->close();
+                }
+            }
+    }
+
+    public function ws(){
+        $reader = \USBScaleReader\Reader::fromDevice('COM4');
+        $weightInGrams = $reader->getWeight();
+        var_dump($reader, $weightInGrams);
     }
 
 

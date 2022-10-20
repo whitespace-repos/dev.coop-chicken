@@ -26,6 +26,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.4.8/jquery.jgrowl.min.js"></script>
         <script src="/assets/js/razor.checkout.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
         <!-- Scripts -->
         @routes
         @vite('resources/js/app.js')

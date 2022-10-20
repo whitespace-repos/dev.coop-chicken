@@ -490,6 +490,10 @@ export default {
             }
       },
       methods: {
+        listSerialPorts() {
+
+        },
+
         loadCustomer(event){
             if(event.target.value.length == 10 ){
                 if(this.phoneMaskComplete == false){

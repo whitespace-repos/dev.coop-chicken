@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use User;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -59,5 +60,30 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');
+    }
+
+
+    public function login(Request $request){
+
+        if(Auth::attempt(['email' => $request->email,'password' => $request->password])){
+            // $user = Auth::user();
+            $user = User::with('shop')->find(Auth::user()->id);
+            $success['token'] = $user->createToken('MyApp')->plainTextToken;
+            $success['user'] = $user;
+            //
+            $response = [
+                'success' => true,
+                'data' => $success,
+                'message' => 'User login successfully'
+            ];
+
+            return response()->json($response,200);
+        }else{
+            $response = [
+                'success' => false,
+                'message' => 'Unauthorised'
+            ];
+        }
+
     }
 }

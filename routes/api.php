@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Desktop\RestApiHandler;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,17 +28,7 @@ Route::middleware('auth:sanctum')->get('/user/logout', function (Request $reques
     ]);
 });
 
-Route::middleware('auth:sanctum')->get('/shop', function (Request $request) {
-    $success = [
-                    "shop" => $request->user()->shop,
-                    "products" => $request->user()->shop->products
-    ];
-    return response()->json([
-        "success" => true,
-        "data" => $success,
-        "message" => "User Logout Successfully"
-    ]);
-});
+Route::middleware('auth:sanctum')->get('/products',[RestApiHandler::class,'getProducts']);
 
 
 Route::controller(AuthenticatedSessionController::class)->group(function(){

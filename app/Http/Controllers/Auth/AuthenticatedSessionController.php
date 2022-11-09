@@ -67,7 +67,7 @@ class AuthenticatedSessionController extends Controller
 
         if(Auth::attempt(['email' => $request->email,'password' => $request->password])){
             // $user = Auth::user();
-            $user = User::with('shop')->find(Auth::user()->id);
+            $user = User::with('shop.products')->find(Auth::user()->id);
             $success['token'] = $user->createToken('MyApp')->plainTextToken;
             $success['user'] = $user;
             //

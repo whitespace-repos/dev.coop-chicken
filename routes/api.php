@@ -15,11 +15,6 @@ use App\Http\Controllers\Desktop\RestApiHandler;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    $user = User::with('shop')->find($request->user()->id);
-    return $user;
-});
-
 Route::middleware('auth:sanctum')->get('/user/logout', function (Request $request) {
     $request->user()->currentAccessToken()->delete();
     return response()->json([

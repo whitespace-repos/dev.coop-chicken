@@ -4,6 +4,7 @@
 /public/build
 /storage/*.key
 /vendor
+/dev
 .env
 .htaccess
 .env.backup

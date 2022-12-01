@@ -15,6 +15,10 @@ use App\Http\Controllers\Desktop\RestApiHandler;
 |
 */
 
+Route::controller(AuthenticatedSessionController::class)->group(function(){
+    Route::post('login','login');
+});
+
 Route::middleware('auth:sanctum')->get('/user/logout', function (Request $request) {
     $request->user()->currentAccessToken()->delete();
     return response()->json([
@@ -23,9 +27,16 @@ Route::middleware('auth:sanctum')->get('/user/logout', function (Request $reques
     ]);
 });
 
+
+/**
+ *  For Products
+ */
 Route::middleware('auth:sanctum')->get('/products',[RestApiHandler::class,'getProducts']);
 
 
-Route::controller(AuthenticatedSessionController::class)->group(function(){
-    Route::post('login','login');
-});
+/**
+ * For Customers
+ */
+Route::middleware('auth:sanctum')->get('/customer/{phone}',[RestApiHandler::class,'getCustomerByPhone']);
+Route::middleware('auth:sanctum')->post('/customer',[RestApiHandler::class,'saveCustomer']);
+Route::middleware('auth:sanctum')->post('/checkout',[RestApiHandler::class,'checkout']);

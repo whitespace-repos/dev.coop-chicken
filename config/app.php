@@ -223,7 +223,9 @@ return [
         'Stock' => App\Models\Stock::class,
         'Sale' => App\Models\Sale::class,
         'StockRequest' => App\Models\StockRequest::class,
+        'StockRequestedProduct' => App\Models\StockRequest::class,
         'ProductWholesaleRateRange' => App\Models\ProductWholesaleRateRange::class,
+        'Payment' => App\Models\Payment::class,
         //
 
         'SettingTrait' => App\Http\Traits\SettingTrait::class,

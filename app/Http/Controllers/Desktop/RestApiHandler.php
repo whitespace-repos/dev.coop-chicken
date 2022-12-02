@@ -8,6 +8,9 @@ use Customer;
 use PurchaseHistory;
 use \Carbon\Carbon;
 use Sale;
+use Payment;
+use StockRequest;
+use StockRequestedProduct;
 
 class RestApiHandler extends Controller
 {
@@ -24,17 +27,59 @@ class RestApiHandler extends Controller
     /**
      * Get Customer
      */
-    public function getCustomerByPhone($phone){
+    public function getCustomerByPhone($phone , $detail = 'short'){
         $customer = Customer::where('phone',$phone)->first();
-        return response()->json(($customer != null) ? $customer : null);
+        if($detail == 'full' && $customer != null){
+            $customer->load('purchased_history.sales.product');
+            return response()->json([
+                                    "customer" => $customer
+            ]);
+        }else{
+            return response()->json(($customer != null) ? $customer : null);
+        }
+        //
+        return response()->json([]);
     }
+
+
 
     // Save Customer
     public function saveCustomer(Request $request){
-        $customer = Customer::create($request->all());
-        return response()->json($customer);
+        if ($request->has('id')) {
+            $customer = Customer::find($request->id);
+            $customer->name = $request->name;
+            $customer->phone = $request->phone;
+            $customer->save();
+            $customer->load('purchased_history.sales.product');
+            return response()->json([
+                                    "customer" => $customer
+            ]);
+        }else{
+            $customer = Customer::create($request->all());
+            return response()->json($customer);
+        }
     }
 
+    /**
+     * Save Payment
+     */
+    public function savePayment(Request $request){
+        $payment = new Payment();
+        $payment->payment_id = $request->payment_id;
+        $payment->type = $request->type;
+        $payment->customer_id = $request->customerId;
+        $payment->amount = $request->amount;
+        $payment->status = $request->status;
+        $payment->save();
+        if($request->updateDueAmount){
+            $customer = Customer::find($request->customerId);
+            $customer->due_amount -= $request->amount;
+            $customer->save();
+        }
+    }
+
+
+    //
 
 
     /**
@@ -110,6 +155,32 @@ class RestApiHandler extends Controller
             ]);
 
             //
+        }
+    }
+
+
+    /**
+     *  Stock Request
+     */
+    public function stockRequest(Request $request){
+        $shop = $request->user()->shop()->with('products.weightRanges','products.rate','purchase_history')->first();
+        $stockRequest = collect($request->stockRequest);
+        if($stockRequest->count() > 0){
+            $stockRequestInstace = StockRequest::create([
+                                                "date" => Carbon::now(),
+                                                "shop_id" => $shop->id,
+                                                "stock_requested_by" => $request->user()->id,
+                                                "status" => "Requested"
+                                        ]);
+            // foreach ($stockRequest as $key => $product) {
+            //     StockRequestedProduct::create([
+            //         "stock_request_id" => $stockRequestInstace->id,
+            //         "product_id" => $product['id'],
+            //         "stock_request" => $product['requestedStock'],
+            //         "current_stock" => $shop->products()->find($product['id'])->association->stock,
+            //         "status" => "Requested"
+            //     ]);
+            // }
         }
     }
 }

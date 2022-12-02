@@ -37,6 +37,8 @@ Route::middleware('auth:sanctum')->get('/products',[RestApiHandler::class,'getPr
 /**
  * For Customers
  */
-Route::middleware('auth:sanctum')->get('/customer/{phone}',[RestApiHandler::class,'getCustomerByPhone']);
+Route::middleware('auth:sanctum')->get('/customer/{phone}/{detail?}',[RestApiHandler::class,'getCustomerByPhone']);
 Route::middleware('auth:sanctum')->post('/customer',[RestApiHandler::class,'saveCustomer']);
 Route::middleware('auth:sanctum')->post('/checkout',[RestApiHandler::class,'checkout']);
+Route::middleware('auth:sanctum')->post('/save/payment',[RestApiHandler::class,'savePayment']);
+Route::middleware('auth:sanctum')->post('/stock/request',[RestApiHandler::class,'stockRequest']);

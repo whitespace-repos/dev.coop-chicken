@@ -16,6 +16,7 @@ class AddCartFieldToPurchaseHistories extends Migration
         Schema::table('purchase_histories', function (Blueprint $table) {
             //
             $table->longText('cart')->nullable();
+            $table->string('batch_number')->nullable();
         });
     }
 

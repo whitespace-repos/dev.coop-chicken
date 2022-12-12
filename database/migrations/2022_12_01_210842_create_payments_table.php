@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->double("amount",8,2)->default(0);
             $table->enum('status',["Complete","Incomplete"])->nullable();
+            $table->boolean('data_sync')->default(0);
+            $table->timestamp('data_sync_at')->nullable();
             $table->timestamps();
         });
     }

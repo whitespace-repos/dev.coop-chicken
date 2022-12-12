@@ -19,61 +19,13 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        User::insert([[
-                                    'phone' => 1234567890 ,
-                                    'name' => 'Admin Coop' ,
-                                    'email' => 'admin@coop.com',
-                                    'password' => Hash::make('1234567890'),
-                                    'decrypt' => '1234567890'
-                ],[
-                    'phone' => 1234567891 ,
-                    'name' => 'Supplier 1' ,
-                    'email' => 'supplier1@coop.com',
-                    'password' => Hash::make('1234567890'),
-                    'decrypt' => '1234567890'
-                ],[
-                    'phone' => 1234567892 ,
-                    'name' => 'Supplier 2' ,
-                    'email' => 'supplier2@coop.com',
-                    'password' => Hash::make('1234567890'),
-                    'decrypt' => '1234567890'
-                ],[
-                    'phone' => 1234567893 ,
-                    'name' => 'Supplier 3' ,
-                    'email' => 'supplier3@coop.com',
-                    'password' => Hash::make('1234567890'),
-                    'decrypt' => '1234567890'
-                ],[
-                    'phone' => 1234567894 ,
-                    'name' => 'Supplier 4' ,
-                    'email' => 'supplier4@coop.com',
-                    'password' => Hash::make('1234567890'),
-                    'decrypt' => '1234567890'
-                ],[
-                    'phone' => 1234567895 ,
-                    'name' => 'Supplier 5' ,
-                    'email' => 'supplier5@coop.com',
-                    'password' => Hash::make('1234567890'),
-                    'decrypt' => '1234567890'
-                ],[
-                    'phone' => 1234567896 ,
-                    'name' => 'Supplier 6' ,
-                    'email' => 'supplier6@coop.com',
-                    'password' => Hash::make('1234567890'),
-                    'decrypt' => '1234567890'
-                ],[
-                    'phone' => 1234567897 ,
-                    'name' => 'Supplier 7' ,
-                    'email' => 'supplier7@coop.com',
-                    'password' => Hash::make('1234567890'),
-                    'decrypt' => '1234567890'
-                ],[
-                    'phone' => 1234567898 ,
-                    'name' => 'Supplier 8' ,
-                    'email' => 'supplier8@coop.com',
-                    'password' => Hash::make('1234567890'),
-                    'decrypt' => '1234567890'
-                ]]);
+        User::insert([
+                            'phone' => 1234567890 ,
+                            'name' => 'Admin Coop' ,
+                            'email' => 'admin@coop.com',
+                            'password' => Hash::make('1234567890'),
+                            'decrypt' => '1234567890'
+                ]);
         //
         $users = User::all();
         //
@@ -115,7 +67,7 @@ class DatabaseSeeder extends Seeder
         foreach ($users as $key => $user) {
             if($user->email == 'admin@coop.com'){
                 $user->assignRole(['Admin','Supplier']);
-                for ($x = 0; $x <= 5; $x++) {
+                for ($x = 0; $x <= 3; $x++) {
                     $user->products()->create([
                                 'product_name' => 'ASP '.$user->id.'-Product-'.($x + 1),
                                 'weight_unit' => 'KG',
@@ -125,20 +77,7 @@ class DatabaseSeeder extends Seeder
                                 'supplier_id' => $user->id
                     ]);
                 }
-            }else{
-                $user->assignRole(['Supplier']);
-                for ($x = 0; $x <= 5; $x++) {
-                    $user->products()->create([
-                                'product_name' => 'SP '. ( $user->id - 1 ).'-Product-'.($x + 1),
-                                'weight_unit' => 'KG',
-                                'wholesale_weight' => 0,
-                                'image' => '/storage/products/1655138004_hean.png',
-                                'stock' => 1,
-                                'supplier_id' => $user->id
-                    ]);
-                }
             }
-
         }
 
     }

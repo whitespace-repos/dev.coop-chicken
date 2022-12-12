@@ -18,6 +18,8 @@ class AddFieldSentReceiveToStockRequestedProducts extends Migration
             $table->double('stock_sent', 8, 2)->default(0)->nullable();
             $table->double('stock_received', 8, 2)->default(0)->nullable();
             $table->double('stock_wastage', 8, 2)->default(0)->nullable();
+            $table->boolean('data_sync')->default(0);
+            $table->timestamp('data_sync_at')->nullable();
         });
     }
 

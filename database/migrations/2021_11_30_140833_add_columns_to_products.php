@@ -17,8 +17,6 @@ class AddColumnsToProducts extends Migration
             //
             $table->string("weight_unit")->nullable();
             $table->string("fields")->nullable();
-
-
         });
     }
 

@@ -22,7 +22,10 @@ class PurchaseHistory extends Model
                                 'rest_amount',
                                 'past_due_amount',
                                 'payment_id',
-                                'payment_method'
+                                'payment_method',
+                                'batch_number',
+                                'data_sync',
+                                'data_sync_at'                                
     ];
 
 
@@ -38,5 +41,9 @@ class PurchaseHistory extends Model
 
     public function sales(){
         return $this->hasMany(Sale::class);
+    }
+
+    public function customer(){
+        return $this->belongsTo(Customer::class,'customer_id');
     }
 }

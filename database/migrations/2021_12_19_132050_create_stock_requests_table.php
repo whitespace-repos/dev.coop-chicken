@@ -24,6 +24,8 @@ class CreateStockRequestsTable extends Migration
             $table->integer('payment_period')->nullable();
             $table->foreignId('stock_requested_by')->nullable()->constrained('users');
             $table->enum('status',['Requested','Pending','Rejected','Approved','Sent','Received','Completed','Processing'])->default('Requested')->nullable();
+            $table->boolean('data_sync')->default(0);
+            $table->timestamp('data_sync_at')->nullable();
             $table->timestamps();
         });
     }

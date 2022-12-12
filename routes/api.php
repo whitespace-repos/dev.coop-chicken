@@ -1,9 +1,11 @@
+
 <?php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Desktop\RestApiHandler;
+use App\Http\Controllers\Desktop\SyncDataHandler;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -41,4 +43,20 @@ Route::middleware('auth:sanctum')->get('/customer/{phone}/{detail?}',[RestApiHan
 Route::middleware('auth:sanctum')->post('/customer',[RestApiHandler::class,'saveCustomer']);
 Route::middleware('auth:sanctum')->post('/checkout',[RestApiHandler::class,'checkout']);
 Route::middleware('auth:sanctum')->post('/save/payment',[RestApiHandler::class,'savePayment']);
-Route::middleware('auth:sanctum')->post('/stock/request',[RestApiHandler::class,'stockRequest']);
+
+
+
+
+
+
+
+// Sync Data to Database
+Route::middleware('auth:sanctum')->post('/sync/customers',[SyncDataHandler::class,'customers']);
+Route::middleware('auth:sanctum')->post('/sync/sales',[SyncDataHandler::class,'sales']);
+
+
+
+
+//Stock Request
+Route::middleware('auth:sanctum')->post('/stock/request',[SyncDataHandler::class,'stockRequest']);
+Route::middleware('auth:sanctum')->get('/stock/requests',[SyncDataHandler::class,'getAllSTockRequets']);

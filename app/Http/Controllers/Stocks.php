@@ -222,20 +222,20 @@ class Stocks extends Controller
                                                 "actual_payment" => $request->actual_payment
                                         ]);
         /* ***** */
-
-        foreach ($shop->products as $key => $product) {
-            if(!empty($request->products['product-'.$product->id])){
-                StockRequestedProduct::create([
-                    "stock_request_id" => $stockRequest->id,
-                    "product_id" => $product->id,
-                    "stock_sent" => $request->products['product-'.$product->id],
-                    "current_stock" => $product->association->stock,
-                    "supply_rate" => $request->products['product-'.$product->id.'-supply-rate'],
-                    "status" => "Sent",
-                    "total" => $request->products['product-'.$product->id.'-total-price']
-                ]);
-            }
-        }
+        \Log::info($stockRequest);
+        // foreach ($shop->products as $key => $product) {
+        //     if(!empty($request->products['product-'.$product->id])){
+        //         StockRequestedProduct::create([
+        //             "stock_request_id" => $stockRequest->id,
+        //             "product_id" => $product->id,
+        //             "stock_sent" => $request->products['product-'.$product->id],
+        //             "current_stock" => $product->association->stock,
+        //             "supply_rate" => $request->products['product-'.$product->id.'-supply-rate'],
+        //             "status" => "Sent",
+        //             "total" => $request->products['product-'.$product->id.'-total-price']
+        //         ]);
+        //     }
+        // }
         //
         return back();
     }

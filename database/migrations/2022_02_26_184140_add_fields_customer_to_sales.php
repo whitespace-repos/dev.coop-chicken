@@ -17,6 +17,9 @@ class AddFieldsCustomerToSales extends Migration
             //
             $table->bigInteger('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade'); 
+            $table->boolean('data_sync')->default(0);
+            $table->timestamp('data_sync_at')->nullable();
+            $table->string('batch_number')->nullable();
         });
     }
 

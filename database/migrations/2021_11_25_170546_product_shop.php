@@ -20,6 +20,7 @@ class ProductShop extends Migration
             $table->bigInteger('shop_id')->unsigned();        
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade'); 
+            $table->double('stock',8,2)->nullable()->default(0);
             $table->timestamps();       
         });
     }

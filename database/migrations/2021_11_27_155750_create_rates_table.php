@@ -16,7 +16,13 @@ class CreateRatesTable extends Migration
         Schema::create('rates', function (Blueprint $table) {
             $table->id();
             $table->date('date');
+            $table->foreignId('shop_id')->nullable()->constrained('shops');
             $table->foreignId('product_id')->constrained('products');
+            $table->double('retail_rate',8,2)->nullable()->default(0);
+            $table->double('whole_sale_rate',8,2)->nullable()->default(0);
+            $table->string('wholesale_rate')->nullable()->default("[]");
+            $table->enum('type',["Regular","Exceptional"])->default("Regular");
+            $table->enum('status',["Active","Inactive"])->default("Active");
             $table->timestamps();
         });
     }

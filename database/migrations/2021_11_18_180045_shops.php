@@ -25,6 +25,9 @@ class Shops extends Migration
             $table->double('max_sale_estimate_per_day', 8, 2)->nullable();
             $table->date('estimated_start_date')->nullable();
             $table->enum('status' ,['Active','Inactive'])->default('Active');
+            $table->bigInteger('supplier_id')->unsigned();        
+            $table->foreign('supplier_id')->references('id')->on('users')->onDelete('cascade');
+            $table->bigInteger("phone")->nullable();
             $table->timestamps();
         });
     }

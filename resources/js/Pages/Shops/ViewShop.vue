@@ -15,14 +15,14 @@
         <div class="col-auto">
           <div class="card rounded-0">
             <div class="card-header font-weight-bold text-primary"><span data-feather="phone" class="align-text-bottom"></span> {{ shop.phone }} </div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item p-2"><span data-feather="map-pin" class="align-text-bottom mr-1"></span> <b>Address</b> : {{ shop.address }}</li>
-              <li class="list-group-item p-2"><span data-feather="globe" class="align-text-bottom mr-1"></span> <b>Distance</b> : {{ shop.distance_from_cps }}</li>
-              <li class="list-group-item p-2"><span data-feather="sidebar" class="align-text-bottom mr-1"></span> <b>Dimensive</b> : {{ shop.shop_dimentions }}</li>
-              <li class="list-group-item p-2"><icon :icon="$page.props.currency" /> <b class="ml-1">Max Sale Estimation</b> : {{  toDecimal(shop.max_sale_estimate_per_day) }}</li>
-              <li class="list-group-item p-2"><icon :icon="$page.props.currency" /> <b  class="ml-1">Max stock capacity</b> : {{ toDecimal(shop.stock_capacity_per_day) }}</li>
-              <li class="list-group-item p-2"><span data-feather="calendar" class="align-text-bottom mr-1"></span> <b>Estimated Start Date</b> : {{ shop.estimated_start_date }}</li>
-              <li class="list-group-item p-2"><span data-feather="users" class="align-text-bottom mr-1"></span> <b>Supplier</b> : {{ shop.supplier.name }}</li>
+            <ul class="list-group list-group-flush" style="width: 16em;">
+              <li class="list-group-item p-2  text-truncate"><span data-feather="map-pin" class="align-text-bottom mr-1"></span> <b>Address</b> : {{ shop.address }}</li>
+              <li class="list-group-item p-2  text-truncate"><span data-feather="globe" class="align-text-bottom mr-1"></span> <b>Distance</b> : {{ shop.distance_from_cps }}</li>
+              <li class="list-group-item p-2  text-truncate"><span data-feather="sidebar" class="align-text-bottom mr-1"></span> <b>Dimensive</b> : {{ shop.shop_dimentions }}</li>
+              <li class="list-group-item p-2  text-truncate"><icon :icon="$page.props.currency" /> <b class="ml-1">Max Sale</b> : {{  toDecimal(shop.max_sale_estimate_per_day) }}</li>
+              <li class="list-group-item p-2  text-truncate"><icon :icon="$page.props.currency" /> <b  class="ml-1">Max stock</b> : {{ toDecimal(shop.stock_capacity_per_day) }}</li>
+              <li class="list-group-item p-2  text-truncate"><span data-feather="calendar" class="align-text-bottom mr-1"></span> <b>Start Date</b> : {{ shop.estimated_start_date }}</li>
+              <li class="list-group-item p-2  text-truncate"><span data-feather="users" class="align-text-bottom mr-1"></span> <b>Supplier</b> : {{ shop.supplier.name }}</li>
             </ul>
             <div class="card-body px-0 pb-0" >
               <h6 class="heading px-2 mb-2">

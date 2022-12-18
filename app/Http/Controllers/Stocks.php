@@ -101,7 +101,9 @@ class Stocks extends Controller
                                                 "date" => Carbon::now(),
                                                 "shop_id" => $shop->id,
                                                 "stock_requested_by" => auth()->id(),
-                                                "status" => "Requested"
+                                                "status" => "Requested",
+                                                "data_sync_at" => Carbon::now(),
+                                                "data_sync" => true
                                         ]);
             /* ***** */
             foreach ($shop->products as $key => $product) {
@@ -123,7 +125,9 @@ class Stocks extends Controller
     public function approved(Request $request,$id){
         $stockRequest = StockRequest::find($id);
         $stockRequest->status = 'Approved';
+        $stockRequest->data_sync = false;
         $stockRequest->save();
+
         $actual_payment = 0;
         //
         foreach ($stockRequest->requested_products as $key => $rp) {
@@ -160,6 +164,7 @@ class Stocks extends Controller
         foreach($stockRequest->requested_products as $rp){
             $rp->status = 'Sent';
             $rp->stock_sent = (empty($request->send_stocks['product-'.$rp->id])) ? $rp->stock_request : $request->send_stocks['product-'.$rp->id];
+            $rp->stock_received = (empty($request->send_stocks['product-'.$rp->id])) ? $rp->stock_request : $request->send_stocks['product-'.$rp->id];
             $rp->save();
         }
         return back();
@@ -168,6 +173,7 @@ class Stocks extends Controller
     public function stock_completed(Request $request,$id){
         $stockRequest = StockRequest::find($id);
         $stockRequest->status = 'Completed';
+        $stockRequest->data_sync = true;
         $stockRequest->payment_received = $request->payment_received;
         $stockRequest->save();
         //

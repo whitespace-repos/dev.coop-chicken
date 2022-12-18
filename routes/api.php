@@ -60,3 +60,10 @@ Route::middleware('auth:sanctum')->post('/sync/sales',[SyncDataHandler::class,'s
 //Stock Request
 Route::middleware('auth:sanctum')->post('/stock/request',[SyncDataHandler::class,'stockRequest']);
 Route::middleware('auth:sanctum')->get('/stock/requests',[SyncDataHandler::class,'getAllSTockRequets']);
+Route::middleware('auth:sanctum')->get('/fetch/updated/stock/requests',[SyncDataHandler::class,'fetchUpdatedStockRequest']);
+Route::middleware('auth:sanctum')->post('/updated/stock/requests/payments',[SyncDataHandler::class,'updatePaymentForStockRequest']);
+Route::middleware('auth:sanctum')->post('/supplier/receive/stock/requests',[SyncDataHandler::class,'receiveStockRequest']);
+
+
+
+

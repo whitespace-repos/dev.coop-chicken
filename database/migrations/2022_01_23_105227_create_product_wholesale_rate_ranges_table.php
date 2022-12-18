@@ -19,6 +19,7 @@ class CreateProductWholesaleRateRangesTable extends Migration
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->integer('from')->default(0);
             $table->integer('to')->default(0);
+            $table->double("wholesale_rate",8,2)->default(0);
             $table->timestamps();
         });
     }

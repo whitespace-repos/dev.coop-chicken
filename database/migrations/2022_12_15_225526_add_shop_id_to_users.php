@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
-            $table->double('due_amount', 8, 2)->default(0)->nullable()->after('phone');
+            $table->foreignId('shop_id')->nullable()->constrained('shops');
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

@@ -59,6 +59,16 @@ class SyncDataHandler extends Controller
                 }else{
                     $PH = Arr::only($value,["date","total","receive","quantity","sold_by","shop_id","created_at","updated_at","cart","payment_type","payment_method","payment_id","rest_amount","past_due_amount","batch_number","customer_id"]);
                 }
+
+                if(!empty($PH['payment_id'])){
+                    $payment = new Payment();
+                    $payment->payment_id = $PH["payment_id"];
+                    $payment->type = "Stock";            
+                    $payment->amount = $PH['total'];
+                    $payment->status = "Complete";
+                    $payment->save();
+                }
+                
                 PurchaseHistory::upsert($PH, ['data_sync'], ["date","total","receive","quantity","sold_by","shop_id","created_at","updated_at","cart","payment_type","payment_method","payment_id","rest_amount","past_due_amount","batch_number","customer_id"]) ;                                   
 
                 $history = PurchaseHistory::where('batch_number',$value['batch_number'])->first();
@@ -114,13 +124,16 @@ class SyncDataHandler extends Controller
 
 
      public function stockRequest(Request $request){
+        
         $shop = $request->user()->shop;        
         if(!empty($request->products)){
             $stockRequest = StockRequest::create([
                                                 "date" => Carbon::now(),
                                                 "shop_id" => $shop->id,
                                                 "stock_requested_by" => $request->user()->id,
-                                                "status" => "Requested"
+                                                "status" => "Requested",
+                                                "data_sync" => true,
+                                                "data_sync_at" => Carbon::now()
                                         ]);           
             //
             /* ***** */
@@ -136,11 +149,68 @@ class SyncDataHandler extends Controller
                     ]);
                 }
             }
+
+
+            //
+            return response()->json([ "stockRequest" => $stockRequest->load('requested_products.product')]);
         }
      }
 
+     public function fetchUpdatedStockRequest(Request $request){
+        $stockRequest = $request->user()->shop->stock_requests()->where("data_sync",false)->where('status','!=','Completed')->get();
+        return response()->json($stockRequest->load('requested_products.product'));
+     }
 
-     public function getAllSTockRequets(Request $request){
+
+     public function updatePaymentForStockRequest(Request $request){ 
+
+        $stockRequest = StockRequest::find($request['id']);
+        $stockRequest->payment_method = $request['payment_method'];
+        $stockRequest->payment_period  =  $request['payment_period'];
+        $stockRequest->payment_id = $request['payment_id'];
+        $stockRequest->status = 'Processing';        
+        $stockRequest->save();
+
+        if(!empty($request['payment_id'])){
+            $payment = new Payment();
+            $payment->payment_id = $request["payment_id"];
+            $payment->type = "Stock";            
+            $payment->amount = $stockRequest->actual_payment;
+            $payment->status = "Complete";
+            $payment->save();
+        }
+
+        //
+        $stockRequest->requested_products()->update([ 'status' => 'Processing' ]);
+        return response()->json($stockRequest->load('requested_products.product'));       
+     }
+
+
+     public function receiveStockRequest(Request $request){      
+
+        $shop = $request->user()->shop;      
+        $stockRequest = StockRequest::find($request['id']);
+        $stockRequest->status = 'Received'; 
+        $stockRequest->data_sync = true;       
+        $stockRequest->save();
+
+        foreach($request['requested_products'] as $srp){
+            $rp = StockRequestedProduct::where("id",$srp['id'])->update([
+                    "stock_received" => (float) $srp['stock_received'],
+                    "status" => "Received",
+                    "stock_wastage" =>  (float) $srp['stock_sent'] - (float) $srp['stock_received']
+            ]);
+            
+            $p = $shop->products()->find($srp['product_id']);
+            $assoc = $p->association;
+            $assoc->stock += (float)  $srp['stock_received'];
+            $assoc->save();
+        }
+
+        return response()->json([ "success" => true]);
+    }
+
+    public function getAllSTockRequets(Request $request){
         $shop = $request->user()->shop;
         $shop->load('stock_requests.requested_products.product');
         $stockRequests = $shop->stock_requests;

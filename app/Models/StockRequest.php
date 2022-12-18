@@ -23,7 +23,9 @@ class StockRequest extends Model
                             'actual_payment',
                             'payment_received',
                             'date',
-                            'payment_id'
+                            'payment_id',
+                            "data_sync",
+                            "data_sync_at"
     ];
 
 

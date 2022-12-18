@@ -55,13 +55,22 @@ class DatabaseSeeder extends Seeder
             'updated_at' => \Carbon\Carbon::now()
         ]);
 
-        DB::table('settings')->insert([
-            "setting_group_id" => 1,
-            "name"  => "Killo Gram",
-            "value"  => "Killo Gram",
-            "key"  => "KG",
-            'created_at' => \Carbon\Carbon::now(),
-            'updated_at' => \Carbon\Carbon::now()
+        DB::table('settings')->insert([[
+                "setting_group_id" => 1,
+                "name"  => "Killo Gram",
+                "value"  => "Killo Gram",
+                "key"  => "KG",
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
+            ],
+            [
+                "setting_group_id" => 1,
+                "name"  => "Numbers",
+                "value"  => "Nrs",
+                "key"  => "Nrs",
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
+            ]
         ]);
 
         foreach ($users as $key => $user) {

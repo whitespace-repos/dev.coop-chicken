@@ -66,8 +66,17 @@ class AuthenticatedSessionController extends Controller
     public function login(Request $request){
 
         if(Auth::attempt(['email' => $request->email,'password' => $request->password])){
+            $user = Auth::user();
+            if( !$user->hasRole('Employee')) {
+                Auth::logout();    
+                $response = [
+                    'success' => false,
+                    'message' => 'Unauthorised'
+                ];
+                return response()->json($response,200);
+            }
             // $user = Auth::user();
-            $user = User::with('shop.products.rate')->find(Auth::user()->id);
+            $user = User::with(['shop.products.rate','shop.stock_requests.requested_products','shop.customers'])->find(Auth::user()->id);
             $success['token'] = $user->createToken('MyApp')->plainTextToken;
             $success['user'] = $user;
             //
@@ -83,6 +92,7 @@ class AuthenticatedSessionController extends Controller
                 'success' => false,
                 'message' => 'Unauthorised'
             ];
+            return response()->json($response,200);
         }
 
     }

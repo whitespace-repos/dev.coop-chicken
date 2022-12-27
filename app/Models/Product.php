@@ -23,8 +23,11 @@ class Product extends Model
                             'wholesale_weight_range',
                             'default_wholesale_weight',
                             'supplier_id',
-                            'mask'
+                            'mask',
+                            'raw_image',
+                            'digits'
                         ];
+
 
      /**
      * The shops that belong to the product.
@@ -32,10 +35,12 @@ class Product extends Model
     public function shops()
     {
         if(auth()->user()->hasRole(['Supplier']))
-            return $this->belongsToMany(Shop::class)->as('association')->withPivot('stock')->where("supplier_id",auth()->id());
+            return $this->belongsToMany(Shop::class)->as('association')->withPivot(['stock','id','totalQtyPerDay'])->where("supplier_id",auth()->id());
         else
-            return $this->belongsToMany(Shop::class)->as('association')->withPivot('stock');
+            return $this->belongsToMany(Shop::class)->as('association')->withPivot(['stock','id','totalQtyPerDay']);
     }
+
+    
 
     /**
      *

@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col-lg-7 col-md-12 ">
           <h6 class="d-flex"><span data-feather="file" class="align-text-bottom mr-1"></span> {{ 'COOP - ' + shop.shop_name }}</h6>
-          <small class="text-muted font-weight-bold">Due Amount  -  <icon :icon="$page.props.currency" />  {{ toDecimal(due_amount) }}</small>
+          <small class="text-muted font-weight-bold">Due Amount  -  <icon :icon="$page.props.currency" />  {{ currency(due_amount) }}</small>
           <small class="text-muted font-weight-bold ml-4"> <span data-feather="user" class="align-text-bottom"></span> Retailer  -  {{ isNil(shop.employee) ? '-' : shop.employee.name }}</small>
         </div>
       </div>
@@ -19,8 +19,8 @@
               <li class="list-group-item p-2  text-truncate"><span data-feather="map-pin" class="align-text-bottom mr-1"></span> <b>Address</b> : {{ shop.address }}</li>
               <li class="list-group-item p-2  text-truncate"><span data-feather="globe" class="align-text-bottom mr-1"></span> <b>Distance</b> : {{ shop.distance_from_cps }}</li>
               <li class="list-group-item p-2  text-truncate"><span data-feather="sidebar" class="align-text-bottom mr-1"></span> <b>Dimensive</b> : {{ shop.shop_dimentions }}</li>
-              <li class="list-group-item p-2  text-truncate"><icon :icon="$page.props.currency" /> <b class="ml-1">Max Sale</b> : {{  toDecimal(shop.max_sale_estimate_per_day) }}</li>
-              <li class="list-group-item p-2  text-truncate"><icon :icon="$page.props.currency" /> <b  class="ml-1">Max stock</b> : {{ toDecimal(shop.stock_capacity_per_day) }}</li>
+              <li class="list-group-item p-2  text-truncate"><icon :icon="$page.props.currency" /> <b class="ml-1">Max Sale</b> : {{  currency(shop.max_sale_estimate_per_day) }}</li>
+              <li class="list-group-item p-2  text-truncate"><icon :icon="$page.props.currency" /> <b  class="ml-1">Max stock</b> : {{ scale(shop.stock_capacity_per_day) }}</li>
               <li class="list-group-item p-2  text-truncate"><span data-feather="calendar" class="align-text-bottom mr-1"></span> <b>Start Date</b> : {{ shop.estimated_start_date }}</li>
               <li class="list-group-item p-2  text-truncate"><span data-feather="users" class="align-text-bottom mr-1"></span> <b>Supplier</b> : {{ shop.supplier.name }}</li>
             </ul>
@@ -50,9 +50,9 @@
                           <li class="list-group-item font-weight-bold text-center">
                             <img  :src="sale.product.image" class="img-fluid mr-2" width="20"/> <span>{{ sale.product.product_name }}</span>
                           </li>
-                          <li class="list-group-item px-1 text-center font-weight-bold">
-                                <span data-feather="shopping-bag" class="mr-1"></span> {{ toDecimal(sale.total_quantity) }} <sup>{{ sale.product.weight_unit }}</sup>
-                                <span data-feather="at-sign" class="mr-1  ml-3"></span> <span v-currency>{{ toDecimal(sale.total_sales) }}</span>
+                          <li class="list-group-item px-1 text-center font-weight-bold">                                
+                              <span data-feather="shopping-bag" class="mr-1"></span> {{ scale(sale.total_quantity,sale.product.digits) }} <sup>{{ sale.product.weight_unit }}</sup>
+                                <span data-feather="at-sign" class="mr-1  ml-3"></span> <span>{{ currency(sale.total_sales) }}</span>
                           </li>
                         </ul>
                     </div>
@@ -72,7 +72,7 @@
               <ul class="list-group shadow-lg mb-3" v-for="product in shop.products" :key="product.id">
                 <template v-if="product.stock">
                     <li class="list-group-item font-weight-bold"><img  :src="product.image" class="img-fluid mr-2" width="20"/> {{ product.product_name }}</li>
-                    <li class="list-group-item text-primary font-weight-bold"><span data-feather="truck" class="mr-1"></span> {{ toDecimal(product.association.stock) +' '+ product.weight_unit }} </li>
+                    <li class="list-group-item text-primary font-weight-bold"><span data-feather="truck" class="mr-1"></span> {{ scale(product.association.stock,product.digits) +' '+ product.weight_unit }} </li>
                 </template>
               </ul>
             </div>
@@ -94,13 +94,13 @@
                 <li class="list-group-item rounded-0 border-left-0 border-top-0 border-bottom-0 w-100">
                   <h6> Wholesale </h6>
                   <p>
-                    <span class="badge badge-primary font-weight-normal d-block my-1" v-for="range in parseToJSON(productRate.rate.wholesale_rate)" :key="range.id" style="font-size:11px">&#8377;  {{ toDecimal(range.rate) }} {{ ' : ' + toDecimal(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }} {{ productRate.weight_unit }}</span>
+                    <span class="badge badge-primary font-weight-normal d-block my-1" v-for="range in parseToJSON(productRate.rate.wholesale_rate)" :key="range.id" style="font-size:11px">&#8377;  {{ currency(range.rate) }} {{ ' : ' + scale(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : scale(range.to)  }} {{ productRate.weight_unit }}</span>
                   </p>
                 </li>
                 <li class="list-group-item rounded-0 border-right-0 border-top-0 border-bottom-0 w-auto">
                   <h6>Retail</h6>
                   <p>
-                    <span class="badge badge-primary font-weight-normal d-block">&#8377;  {{ toDecimal(productRate.rate.retail_rate) +' '+ productRate.weight_unit }}</span>
+                    <span class="badge badge-primary font-weight-normal d-block">{{ currency(productRate.rate.retail_rate)  }}</span>
                   </p>
                 </li>
               </ul>
@@ -110,13 +110,13 @@
                 <li class="list-group-item rounded-0 border-left-0 border-top-0 border-bottom-0 w-100">
                   <h6> Wholesale </h6>
                   <p>
-                    <span class="badge badge-primary font-weight-normal d-block my-1" v-for="range in parseToJSON(productRate.exceptional_rate.wholesale_rate)" :key="range.id" style="font-size:11px">&#8377;   {{ toDecimal(range.rate) }} {{ ' : ' + toDecimal(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : toDecimal(range.to)  }} {{ productRate.weight_unit }}</span>
+                    <span class="badge badge-primary font-weight-normal d-block my-1" v-for="range in parseToJSON(productRate.exceptional_rate.wholesale_rate)" :key="range.id" style="font-size:11px">&#8377;   {{ currency(range.rate) }} {{ ' : ' + scale(range.from) +' - ' }} {{ (range.to == 50000) ? 'MAX' : scale(range.to)  }} {{ productRate.weight_unit }}</span>
                   </p>
                 </li>
                 <li class="list-group-item rounded-0 border-right-0 border-top-0 border-bottom-0 w-auto">
                   <h6>Retail</h6>
                   <p>
-                    <span class="badge badge-primary font-weight-normal d-block">&#8377;  {{ toDecimal(productRate.exceptional_rate.retail_rate) +' '+ productRate.weight_unit }}</span>
+                    <span class="badge badge-primary font-weight-normal d-block">  {{ currency(productRate.exceptional_rate.retail_rate) }}</span>
                   </p>
                 </li>
               </ul>
@@ -210,16 +210,16 @@
                                   <img :src="rp.product.image" class="img-fluid mr-2" width="20"> <span>{{ rp.product.product_name }}</span>
                                 </li>
                                 <li class="list-group-item px-1 text-center small" v-if="request.status != 'Requested'">
-                                      <b v-if="request.type == 'Direct'"><span data-feather="shopping-bag" class="mr-1"></span> {{ toDecimal(rp.stock_sent) +' ' + rp.product.weight_unit }}</b>
-                                      <b  v-else><span data-feather="truck" class="mr-1  ml-3"></span> {{ toDecimal(rp.stock_request) +' ' + rp.product.weight_unit }}</b>
-                                      <b> <span data-feather="at-sign" class="mr-1  ml-3"></span>  <span v-currency>{{ toDecimal(rp.supply_rate) }}</span> </b>
+                                      <b v-if="request.type == 'Direct'"><span data-feather="shopping-bag" class="mr-1"></span> {{ scale(rp.stock_sent) +' ' + rp.product.weight_unit }}</b>
+                                      <b  v-else><span data-feather="truck" class="mr-1  ml-3"></span> {{ scale(rp.stock_request) +' ' + rp.product.weight_unit }}</b>
+                                      <b> <span data-feather="at-sign" class="mr-1  ml-3"></span>  <span>{{ currency(rp.supply_rate) }}</span> </b>
                                 </li>
                                 <li class="list-group-item px-1 text-center" v-else>
                                   <!--  -->
                                   <div class="input-group input-group-sm" >
                                     <div class="input-group-prepend">
-                                      <span class="input-group-text" v-if="request.type == 'Direct'">{{ toDecimal(rp.stock_sent) +' ' + rp.product.weight_unit }}</span>
-                                      <span class="input-group-text" v-else>{{ toDecimal(rp.stock_request) +' ' + rp.product.weight_unit }}</span>
+                                      <span class="input-group-text" v-if="request.type == 'Direct'">{{ scale(rp.stock_sent) +' ' + rp.product.weight_unit }}</span>
+                                      <span class="input-group-text" v-else>{{ scale(rp.stock_request) +' ' + rp.product.weight_unit }}</span>
                                     </div>
                                     <input class="form-control" id="inlineFormInputGroup" placeholder="Supply Rate" v-model="form.approvedStockRequest.supply_rates['product-' + rp.id]" v-maska="'#*.##'" maxlength="4"/>
                                     <div class="input-group-append">
@@ -266,8 +266,8 @@
                                 <img :src="rp.product.image" class="img-fluid mr-2" width="20"> <span>{{ rp.product.product_name }}</span>
                               </li>
                               <li class="list-group-item px-1 text-center small" v-if="request.status != 'Requested'">
-                                <small><span data-feather="shopping-bag" class="mr-1"></span> {{ toDecimal(rp.stock_sent) +' ' + rp.product.weight_unit }}</small>
-                                <small><span data-feather="at-sign" class="mr-1  ml-3"></span> <span v-currency>{{ toDecimal(rp.stock_request)  }} </span></small>
+                                <small><span data-feather="shopping-bag" class="mr-1"></span> {{ scale(rp.stock_sent) +' ' + rp.product.weight_unit }}</small>
+                                <small><span data-feather="at-sign" class="mr-1  ml-3"></span> <span v-currency>{{ scale(rp.stock_request)  }} </span></small>
                               </li>
                             </ul>
                           </div>
@@ -279,13 +279,13 @@
               </div>
               <div id="SendNewStock" class="tab-pane fade" >
                 <form method="POST" @submit.prevent="directStockRequest" class="container-fluid">
-                  <label class="mr-5 ml-2 font-weight-bold"> Grand Total Price : {{ toDecimal(calculateTotalPrice) }} <sup>INR </sup></label>
+                  <label class="mr-5 ml-2 font-weight-bold"> Grand Total Price : {{ currency(calculateTotalPrice) }} <sup>INR </sup></label>
                   <button class="btn btn-outline-primary btn-sm  px-5" type="submit">Confirm</button>
                   <hr />
                   <div class="row">
                     <div class="col-4"  v-for="product in shop.products" :key="product.id">
                       <ul class="list-group shadow-lg mb-3" v-if="product.stock">
-                        <li class="list-group-item font-weight-bold text-truncate px-1 text-center"><img  :src="product.image" class="img-fluid mr-2" width="20"/> {{ product.product_name }} <span class="text-primary">({{ toDecimal(product.association.stock) +' '+ product.weight_unit }} )</span></li>
+                        <li class="list-group-item font-weight-bold text-truncate px-1 text-center"><img  :src="product.image" class="img-fluid mr-2" width="20"/> {{ product.product_name }} <span class="text-primary">({{ scale(product.association.stock) +' '+ product.weight_unit }} )</span></li>
                         <li class="list-group-item px-2">
                           <div class="input-group input-group-sm">
                             <input type="text" v-maska="'#*.##'" class="form-control" @input="calculateSupplyRate($event,product.id)" placeholder="Quantity" v-model="form.directStockRequest.products['product-'+product.id]" />
@@ -300,7 +300,7 @@
                         </li>
                         <li class="list-group-item p-1 d-flex justify-content-between">
                           <small class="help-block text-muted">&#10153; Supply Rate for per {{ product.weight_unit }}.</small>
-                          <small><icon :icon="$page.props.currency" /> {{ toDecimal(form.directStockRequest.products['product-'+product.id+'-total-price']) }}</small>
+                          <small><icon :icon="$page.props.currency" /> {{ currency(form.directStockRequest.products['product-'+product.id+'-total-price']) }}</small>
                         </li>
                       </ul>
                     </div>
@@ -441,6 +441,7 @@ import Button from '@/Components/Button.vue';
 import {head,forEach,filter,isNil,assignIn} from 'lodash'
 import { Inertia } from '@inertiajs/inertia'
 import Input from '@/Components/Input.vue';
+import { currency , scale } from "../../utils"
 //import Vue from 'vue'
 
 export default {
@@ -453,6 +454,8 @@ export default {
     props:['products','shop','users','due_amount','sales'],
     data () {
         return {
+                  currency,
+                  scale,
                   exceptionalRateFlag:false,
                   // lodash instance for templates
                   isNil,

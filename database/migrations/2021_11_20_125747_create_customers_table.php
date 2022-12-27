@@ -22,7 +22,7 @@ class CreateCustomersTable extends Migration
             $table->string('location')->nullable();
             $table->boolean('data_sync')->default(0);
             $table->timestamp('data_sync_at')->nullable();            
-            $table->string('batch_number')->nullable();                
+            $table->string('batch')->nullable();                
             $table->foreignId('shop_id')->constrained('shops')->nullable();       
             $table->timestamps();
         });

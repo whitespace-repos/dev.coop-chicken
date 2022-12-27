@@ -15,6 +15,7 @@ class CreateStockRequestsTable extends Migration
     {
         Schema::create('stock_requests', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('batch')->nullable();
             $table->date('date')->nullale();
             $table->foreignId('shop_id')->constrained('shops');
             $table->double('stock_request', 8, 2)->default(0)->nullable();
@@ -24,7 +25,7 @@ class CreateStockRequestsTable extends Migration
             $table->foreignId('stock_requested_by')->nullable()->constrained('users');
             $table->enum('status',['Requested','Pending','Rejected','Approved','Sent','Received','Completed','Processing','Cancelled'])->default('Requested')->nullable();
             $table->enum("type",["Request","Direct"])->default("Request");
-            $table->string("payment_id")->nullable();
+            $table->string("payment_id")->nullable();            
             $table->double("total_stock_sent",8,2)->default(0);
             $table->double("total_stock_received",8,2)->default(0);
             $table->double("total_stock_wastage",8,2)->default(0);
@@ -32,6 +33,11 @@ class CreateStockRequestsTable extends Migration
             $table->double("payment_received",8,2)->default(0);            
             $table->boolean('data_sync')->default(0);
             $table->timestamp('data_sync_at')->nullable();
+            $table->boolean("notify")->default(0);
+            $table->enum('request_direction',['Server','Client'])->nullable();
+            $table->boolean("completed")->default(0);
+            $table->boolean("server_sync")->default(0);
+            $table->boolean("client_sync")->default(0);            
             $table->timestamps();
         });
     }

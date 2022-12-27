@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StockRequest extends Model
 {
     use HasFactory;
+    
 
     protected $fillable = [
                             'shop_id',
@@ -25,9 +26,27 @@ class StockRequest extends Model
                             'date',
                             'payment_id',
                             "data_sync",
-                            "data_sync_at"
+                            "data_sync_at",
+                            "notify",
+                            "batch",
+                            "request_direction",
+                            "completed",
+                            "server_sync",
+                            "client_sync"
     ];
 
+
+       /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'server_sync' => 'boolean',
+        'client_sync' => 'boolean',
+        'data_sync' => 'boolean',
+        'notify' => 'boolean',
+    ];
 
     public function product(){
         return $this->belongsTo('Product');

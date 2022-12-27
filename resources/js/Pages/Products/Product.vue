@@ -369,6 +369,7 @@ export default {
                                             image:'',
                                             stock:true,
                                             product_image:null,
+                                            raw_image:null,
                                             wholesale_weight_range:false,
                                             weightRanges:[],
                                             weightUnits:[
@@ -391,6 +392,7 @@ export default {
                                           stock:false,
                                           '_method':'PATCH',
                                           product_image:null,
+                                          raw_image:null,
                                           parent_product_id:'',
                                           conversion_rate:0,
                                           wholesale_weight_range:false,
@@ -435,6 +437,22 @@ export default {
     },
     setup () {
       return { v$: useVuelidate() }
+    },
+    watch:{
+        'form.product.product_image'(file){
+            const reader = new FileReader()            
+            reader.onloadend = () => {
+              this.form.product.raw_image = reader.result;   
+            }
+            reader.readAsDataURL(file);
+        },
+        'form.editProduct.product_image'(file){
+            const reader = new FileReader()            
+            reader.onloadend = () => {
+              this.form.editProduct.raw_image = reader.result;   
+            }
+            reader.readAsDataURL(file);
+        }
     },
     methods: {
         addRange(range){

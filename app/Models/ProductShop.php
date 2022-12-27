@@ -11,5 +11,5 @@ class ProductShop extends Model
 
     protected $table = "product_shop";
     // 
-    protected $fillable = ['product_id','shop_id','stock'];
+    protected $fillable = ['product_id','shop_id','stock','totalQtyPerDay'];
 }

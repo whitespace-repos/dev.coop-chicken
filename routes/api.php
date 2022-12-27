@@ -44,6 +44,8 @@ Route::middleware('auth:sanctum')->post('/customer',[RestApiHandler::class,'save
 Route::middleware('auth:sanctum')->post('/checkout',[RestApiHandler::class,'checkout']);
 Route::middleware('auth:sanctum')->post('/save/payment',[RestApiHandler::class,'savePayment']);
 
+Route::middleware('auth:sanctum')->get('/get/last12month/sale',[RestApiHandler::class,'getSaleOfLast12Month']);
+
 
 
 
@@ -60,9 +62,16 @@ Route::middleware('auth:sanctum')->post('/sync/sales',[SyncDataHandler::class,'s
 //Stock Request
 Route::middleware('auth:sanctum')->post('/stock/request',[SyncDataHandler::class,'stockRequest']);
 Route::middleware('auth:sanctum')->get('/stock/requests',[SyncDataHandler::class,'getAllSTockRequets']);
-Route::middleware('auth:sanctum')->get('/fetch/updated/stock/requests',[SyncDataHandler::class,'fetchUpdatedStockRequest']);
+Route::middleware('auth:sanctum')->post('/fetch/updated/stock/requests',[SyncDataHandler::class,'fetchUpdatedStockRequest']);
 Route::middleware('auth:sanctum')->post('/updated/stock/requests/payments',[SyncDataHandler::class,'updatePaymentForStockRequest']);
 Route::middleware('auth:sanctum')->post('/supplier/receive/stock/requests',[SyncDataHandler::class,'receiveStockRequest']);
+
+Route::middleware('auth:sanctum')->post('/sync/stock/requests',[SyncDataHandler::class,'syncStockRequests']);
+
+
+
+
+
 
 
 

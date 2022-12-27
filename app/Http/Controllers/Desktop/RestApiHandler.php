@@ -11,6 +11,7 @@ use Sale;
 use Payment;
 use StockRequest;
 use StockRequestedProduct;
+use DB;
 
 class RestApiHandler extends Controller
 {
@@ -182,5 +183,48 @@ class RestApiHandler extends Controller
             //     ]);
             // }
         }
+    }
+
+
+
+    public function getSaleOfLast12Month(Request $request){
+        $dataset = collect([]);
+        $products = $request->user()->shop->products()->select(['products.id', 'product_name'])->get();
+
+        foreach ($products as $key => $product) {
+            $dataset->push((Object) [ "name" => $product->product_name , "id" => $product->id , "data" => collect([]) ]);
+        }
+        
+
+        foreach($dataset as $key => $data){
+            $months = collect(range(11, 0));
+            $monthNames = collect([]);
+            $dataCollection = Sale::select(
+                                    DB::raw("sum(total) as sale"),
+                                    DB::raw("MONTHNAME(date) as month_name")
+                        )
+                        ->whereYear('date', date('Y'))
+                        ->groupBy('month_name')
+                        ->orderBy('date')
+                        ->where('product_id', $data->id)
+                        ->get();
+            $useData = [ "collection" => $dataCollection , "data" => $data ,  "monthNames" => $monthNames];
+            $months->map(function ($i) use($useData) {
+                $dataCollection = $useData["collection"];
+                $data = $useData["data"];
+                $monthNames = $useData["monthNames"];
+                //
+                $dt = today()->startOfMonth()->subMonth($i);
+                $monthNames->push($dt->shortMonthName);
+                $monthSale = $dataCollection->where('month_name',$dt->monthName)->first();                
+                if(empty($monthSale))
+                    $data->data->push(0);
+                else 
+                    $data->data->push(round($monthSale->sale));
+                    
+            });
+        }
+
+        return response()->json( [ "dataset" => $dataset , "monthNames" => $monthNames ]);
     }
 }

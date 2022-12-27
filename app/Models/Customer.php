@@ -9,7 +9,7 @@ class Customer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','phone','email','location','customer_id','due_amount','shop_id','batch_number','data_sync','data_sync_at'];
+    protected $fillable = ['name','phone','email','location','customer_id','due_amount','shop_id','batch','data_sync','data_sync_at'];
 
 
     public function  purchase_history() {

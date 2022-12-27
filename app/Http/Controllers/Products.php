@@ -57,6 +57,8 @@ class Products extends Controller
         //
         $request->request->add([ "supplier_id" => auth()->id() ]);
         //
+        $setting = Setting::where("key",$request->weight_unit)->first();        
+        $request->request->add([ "digits" => $setting->digits ]);
         $product = Product::create($request->all());
         //
         if($product->wholesale_weight_range){
@@ -115,6 +117,9 @@ class Products extends Controller
             $request->request->add(["image" => '/storage/'.$filePath ]);
         }
         //
+        $setting = Setting::where("key",$request->weight_unit)->first();        
+        $request->request->add([ "digits" => $setting->digits ]);
+        
         $product->update($request->all());
         //  delete old range
         $product->weightRanges()->delete();

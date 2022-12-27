@@ -24,7 +24,7 @@ class CreatePurchaseHistoriesTable extends Migration
             $table->foreignId('sold_by')->constrained('users')->nullable();
             $table->foreignId('shop_id')->constrained('shops')->nullable();
             $table->longText('cart')->nullable();
-            $table->string("batch_number")->nullable();
+            $table->string("batch")->nullable();
             $table->enum("payment_type",["Discount","Round Off","Pending"])->nullable();
             $table->enum("payment_method",["Online","Offline"])->default("Offline");
             $table->string("payment_id")->nullable();

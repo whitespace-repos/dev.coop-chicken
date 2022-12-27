@@ -73,7 +73,7 @@ createInertiaApp({
                 },
                 methods: {
                             route,
-                            toDecimal : str => Number(str).toFixed(2),
+                            toDecimal : str => Number(str).toFixed(3),
                             beep() {
                                 this.playSound("../sound/beep-29.mp3");
                             },

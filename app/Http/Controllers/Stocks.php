@@ -125,7 +125,8 @@ class Stocks extends Controller
     public function approved(Request $request,$id){
         $stockRequest = StockRequest::find($id);
         $stockRequest->status = 'Approved';
-        $stockRequest->data_sync = false;
+        $stockRequest->client_sync = false;
+        $stockRequest->notify = true;
         $stockRequest->save();
 
         $actual_payment = 0;
@@ -149,6 +150,7 @@ class Stocks extends Controller
         $stockRequest = StockRequest::find($id);
         $stockRequest->payment_method = $request->payment_method;
         $stockRequest->payment_period  =  $request->payment_period;
+        $stockRequest->notify = false;
         $stockRequest->status = 'Processing';
         $stockRequest->save();
         //
@@ -159,6 +161,9 @@ class Stocks extends Controller
     public function stock_send(Request $request,$id){
         $stockRequest = StockRequest::find($id);
         $stockRequest->status = 'Sent';
+        $stockRequest->notify = true;
+        $stockRequest->server_sync = true;
+        $stockRequest->client_sync = false;
         $stockRequest->save();
         //
         foreach($stockRequest->requested_products as $rp){
@@ -172,8 +177,10 @@ class Stocks extends Controller
 
     public function stock_completed(Request $request,$id){
         $stockRequest = StockRequest::find($id);
-        $stockRequest->status = 'Completed';
-        $stockRequest->data_sync = true;
+        $stockRequest->status = 'Completed';        
+        $stockRequest->notify = false;
+        $stockRequest->server_sync = true;
+        $stockRequest->client_sync = false;
         $stockRequest->payment_received = $request->payment_received;
         $stockRequest->save();
         //
@@ -187,6 +194,7 @@ class Stocks extends Controller
             $stockRequest = StockRequest::find($id);
             $stockRequest->status = 'Received';
             $stockRequest->payment_id = $request->payment_id;
+            $stockRequest->notify = false;
             $stockRequest->save();
             //
             foreach($stockRequest->requested_products as $product){
@@ -217,32 +225,41 @@ class Stocks extends Controller
         return Inertia::render('Stocks/Requests', [ 'shop' => $shop ]);
     }
 
-    public function directRequested(Request $request){
+    public function directRequested(Request $request){        
+
         $shop = Shop::find($request->shop_id);
         //
         $stockRequest = StockRequest::create([
+                                                "date" => Carbon::now()->format("y-m-d"),
+                                                "batch" => Carbon::now()->format('Ymdhis'),
                                                 "shop_id" => $shop->id,
                                                 "stock_requested_by" => auth()->id(),
                                                 "status" => "Sent",
                                                 "type" => "Direct",
+                                                "server_sync" => true,
+                                                "client_sync" => false,
+                                                "data_sync" => true,
+                                                "notify" => true,
+                                                "data_sync_at" => Carbon::now(),
                                                 "actual_payment" => $request->actual_payment
                                         ]);
-        /* ***** */
-        \Log::info($stockRequest);
-        // foreach ($shop->products as $key => $product) {
-        //     if(!empty($request->products['product-'.$product->id])){
-        //         StockRequestedProduct::create([
-        //             "stock_request_id" => $stockRequest->id,
-        //             "product_id" => $product->id,
-        //             "stock_sent" => $request->products['product-'.$product->id],
-        //             "current_stock" => $product->association->stock,
-        //             "supply_rate" => $request->products['product-'.$product->id.'-supply-rate'],
-        //             "status" => "Sent",
-        //             "total" => $request->products['product-'.$product->id.'-total-price']
-        //         ]);
-        //     }
-        // }
-        //
+        /* ***** */        
+        foreach ($shop->products as $key => $product) {
+            if(!empty($request->products['product-'.$product->id])){
+                StockRequestedProduct::create([
+                    "date" => Carbon::now()->format("y-m-d"),
+                    "stock_request_id" => $stockRequest->id,
+                    "product_id" => $product->id,
+                    "stock_sent" => $request->products['product-'.$product->id],
+                    "stock_received" => $request->products['product-'.$product->id],
+                    "current_stock" => $product->association->stock,
+                    "supply_rate" => $request->products['product-'.$product->id.'-supply-rate'],
+                    "status" => "Sent",
+                    "total" => $request->products['product-'.$product->id.'-total-price']
+                ]);
+            }
+        }
+        
         return back();
     }
 }

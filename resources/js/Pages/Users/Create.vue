@@ -80,7 +80,7 @@
     import { Head } from '@inertiajs/inertia-vue3';
 
     import useVuelidate from '@vuelidate/core'
-    import { required, email, numeric } from '@vuelidate/validators'
+    import { required, email, numeric, requiredIf } from '@vuelidate/validators'
     import Fuse from 'fuse.js'
 
     export default {
@@ -139,7 +139,7 @@
                             email: { email},
                             password: { required},
                             phone:{ required ,numeric },
-                            shop_id:{}
+                            shop_id:{ requiredIf:requiredIf(this.form.role == 'Employee') } 
                         }
             }
         },

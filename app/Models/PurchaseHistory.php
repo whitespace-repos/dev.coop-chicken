@@ -23,7 +23,7 @@ class PurchaseHistory extends Model
                                 'past_due_amount',
                                 'payment_id',
                                 'payment_method',
-                                'batch_number',
+                                'batch',
                                 'data_sync',
                                 'data_sync_at'                                
     ];

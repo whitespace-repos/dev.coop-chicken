@@ -30,7 +30,11 @@ class Shop extends Model
      */
     public function products()
     {
-        return $this->belongsToMany(Product::class)->as('association')->withPivot('stock');
+        return $this->belongsToMany(Product::class)->as('association')->withPivot(['stock','id','totalQtyPerDay']);
+    }
+
+    public function customers(){
+        return $this->hasMany(Customer::class);
     }
 
 

@@ -8,7 +8,7 @@ import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
 import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
 
 export default {
-                    props:["canResetPassword","status"],
+                    props:["canResetPassword","status","auth"],
                     data(){
                                 return {    
                                             form:{
@@ -17,7 +17,8 @@ export default {
                                                                     .form({ 
                                                                             email: '',
                                                                             password: '',
-                                                                            remember: false
+                                                                            remember: false,
+                                                                            _token: this.auth.csrf,
                                                     })
                                             }
                                             
@@ -39,6 +40,9 @@ export default {
                                         onFinish: () => this.form.credentials.reset('password'),
                                     });
                         }
+                    },
+                    mounted(){
+                        console.log(this.auth.csrf)
                     }
     
 }

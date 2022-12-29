@@ -102,7 +102,7 @@ createInertiaApp({
         let loader = null;
 
         // Axios Uses
-        axios.interceptors.request.use(config => {
+        axios.interceptors.request.use(config => {            
             loader = appInstance.$loading.show();
             return config;
         });

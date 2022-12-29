@@ -6,8 +6,7 @@
         <meta name="author" content="CPS-COOP">
         <meta name="generator" content="Hugo 0.101.0">
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
-        <meta name="csrf-token" content="{{ csrf_token() }}" />
-        <link rel="canonical" href="http://coop-chicken.in/">
+        <link rel="canonical" href="https://coop-chicken.in/">
         <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
         <!-- Favicons -->
         <link rel="icon" href="{{ asset('/assets/img/logo.png') }}">

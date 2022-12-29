@@ -17,7 +17,8 @@ export default {
                                                                     .form({ 
                                                                             email: '',
                                                                             password: '',
-                                                                            remember: false
+                                                                            remember: false,
+                                                                            _token: this.auth.csrf,
                                                     })
                                             }
                                             
@@ -34,7 +35,7 @@ export default {
                         Link
                     },
                     methods:{
-                        submit(){
+                        submit(){   
                                     this.form.credentials.post(route('login'), {
                                         headers: { "X-XSRF-TOKEN" : this.auth.csrf },
                                         onFinish: () => this.form.credentials.reset('password'),

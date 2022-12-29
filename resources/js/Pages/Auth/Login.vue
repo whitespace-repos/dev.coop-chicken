@@ -17,8 +17,7 @@ export default {
                                                                     .form({ 
                                                                             email: '',
                                                                             password: '',
-                                                                            remember: false,
-                                                                            _token: this.auth.csrf,
+                                                                            remember: false
                                                     })
                                             }
                                             
@@ -37,6 +36,7 @@ export default {
                     methods:{
                         submit(){
                                     this.form.credentials.post(route('login'), {
+                                        headers: { "X-XSRF-TOKEN" : this.auth.csrf },
                                         onFinish: () => this.form.credentials.reset('password'),
                                     });
                         }

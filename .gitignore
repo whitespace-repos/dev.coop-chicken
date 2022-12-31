@@ -5,6 +5,7 @@
 /storage/*.key
 /vendor
 /dev
+/dev.coop-chicken
 .env
 .htaccess
 .env.backup

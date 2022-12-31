@@ -221,7 +221,7 @@
                                       <span class="input-group-text" v-if="request.type == 'Direct'">{{ scale(rp.stock_sent) +' ' + rp.product.weight_unit }}</span>
                                       <span class="input-group-text" v-else>{{ scale(rp.stock_request) +' ' + rp.product.weight_unit }}</span>
                                     </div>
-                                    <input class="form-control" id="inlineFormInputGroup" placeholder="Supply Rate" v-model="form.approvedStockRequest.supply_rates['product-' + rp.id]" v-maska="'#*.##'" maxlength="4"/>
+                                    <input class="form-control" id="inlineFormInputGroup" placeholder="Supply Rate" v-model="form.approvedStockRequest.supply_rates['product-' + rp.id]" v-maska="'#*.##'" maxlength="8"/>
                                     <div class="input-group-append">
                                       <span class="input-group-text"><sup v-currency>{{form.approvedStockRequest.supply_rates['product-' + rp.id]}}</sup> / {{ rp.product.weight_unit }}</span>
                                     </div>

@@ -7,20 +7,22 @@ use User;
 use DB;
 use Inertia;
 use Excel;
+use Sale;
 use App\Exports\RatesExport;
 use App\Imports\StockRequestImport;
 use App\Imports\ProductRequestProductImport;
 use App\Imports\RatesImport;
 use App\Imports\SalesImport;
-
+use \Carbon\Carbon;
 use lepiaf\SerialPort\SerialPort;
 use lepiaf\SerialPort\Parser\SeparatorParser;
 use lepiaf\SerialPort\Configure\TTYConfigure;
 
+
 class Dashboard extends Controller
 {
     //
-    public function index(){
+    public function index(){        
         $suppliers = (auth()->user()->hasRole('Admin'))
                                                             ?  User::role('Supplier')->with('shops.products.rate')->get()
                                                             :  User::with('shops.products.rate')->where('id',auth()->id())->get();

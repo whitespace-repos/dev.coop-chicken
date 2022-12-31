@@ -220,11 +220,16 @@ class RestApiHandler extends Controller
                 if(empty($monthSale))
                     $data->data->push(0);
                 else 
-                    $data->data->push(round($monthSale->sale));
+                    $data->data->push(round($monthSale->sale,2));
                     
             });
         }
+        $shop = $request->user()->shop;
+        $widgets = Sale::select( DB::raw("max(total) as max") , DB::raw("avg(total) as avg"), DB::raw("sum(total) as total"))
+                    ->whereMonth('date', Carbon::now()->month)
+                    ->where('shop_id',$shop->id)
+                    ->get();
 
-        return response()->json( [ "dataset" => $dataset , "monthNames" => $monthNames ]);
+        return response()->json( [ "dataset" => $dataset , "monthNames" => $monthNames , "widgets" => $widgets ]);
     }
 }

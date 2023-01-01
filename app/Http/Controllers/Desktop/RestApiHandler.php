@@ -194,8 +194,6 @@ class RestApiHandler extends Controller
         foreach ($products as $key => $product) {
             $dataset->push((Object) [ "name" => $product->product_name , "id" => $product->id , "data" => collect([]) ]);
         }
-        
-
         foreach($dataset as $key => $data){
             $months = collect(range(11, 0));
             $monthNames = collect([]);
@@ -203,7 +201,7 @@ class RestApiHandler extends Controller
                                     DB::raw("sum(total) as sale"),
                                     DB::raw("MONTHNAME(date) as month_name")
                         )
-                        ->whereYear('date', date('Y'))
+                        ->where('date', '>', DB::raw('NOW() - INTERVAL 12 MONTH'))
                         ->groupBy('month_name')
                         ->orderBy('date')
                         ->where('product_id', $data->id)

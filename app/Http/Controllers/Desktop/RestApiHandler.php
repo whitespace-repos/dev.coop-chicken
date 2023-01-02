@@ -224,7 +224,7 @@ class RestApiHandler extends Controller
         }
         $shop = $request->user()->shop;
         $widgets = Sale::select( DB::raw("max(total) as max") , DB::raw("avg(total) as avg"), DB::raw("sum(total) as total"))
-                    ->whereMonth('date', Carbon::now()->month)
+                    ->whereDay('date', Carbon::now()->format('d'))
                     ->where('shop_id',$shop->id)
                     ->get();
 

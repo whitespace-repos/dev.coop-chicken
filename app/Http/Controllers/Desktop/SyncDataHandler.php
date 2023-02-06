@@ -176,10 +176,12 @@ class SyncDataHandler extends Controller
                 if($sr['status'] == 'Received'){
                     $shop = $request->user()->shop;
                     $p = $shop->products()->find($rp['product_id']);
-                    $assoc = $p->association;
-                    $assoc->stock += (float)  $rp['stock_received'];
-                    $assoc->totalQtyPerDay = $assoc->stock;
-                    $assoc->save();
+                    if(!empty($p)){
+                        $assoc = $p->association;
+                        $assoc->stock += (float)  $rp['stock_received'];
+                        $assoc->totalQtyPerDay = $assoc->stock;
+                        $assoc->save();
+                    }
                 }
                 StockRequestedProduct::where("id",$rp["id"])->update(Arr::except($rp, ['$id','product']));            
             } 

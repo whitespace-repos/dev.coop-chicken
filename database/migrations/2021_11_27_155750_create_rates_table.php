@@ -23,6 +23,7 @@ class CreateRatesTable extends Migration
             $table->string('wholesale_rate')->nullable()->default("[]");
             $table->enum('type',["Regular","Exceptional"])->default("Regular");
             $table->enum('status',["Active","Inactive"])->default("Active");
+            $table->string('addons')->nullable()->default("[]");
             $table->timestamps();
         });
     }

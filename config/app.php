@@ -232,6 +232,7 @@ return [
         'Carbon' => Carbon\Carbon::class,
         'Inertia' => Inertia\Inertia::class,
         'Cart' => Darryldecode\Cart\Facades\CartFacade::class,
+        'AddOn' => App\Models\ProductAddOn::class,
     ])->toArray(),
 
 ];

@@ -37,6 +37,36 @@
                   <small v-if="v$.form.rate.range['range-'+range.id].$error">{{ 'Please Enter a Valid Rate' }} </small>
               </div>
             </div>
+            <template v-for="(addon,idex) in form.rate.addon" :key="idex">
+              <div class="col-3">
+                <div class="form-group">
+                  <label>Addon Name</label>
+                  <select class="form-control" v-model="addon.addon">
+                      <template v-for="(item,idex) in selectedProduct.addons" :key="idex">
+                        <option :value="item.id">{{ item.addon }}</option>
+                      </template>                      
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-2">
+                <div class="form-group">
+                  <label>Rate </label>
+                  <input class="form-control" v-model="addon.rate"/>
+                </div>
+              </div>
+
+              <div class="col-1 pt-4">
+                <div class="form-group">
+                  <a href="javascript:void(0)" @click="removeAddon(idex)" class="btn btn-link btn-xs">Remove</a>
+                </div>
+              </div>
+            </template>
+
+            <div class="col-12">
+              <a href="javascript:void(0)"  class="btn btn-primary d-inline-flex align-items-center" @click="addProductAddOn"><icon icon="material-symbols:add-circle-outline" class="mr-2"/>Addons</a>
+            </div>
+            
           <div class="col-md-12">
             <hr />
             <button class="btn btn-primary px-5" type="submit" :disabled="v$.form.rate.$invalid"><span data-feather="database" class="mr-2 align-text-bottom"></span> Save Rate</button>
@@ -173,7 +203,8 @@ export default {
                                             retail_rate:0,
                                             wholesale_rate:0,
                                             default_wholesale_weight:0,
-                                            shop_id:this.shop_id
+                                            shop_id:this.shop_id,
+                                            addon:[]
                           }),
                         selectedRate:this
                                   .$inertia
@@ -227,6 +258,14 @@ export default {
         },
         parseToJSON(data){
                return JSON.parse(data);
+        },
+        addProductAddOn(){
+          console.log(this.selectedProduct);
+          this.form.rate.addon.push({ addon : null , rate : 0 });
+          console.log(this.form.rate.addon);
+        },
+        removeAddon: function(index) {
+          this.form.rate.addon.splice(index, 1);
         }
     },
     mounted(){

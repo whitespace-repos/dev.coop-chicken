@@ -9,7 +9,7 @@ use Inertia;
 use Setting;
 use Customer;
 use ProductWholesaleRateRange;
-
+use AddOn;
 class Products extends Controller
 {
     /**
@@ -66,6 +66,14 @@ class Products extends Controller
                 ProductWholesaleRateRange::create([ "product_id" => $product->id , "from" => $range['from'] , "to" => $range['to'] ]);
             }
         }
+
+        foreach($request->addon as $addon){
+            AddOn::create([
+                                "product_id" => $product->id,
+                                "type"       => "Additional Charges",
+                                "addon"      => $addon
+            ]);
+        }
         //
         return redirect()->route('product.index');
     }
@@ -79,7 +87,7 @@ class Products extends Controller
     public function show($id)
     {
         //
-        $product = Product::with("weightRanges")->where("id",$id)->first();
+        $product = Product::with("addons","weightRanges")->where("id",$id)->first();        
         return response()->json($product);
     }
 
@@ -93,7 +101,7 @@ class Products extends Controller
     {
         //
         $weightUnits = SettingGroup::where('group','Weight Unit')->first();
-        $product = Product::find($id);
+        $product = Product::with('addons').find($id);              
         return view('pages.products.edit',compact('product','weightUnits'));
     }
 
@@ -106,7 +114,8 @@ class Products extends Controller
      */
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
+        $product = Product::with('addons')->find($id);
+        //
         if($request->file("product_image")){
             // remove existing file
             if(!empty($product->image))
@@ -129,6 +138,16 @@ class Products extends Controller
             foreach($request->weightRanges as $range){
                 ProductWholesaleRateRange::create([ "product_id" => $product->id , "from" => $range['from'] , "to" => $range['to'] ]);
             }
+        }
+        //
+        $product->addons()->delete();
+        //
+        foreach($request->addon as $addon){
+            AddOn::create([
+                                "product_id" => $product->id,
+                                "type"       => "Additional Charges",
+                                "addon"      => $addon
+            ]);
         }
         //
         return redirect()->route('product.index');

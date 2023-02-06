@@ -9,7 +9,7 @@ class Rate extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id','supply_rate','wholesale_rate','whole_sale_rate','retail_rate','other_rate','type','status','date','shop_id'];
+    protected $fillable = ['product_id','supply_rate','wholesale_rate','whole_sale_rate','retail_rate','other_rate','type','status','date','shop_id',"addons"];
 
     public function product() {
         return $this->belongsTo(Product::class);

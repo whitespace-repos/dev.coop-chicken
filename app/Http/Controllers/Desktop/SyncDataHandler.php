@@ -175,7 +175,10 @@ class SyncDataHandler extends Controller
             foreach($sr["requested_products"] as $k => $rp){
                 if($sr['status'] == 'Received'){
                     $shop = $request->user()->shop;
+                    \Log::info($shop);
+                    \Log::info($rp['product_id']);
                     $p = $shop->products()->find($rp['product_id']);
+                    \Log::info($p);
                     $assoc = $p->association;
                     $assoc->stock += (float)  $rp['stock_received'];
                     $assoc->totalQtyPerDay = $assoc->stock;

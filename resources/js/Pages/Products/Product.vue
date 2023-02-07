@@ -155,6 +155,14 @@
                       </div>
                   </div>
 
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Add Ons : </label>                      
+                      <v-select taggable multiple push-tags v-model="form.product.addon"/>
+                      <small class="text-muted"> Type addon name and press enter </small>
+                    </div>
+                  </div>
+
                   <div class="col-12 text-right">
                       <hr />
                       <button class="btn btn-primary add-btn btn-sm  " type="submit"><span data-feather="database" class="align-text-bottom mr-1"></span> Add Product</button>
@@ -324,6 +332,13 @@
                   <input v-model="form.editProduct.conversion_rate" class="form-control"  v-maska="'#*.##'"/>
                 </div>
               </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Add Ons : </label>                      
+                  <v-select taggable multiple push-tags v-model="form.editProduct.addon"/>
+                  <small class="text-muted"> Type addon name and press enter </small>
+                </div>
+              </div>
               <div class="col-md-12 text-right">
                 <hr />
                 <button class="btn btn-primary px-4 py-1" type="submit"><span data-feather="database" class="align-text-bottom mr-2"></span> Update Product</button>
@@ -381,7 +396,8 @@ export default {
                                             parent_product_id:'',
                                             conversion_rate:0,
                                             default_wholesale_weight:0,
-                                            mask:'#*.##'
+                                            mask:'#*.##',
+                                            addon:[]
                 }),
                 editProduct:this
                                   .$inertia
@@ -404,7 +420,8 @@ export default {
                                                     {from:0,to:0},{from:0,to:0},{from:0,to:50000},
                                           ],
                                           default_wholesale_weight:0,
-                                          mask:'#*.##'
+                                          mask:'#*.##',
+                                          addon:[]
               }),
           },
           selectedProduct:{}
@@ -495,7 +512,6 @@ export default {
             return
           }
           //
-
           this.form.product.post(this.route('product.store'), {
                 onSuccess: () => {
                                     this.form.product.reset('product_name','weight_unit','wholesale_weight','stock','wholesale_weight_range','product_image');
@@ -524,10 +540,14 @@ export default {
           let data = this.$data;
           axios.get(this.route('product.show',$id))
           .then(function(response){
-            assignIn(data.form.editProduct, response.data)
+            assignIn(data.form.editProduct, response.data)                        
             data.selectedProduct = response.data;
             data.form.editProduct.weightRanges = [];
             data.form.editProduct.stock = (data.selectedProduct.stock) ? true : false;
+            data.form.editProduct.addon = [];
+            response.data.addons.filter(item => {
+              data.form.editProduct.addon.push(item.addon);
+            });
             if(data.selectedProduct.weight_ranges.length > 0){
               data.form.editProduct.wholesale_weight_range = true;
               $.each(data.selectedProduct.weight_ranges,function(i,v){

@@ -8,6 +8,8 @@ use Product;
 use Carbon;
 use Inertia;
 use ProductWholesaleRateRange;
+use AddOn;
+
 
 class Rates extends Controller
 {
@@ -20,7 +22,7 @@ class Rates extends Controller
     {
         //
         $rates = Rate::where( 'date', ($request->has('date')) ? $request->date : Carbon::today())
-                        ->with('product.weightRanges','shop')
+                        ->with('product.weightRanges','shop','product.addons')
                         ->whereRelation('product','supplier_id',auth()->id())
                         ->where(function ($query) use($request) {
                             ($request->has("date")) ?
@@ -89,6 +91,16 @@ class Rates extends Controller
         }
 
         $rate->wholesale_rate =  $wholesaleRangeRates->toJson();
+        $addons = collect([]);
+
+        foreach ($request->addon as $key => $item) {
+            # code...
+            if($item["rate"] > 0 && !empty($item["addon"])){
+                $addon = AddOn::find($item["addon"]);
+                $addons->push(["id"=> $addon->id, "addon" => $addon->addon, "rate" => $item["rate"] ]);
+            }
+        }
+        $rate->addons =  $addons->toJson();        
         $rate->save();
         return redirect()->route('rate.index');
     }
@@ -109,7 +121,7 @@ class Rates extends Controller
                                 ->get();
 
         $products = auth()->user()->products;
-        $product = Product::where('id',$id)->with('shops','weightRanges')->first();
+        $product = Product::where('id',$id)->with('shops','weightRanges','addons')->first();
         return Inertia::render('Rate/Rates', ["products"=> $products , "selectedProduct" => $product , "rates" => $rates ]);
     }
 

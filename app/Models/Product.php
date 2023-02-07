@@ -68,5 +68,9 @@ class Product extends Model
         return $this->hasMany(ProductWholesaleRateRange::class);
     }
 
+    public function addons(){
+        return $this->hasMany(ProductAddOn::class);
+    }
+
 
 }

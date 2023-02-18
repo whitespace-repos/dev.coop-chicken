@@ -66,13 +66,14 @@ class Products extends Controller
                 ProductWholesaleRateRange::create([ "product_id" => $product->id , "from" => $range['from'] , "to" => $range['to'] ]);
             }
         }
-
-        foreach($request->addon as $addon){
-            AddOn::create([
-                                "product_id" => $product->id,
-                                "type"       => "Additional Charges",
-                                "addon"      => $addon
-            ]);
+        if($request->has("addon")){
+            foreach($request->addon as $addon){
+                AddOn::create([
+                                    "product_id" => $product->id,
+                                    "type"       => "Additional Charges",
+                                    "addon"      => $addon
+                ]);
+            }
         }
         //
         return redirect()->route('product.index');

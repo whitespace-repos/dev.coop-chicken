@@ -9,7 +9,7 @@
 
       <hr />
 
-      <form method="POST"  @submit.prevent="addRate" class="font-weight-bold shadow-lg p-3 rounded-lg org-shadow bg-white">
+      <form method="POST"   @submit.prevent="addRate" class="font-weight-bold shadow-lg p-3 rounded-lg org-shadow bg-white">
         <div class="row">
           <div class="col-md-8">
             <div class="form-group" :class="{'has-error':v$.form.rate.product_id.$error}">
@@ -62,11 +62,11 @@
                 </div>
               </div>
             </template>
-
-            <div class="col-12">
-              <a href="javascript:void(0)"  class="btn btn-primary d-inline-flex align-items-center" @click="addProductAddOn"><icon icon="material-symbols:add-circle-outline" class="mr-2"/>Addons</a>
-            </div>
-            
+            <template v-if="!isEmpty(selectedProduct.addons)">
+              <div class="col-12" v-if="selectedProduct.addons.length > 0">
+                <a href="javascript:void(0)"  class="btn btn-primary d-inline-flex align-items-center" @click="addProductAddOn"><icon icon="material-symbols:add-circle-outline" class="mr-2"/>Addons</a>
+              </div>
+            </template>            
           <div class="col-md-12">
             <hr />
             <button class="btn btn-primary px-5" type="submit" :disabled="v$.form.rate.$invalid"><span data-feather="database" class="mr-2 align-text-bottom"></span> Save Rate</button>
@@ -138,7 +138,7 @@ import { Head } from '@inertiajs/inertia-vue3';
 import useVuelidate from '@vuelidate/core'
 import { required, helpers , requiredIf, minValue} from '@vuelidate/validators'
 const rateValidation = helpers.regex(/^\d+(?:\.\d{1,2})?$/);
-import { set , assign , slice, assignIn} from 'lodash'
+import { set , assign , slice, assignIn,isEmpty} from 'lodash'
 
 
 export default {
@@ -194,6 +194,7 @@ export default {
 
     data(){
         return {
+                isEmpty,
                 form:{
                         rate:this
                                   .$inertia
